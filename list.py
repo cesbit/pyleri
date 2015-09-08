@@ -1,3 +1,18 @@
+'''pyleri.List Class.
+
+The grammar must find given elements separated by a delimiter. When no delimiter
+is given we split using a comma. All arguments:
+
+    element: List searches for this element
+    delimiter: Elements must be separated by this delimiter. (default: ',')
+    mi: Minimal elements the parser will search for. (default: 0)
+    ma: Maximum elements the parser will search for. (default: None, unlimited)
+    opt: When set to True the list may end with a delimiter. (default: False)
+
+:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+:license: need to decide
+'''
+
 from .token import Token
 from .noderesult import NodeResult
 from .elements import NamedElement

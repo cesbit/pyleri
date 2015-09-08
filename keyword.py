@@ -1,4 +1,4 @@
-'''pylrparsing.Keyword Class.
+'''pyleri.Keyword Class.
 
 Try matching a given keyword string. The keyword should match Grammer.RE_KEYWORDS otherwise
 the keyword will not be found. It's possible however to overwrite the default RE_KEYWORDS
