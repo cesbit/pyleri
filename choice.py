@@ -1,4 +1,4 @@
-'''pylrparsing.Choice Class.
+'''pyleri.Choice Class.
 
 Choose one of the given elements. When most_greedy is True we will choose the 'longest'
 element when multiple elements are valid. If most_greedy is False we will return the first
