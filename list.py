@@ -13,7 +13,6 @@ is given we split using a comma. All arguments:
 :license: need to decide
 '''
 
-from .token import Token
 from .noderesult import NodeResult
 from .elements import NamedElement
 
@@ -23,9 +22,7 @@ class List(NamedElement):
     __slots__ = ('_element', '_delimiter', '_min', '_max', '_opt')
 
     def __init__(self, element, delimiter=',', mi=0, ma=None, opt=False):
-        self._element = self._validate_element(element)
-
-        self._delimiter = Token(delimiter)
+        self._element, self._delimiter = map(self._validate_element, (element, delimiter))
 
         if not isinstance(mi, int) or mi < 0:
             raise TypeError('Repeat(): "mi" must be an integer value larger than or equal to 0, got: {}'.format(mi))
