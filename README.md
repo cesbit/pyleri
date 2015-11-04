@@ -59,7 +59,10 @@ Grammar.export_js()
 -------------------
 syntax:
 ```python
-Grammar.export_js(js_module_name='jsleri', js_template=<template_string>, js_identation=' ' * 4)
+Grammar.export_js(
+    js_module_name='jsleri', 
+    js_template=Grammar.JS_TEMPLATE, 
+    js_identation=' ' * 4)
 ```
 Optional keyword arguments:
 - `js_module_name`: Name of the JavaScript module. (default: 'jsleri')
@@ -67,7 +70,7 @@ Optional keyword arguments:
 - `js_identation`: identation used in the JavaScript file. (default: 4 spaces)
 
 For example when using our Quick usage grammar, this is the output when running `my_grammar.export_js()`:
-```
+```javascript
 /* jshint newcap: false */
 
 /*
