@@ -42,7 +42,7 @@ class Keyword(NamedElement):
             re_match = root._cached_kw_match[node.start]
         except KeyError:
             re_match = root._cached_kw_match[node.start] = root.RE_KEYWORDS.match(s)
-        is_valid = re_match and re_match.group(0) == self._keyword
+        is_valid = re_match and (re_match.group(0) == self._keyword or (self._ign_case and re_match.group(0).lower() == self._keyword.lower()))
         if is_valid:
             root._append_tree(tree, node, node.start + len(self._keyword))
         else:
