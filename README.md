@@ -30,8 +30,16 @@ print(my_grammer.parse('hi "Iris"').is_valid) # => True
 print(my_grammer.parse('bye "Iris"').is_valid) # => False
 ```
 
-parse() method
---------------
+Grammar
+-------
+When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knowns where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has two methods: `parse()` and `export_js()` which are explained below.
+
+Grammar.parse()
+---------------
+syntax:
+```python
+Grammar.parse(string)
+```
 The `parse()` method returns a `NodeResult` object which has the following properties:
 - `expecting`: A Python set() containing pyleri objects which pyleri expects at `pos`
 - `is_valid`: Boolean value, `True` when the given string is valid, `False` when not valid.
@@ -45,6 +53,54 @@ print(node_result.is_valid) # => False
 print(node_result.expecting) # => {hi} => We expected Keyword 'hi' instead of bye 
 print(node_result.pos) # => 0 => Position in the string where we are expecting the above
 print(node_result.tree) # => Node object containing the parse tree
+```
+
+Grammar.export_js()
+-------------------
+syntax:
+```python
+Grammar.export_js(js_module_name='jsleri', js_template=<template_string>, js_identation=' ' * 4)
+```
+Optional keyword arguments:
+- `js_module_name`: Name of the JavaScript module. (default: 'jsleri')
+- `js_template`: Template String used for the export. You might want to look at the default string which can be found at Grammar.JS_TEMPLATE.
+- `js_identation`: identation used in the JavaScript file. (default: 4 spaces)
+
+For example when using our Quick usage grammar, this is the output when running `my_grammar.export_js()`:
+```
+/* jshint newcap: false */
+
+/*
+ * This grammar is generated using the Grammar.export_js() method and
+ * should be used with the jsleri JavaScript module.
+ *
+ * Source class: MyGrammar
+ * Created at: 2015-11-04 10:06:06
+ */
+
+'use strict';
+
+(function (
+            Regex,
+            Sequence,
+            Keyword,
+            Grammar
+        ) {
+    var r_name = Regex('^(?:"(?:[^"]*)")+');
+    var k_hi = Keyword('hi');
+    var START = Sequence(
+        k_hi,
+        r_name
+    );
+
+    window.MyGrammar = Grammar(START, '^\w+');
+
+})(
+    window.jsleri.Regex,
+    window.jsleri.Sequence,
+    window.jsleri.Keyword,
+    window.jsleri.Grammar
+);
 ```
 
 Choice
