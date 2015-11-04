@@ -26,8 +26,8 @@ class MyGrammar(Grammar):
 my_grammer = MyGrammar()
 
 # Use the compiled grammar to parse 'strings'
-print(my_grammer.parse('hi "Iris"').is_valid)  # => True
-print(my_grammer.parse('bye "Iris"').is_valid)  # => False
+print(my_grammer.parse('hi "Iris"').is_valid) # => True
+print(my_grammer.parse('bye "Iris"').is_valid) # => False
 ```
 
 parse() method
@@ -42,7 +42,7 @@ Let's take the example from Quick usage.
 ```python
 node_result = my_grammer.parse('bye "Iris"')
 print(node_result.is_valid) # => False
-print(node_result.expecting)  # => {hi} => We expected Keyword 'hi' instead or bye 
-print(node_result.pos)  # => 0 => Position in the string where we were expecting the above
-print(node_result.tree)  # => Node object containing the parse tree
+print(node_result.expecting) # => {hi} => We expected Keyword 'hi' instead of bye 
+print(node_result.pos) # => 0 => Position in the string where we are expecting the above
+print(node_result.tree) # => Node object containing the parse tree
 ```
