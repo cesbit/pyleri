@@ -23,11 +23,11 @@ class MyGrammar(Grammar):
     START = Sequence(k_hi, r_name)
 
 # Compile your grammar by creating an instance of the Grammar Class.
-myGrammer = MyGrammar()
+my_grammer = MyGrammar()
 
 # Use the compiled grammar to parse 'strings'
-print(myGrammer.parse('hi "Iris"').is_valid)  # => True
-print(myGrammer.parse('bye "Iris"').is_valid)  # => False
+print(my_grammer.parse('hi "Iris"').is_valid)  # => True
+print(my_grammer.parse('bye "Iris"').is_valid)  # => False
 ```
 
 parse() method
@@ -35,5 +35,14 @@ parse() method
 The `parse()` method returns a `NodeResult` object which has the following properties:
 - `expecting`: A Python set() containing pyleri objects which pyleri expects at `pos`
 - `is_valid`: Boolean value, `True` when the given string is valid, `False` when not valid.
-- `pos`: Position where the parser had to stop. (this is equals to the length of the given string when `is_valid` is `True`)
+- `pos`: Position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string)
 - `tree`: Contains the parse tree
+
+Let's take the example from Quick usage.
+```python
+node_result = my_grammer.parse('bye "Iris"')
+print(node_result.is_valid) # => False
+print(node_result.expecting)  # => {hi} => We expected Keyword 'hi' instead or bye 
+print(node_result.pos)  # => 0 => Position in the string where we were expecting the above
+print(node_result.tree)  # => Node object containing the parse tree
+```
