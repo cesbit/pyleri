@@ -9,7 +9,7 @@ Pyleri is an easy-to-use parser create for SiriDB. We first used [lrparsing](htt
 Quick usage
 -----------
 ```python
-# Imports
+# Imports, note that we skip the imports in other examples...
 from pyleri import (
     Grammar,
     Keyword,
@@ -45,4 +45,20 @@ print(node_result.is_valid) # => False
 print(node_result.expecting) # => {hi} => We expected Keyword 'hi' instead of bye 
 print(node_result.pos) # => 0 => Position in the string where we are expecting the above
 print(node_result.tree) # => Node object containing the parse tree
+```
+
+Choice
+------
+syntax:
+```python
+Choice(PyleriObject, PyleriObject, ..., [most_greedy=True/False])
+```
+The parser needs to choose between one of the given options.
+
+```python
+class MyGrammar(Grammar):
+    r_name = Regex('(?:"(?:[^"]*)")+')
+    k_hi = Keyword('hi')
+    k_bye = Keyword('bye')
+    START = Sequence(Choice(k_hi, k_bye), r_name)
 ```
