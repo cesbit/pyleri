@@ -55,7 +55,7 @@ Choice(PyleriObject, PyleriObject, ..., [most_greedy=True/False])
 ```
 The parser needs to choose between one of the given PyleriObjects. Choice accepts one keyword argument `most_greedy` which is `True` by default. When `most_greedy` is set to `False` the parser will stop at the first match and `choose` that object. When `True` the parser will try each PyleriObject and returns the longest match. Settings `most_greedy` to `False` can provide some extra performance. Note that the parser will try to match each PyleriObject in the exact same order they are parsed to Choice.
 
-Let use `Choice` to modify the Quick usage example to allow the string 'bye "Iris"'
+Example: let's use `Choice` to modify the Quick usage example to allow the string 'bye "Iris"'
 ```python
 class MyGrammar(Grammar):
     r_name = Regex('(?:"(?:[^"]*)")+')
