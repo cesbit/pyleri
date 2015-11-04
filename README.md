@@ -29,4 +29,11 @@ myGrammer = MyGrammar()
 print(myGrammer.parse('hi "Iris"').is_valid)  # => True
 print(myGrammer.parse('bye "Iris"').is_valid)  # => False
 ```
-   
+
+parse() method
+--------------
+The `parse()` method returns a `NodeResult` object which has the following properties:
+- `expecting`: A Python set() containing pyleri objects which pyleri expects at `pos`
+- `is_valid`: Boolean value, `True` when the given string is valid, `False` when not valid.
+- `pos`: Position where the parser had to stop. (this is equals to the length of the given string when `is_valid` is `True`)
+- `tree`: Contains the parse tree
