@@ -62,4 +62,8 @@ class MyGrammar(Grammar):
     k_hi = Keyword('hi')
     k_bye = Keyword('bye')
     START = Sequence(Choice(k_hi, k_bye), r_name)
+
+my_grammer = MyGrammar()
+print(my_grammer.parse('hi "Iris"').is_valid)  # => True
+print(my_grammer.parse('bye "Iris"').is_valid)  # => True    
 ```
