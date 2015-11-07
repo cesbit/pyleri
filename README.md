@@ -41,7 +41,7 @@ syntax:
 Grammar.parse(string)
 ```
 The `parse()` method returns a `NodeResult` object which has the following properties:
-- `expecting`: A Python set() containing pyleri objects which pyleri expects at `pos`
+- `expecting`: A Python set() containing elements which pyleri expects at `pos`
 - `is_valid`: Boolean value, `True` when the given string is valid, `False` when not valid.
 - `pos`: Position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string)
 - `tree`: Contains the parse tree
@@ -110,9 +110,9 @@ Choice
 ------
 syntax:
 ```python
-Choice(PyleriObject, PyleriObject, ..., [most_greedy=True/False])
+Choice(Element, Element, ..., most_greedy=True)
 ```
-The parser needs to choose between one of the given PyleriObjects. Choice accepts one keyword argument `most_greedy` which is `True` by default. When `most_greedy` is set to `False` the parser will stop at the first match. When `True` the parser will try each PyleriObject and returns the longest match. Settings `most_greedy` to `False` can provide some extra performance. Note that the parser will try to match each PyleriObject in the exact same order they are parsed to Choice.
+The parser needs to choose between one of the given elements. Choice accepts one keyword argument `most_greedy` which is `True` by default. When `most_greedy` is set to `False` the parser will stop at the first match. When `True` the parser will try each element and returns the longest match. Settings `most_greedy` to `False` can provide some extra performance. Note that the parser will try to match each element in the exact same order they are parsed to Choice.
 
 Example: let's use `Choice` to modify the Quick usage example to allow the string 'bye "Iris"'
 ```python
@@ -126,3 +126,33 @@ my_grammer = MyGrammar()
 print(my_grammer.parse('hi "Iris"').is_valid)  # => True
 print(my_grammer.parse('bye "Iris"').is_valid)  # => True    
 ```
+
+Sequence
+--------
+syntax:
+```python
+Sequence(Element, Element, ...)
+```
+The parser needs to match each element in a sequence.
+
+Example:
+```python
+class TicTacToe(Grammar):
+    START = Sequence(Keyword('Tic'), Keyword('Tac'), Keyword('Toe'))
+
+my_grammer = MyGrammar()
+print(my_grammer.parse('Tic Tac Toe').is_valid)  # => True
+```
+
+Keyword
+-------
+syntax:
+```python
+Keyword(string, ign_case=Fasle)
+```
+The parser needs to match the string. When matching keywords we need to tell the parser what characters are allowed in keywords. By default Pyleri uses `\w` which is both in Python and JavaScript equal to `[A-Za-z0-9_]`
+
+```python
+RE_KEYWORDS = re.compile('^\w+')
+```
+
