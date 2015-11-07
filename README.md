@@ -23,11 +23,11 @@ class MyGrammar(Grammar):
     START = Sequence(k_hi, r_name)
 
 # Compile your grammar by creating an instance of the Grammar Class.
-my_grammer = MyGrammar()
+my_grammar = MyGrammar()
 
 # Use the compiled grammar to parse 'strings'
-print(my_grammer.parse('hi "Iris"').is_valid) # => True
-print(my_grammer.parse('bye "Iris"').is_valid) # => False
+print(my_grammar.parse('hi "Iris"').is_valid) # => True
+print(my_grammar.parse('bye "Iris"').is_valid) # => False
 ```
 
 Grammar
@@ -122,9 +122,9 @@ class MyGrammar(Grammar):
     k_bye = Keyword('bye')
     START = Sequence(Choice(k_hi, k_bye), r_name)
 
-my_grammer = MyGrammar()
-print(my_grammer.parse('hi "Iris"').is_valid)  # => True
-print(my_grammer.parse('bye "Iris"').is_valid)  # => True    
+my_grammar = MyGrammar()
+print(my_grammar.parse('hi "Iris"').is_valid)  # => True
+print(my_grammar.parse('bye "Iris"').is_valid)  # => True    
 ```
 
 Sequence
@@ -140,8 +140,8 @@ Example:
 class TicTacToe(Grammar):
     START = Sequence(Keyword('Tic'), Keyword('Tac'), Keyword('Toe'))
 
-my_grammer = MyGrammar()
-print(my_grammer.parse('Tic Tac Toe').is_valid)  # => True
+ttt_grammar = TicTacToe()
+print(ttt_grammar.parse('Tic Tac Toe').is_valid)  # => True
 ```
 
 Keyword
@@ -150,9 +150,18 @@ syntax:
 ```python
 Keyword(string, ign_case=Fasle)
 ```
-The parser needs to match the string. When matching keywords we need to tell the parser what characters are allowed in keywords. By default Pyleri uses `\w` which is both in Python and JavaScript equal to `[A-Za-z0-9_]`
+The parser needs to match the string. When matching keywords we need to tell the parser what characters are allowed in keywords. By default Pyleri uses `^\w+` which is both in Python and JavaScript equal to `^[A-Za-z0-9_]+`. We can overwrite the default by setting `RE_KEYWORDS` in the grammar.
+
+Example:
 
 ```python
-RE_KEYWORDS = re.compile('^\w+')
+class TicTacToe(Grammar):
+    # Let's allow keywords with alphabetic characters and dashes.
+    RE_KEYWORDS = re.compile('^[A-Za-z-]+')
+    
+    START = Keyword('Tic-Tac-Toe')
+    
+ttt_grammar = TicTacToe()
+print(ttt_grammar.parse('Tic-Tac-Toe').is_valid)  # => True
 ```
 
