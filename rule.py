@@ -11,7 +11,12 @@ class Rule(NamedElement):
     def _get_node_result(self, root, tree, rule, s, node):
         self._tested = {}
         self._tree = {}
-        node_res = root._walk(self._element, node.start, node.children, self, True)
+        node_res = root._walk(
+            self._element,
+            node.start,
+            node.children,
+            self,
+            True)
         if node_res.is_valid:
             root._append_tree(tree, node, node_res.pos)
         return node_res

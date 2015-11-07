@@ -1,8 +1,8 @@
 '''pyleri.Choice Class.
 
-Choose one of the given elements. When most_greedy is True we will choose the 'longest'
-element when multiple elements are valid. If most_greedy is False we will return the first
-match.
+Choose one of the given elements. When most_greedy is True we will choose
+the 'longest' element when multiple elements are valid. If most_greedy is
+False we will return the first match.
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 :license: need to decide
@@ -18,7 +18,9 @@ class Choice(NamedElement):
 
     def __init__(self, *elements, most_greedy=True):
         self._elements = self._validate_elements(elements)
-        self._get_node_result = self._most_greedy_result if most_greedy else self._stop_at_first_match
+        self._get_node_result = \
+            self._most_greedy_result if most_greedy else \
+            self._stop_at_first_match
 
     def _most_greedy_result(self, root, tree, rule, s, node):
         most_greedy = NodeResult(False, node.start)

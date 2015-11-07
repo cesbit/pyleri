@@ -5,7 +5,12 @@ class This(Element):
 
     def _get_node_result(self, root, tree, rule, s, node):
         if node.start not in rule._tested:
-            rule._tested[node.start] = root._walk(rule._element, node.start, node.children, rule, True)
+            rule._tested[node.start] = root._walk(
+                rule._element,
+                node.start,
+                node.children,
+                rule,
+                True)
             rule._tree[node.start] = node.children
 
         if rule._tested[node.start].is_valid:

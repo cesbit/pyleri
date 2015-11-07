@@ -8,7 +8,8 @@ class Token(NamedElement):
 
     def __init__(self, token):
         if not isinstance(token, str):
-            raise TypeError('Token(): first argument must be a string value, got {}'.format(token))
+            raise TypeError('Token(): first argument must be a string '
+                            'value, got {}'.format(token))
         self._token = token
 
     def __repr__(self):

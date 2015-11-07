@@ -17,7 +17,8 @@ class _Prio(NamedElement):
         for elem in self._elements:
             children = []
             node_res = root._walk(elem, node.start, children, rule, True)
-            if node_res.is_valid and node_res.pos > rule._tested[node.start].pos:
+            if node_res.is_valid and \
+                    node_res.pos > rule._tested[node.start].pos:
                 node.children = rule._tree[node.start] = children
                 rule._tested[node.start] = node_res
 

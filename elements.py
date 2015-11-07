@@ -17,7 +17,9 @@ class Element:
             return Token(element)
         if isinstance(element, Element):
             return element
-        raise TypeError('Expecting an element or string but received type: {}'.format(type(element)))
+        raise TypeError(
+            'Expecting an element or string but received type: {}'.format(
+                type(element)))
 
     @classmethod
     def _validate_elements(cls, elements):
@@ -41,7 +43,9 @@ class NamedElement(Element):
         new_ident = ident + 1
         value = ',\n'.join(['{ident}{elem}'.format(
             ident=js_identation * new_ident,
-            elem=elem._export_js(js_identation, new_ident, classes)) for elem in self._elements])
+            elem=elem._export_js(
+                js_identation,
+                new_ident, classes)) for elem in self._elements])
         return '{class_name}(\n{value}\n{ident})'.format(
             class_name=self.__class__.__name__.lstrip('_'),
             value=value,
@@ -51,7 +55,7 @@ class NamedElement(Element):
         return 'not_implemented'
 
 # Added this import to the bottom to prevent circular import cycle.
-# Note: usually this is bad design but in this case we do want class inheritance
-#       which allows us to create a new class Token which is sub-classed from
-#       the 'NamedElement' class.
-from .token import Token
+# Note: usually this is bad design but in this case we do want class
+#       inheritance which allows us to create a new class Token which
+#       is sub-classed from the 'NamedElement' class.
+from .token import Token  # nopep8

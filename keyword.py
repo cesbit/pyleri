@@ -1,8 +1,8 @@
 '''pyleri.Keyword Class.
 
-Try matching a given keyword string. The keyword should match Grammer.RE_KEYWORDS otherwise
-the keyword will not be found. It's possible however to overwrite the default RE_KEYWORDS
-in you own Grammar class.
+Try matching a given keyword string. The keyword should match
+Grammer.RE_KEYWORDS otherwise the keyword will not be found. It's possible
+however to overwrite the default RE_KEYWORDS in you own Grammar class.
 
 Example:
 
@@ -29,7 +29,8 @@ class Keyword(NamedElement):
     def __init__(self, keyword, ign_case=False):
 
         if not isinstance(keyword, str):
-            raise TypeError('Keyword(): first positional argument must be a string value')
+            raise TypeError(
+                'Keyword(): first positional argument must be a string value')
 
         self._keyword = keyword
         self._ign_case = bool(ign_case)
@@ -41,8 +42,14 @@ class Keyword(NamedElement):
         try:
             re_match = root._cached_kw_match[node.start]
         except KeyError:
-            re_match = root._cached_kw_match[node.start] = root.RE_KEYWORDS.match(s)
-        is_valid = re_match and (re_match.group(0) == self._keyword or (self._ign_case and re_match.group(0).lower() == self._keyword.lower()))
+            re_match = \
+                root._cached_kw_match[node.start] = \
+                root.RE_KEYWORDS.match(s)
+        is_valid = \
+            re_match and \
+            (re_match.group(0) == self._keyword or
+             (self._ign_case and
+              re_match.group(0).lower() == self._keyword.lower()))
         if is_valid:
             root._append_tree(tree, node, node.start + len(self._keyword))
         else:
@@ -51,4 +58,6 @@ class Keyword(NamedElement):
         return NodeResult(is_valid, node.end or node.start)
 
     def _new_export_js(self, js_identation, ident, classes):
-        return 'Keyword(\'{}\'{})'.format(self._keyword, ', true' if self._ign_case else '')
+        return 'Keyword(\'{}\'{})'.format(
+            self._keyword,
+            ', true' if self._ign_case else '')
