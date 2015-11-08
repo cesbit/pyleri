@@ -28,5 +28,8 @@ class _Prio(NamedElement):
         return rule._tested[node.start]
 
 
+_Prio.__name__ = 'Prio'
+
+
 def Prio(*elements):
     return Rule(_Prio(*elements))

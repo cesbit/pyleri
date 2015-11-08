@@ -19,16 +19,30 @@ from .node import Node
 from .expecting import Expecting
 from .endofstatement import endOfStatement
 from .elements import Element, NamedElement
+from .keyword import Keyword
+
+
+_RE_KEYWORDS = re.compile('^\w+')
 
 
 class _KeepOrder(dict):
 
     def __init__(self, *args):
         super().__setitem__('_order', [])
+        self._RE_KEYWORDS = _RE_KEYWORDS
+        self._has_keywords = False
 
     def __setitem__(self, key, value):
         if key not in self:
             super().__getitem__('_order').append(key)
+
+        if key == 'RE_KEYWORDS':
+            if self._has_keywords:
+                raise SyntaxError(
+                    'RE_KEYWORDS must be set on top of Grammar before '
+                    'keywords are set.')
+            self._RE_KEYWORDS = value
+
         if isinstance(value, NamedElement):
             if hasattr(value, 'name'):
                 raise SyntaxError(
@@ -36,6 +50,15 @@ class _KeepOrder(dict):
                     'set to {1!r}. Use Repeat({0}, 1, 1) as a workaround.'
                     .format(value.name, key))
             value.name = key
+
+        if isinstance(value, Keyword):
+            self._has_keywords = True
+            m = self._RE_KEYWORDS.match(value._keyword)
+            if m is None or m.group(0) != value._keyword:
+                raise SyntaxError(
+                    'Keyword {} does not match Grammars keywords match'
+                    .format(value._keyword))
+
         super().__setitem__(key, value)
 
 
@@ -51,7 +74,7 @@ class Grammar(metaclass=_OrderedClass):
     __slots__ = ('_element', '_string', '_expecting', '_cached_kw_match')
 
     RE_LEFT_WHITESPACE = re.compile('^\s+')
-    RE_KEYWORDS = re.compile('^\w+')
+    RE_KEYWORDS = _RE_KEYWORDS
     RE_WHITESPACE = re.compile('\s+')
 
     JS_IDENTATION = ' ' * 4

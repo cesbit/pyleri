@@ -8,7 +8,9 @@ class Regex(NamedElement):
     __slots__ = ('_compiled',)
 
     def __init__(self, pattern, flags=0):
-        self._compiled = re.compile('^' + pattern, flags=flags)
+        if not pattern.startswith('^'):
+            pattern = '^' + pattern
+        self._compiled = re.compile(pattern, flags=flags)
 
     def __repr__(self):
         if hasattr(self, 'name'):
