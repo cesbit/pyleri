@@ -110,7 +110,7 @@ Choice
 ------
 syntax:
 ```python
-Choice(Element, Element, ..., most_greedy=True)
+Choice(element, element, ..., most_greedy=True)
 ```
 The parser needs to choose between one of the given elements. Choice accepts one keyword argument `most_greedy` which is `True` by default. When `most_greedy` is set to `False` the parser will stop at the first match. When `True` the parser will try each element and returns the longest match. Settings `most_greedy` to `False` can provide some extra performance. Note that the parser will try to match each element in the exact same order they are parsed to Choice.
 
@@ -131,7 +131,7 @@ Sequence
 --------
 syntax:
 ```python
-Sequence(Element, Element, ...)
+Sequence(element, element, ...)
 ```
 The parser needs to match each element in a sequence.
 
@@ -148,9 +148,9 @@ Keyword
 -------
 syntax:
 ```python
-Keyword(string, ign_case=Fasle)
+Keyword(keyword, ign_case=Fasle)
 ```
-The parser needs to match the string. When matching keywords we need to tell the parser what characters are allowed in keywords. By default Pyleri uses `^\w+` which is both in Python and JavaScript equal to `^[A-Za-z0-9_]+`. We can overwrite the default by setting `RE_KEYWORDS` in the grammar.
+The parser needs to match the keyword which is just a string. When matching keywords we need to tell the parser what characters are allowed in keywords. By default Pyleri uses `^\w+` which is both in Python and JavaScript equal to `^[A-Za-z0-9_]+`. We can overwrite the default by setting `RE_KEYWORDS` in the grammar. Keyword() accepts one keyword argument `ign_case` to tell the parser if we should match case insensitive.
 
 Example:
 
@@ -159,9 +159,37 @@ class TicTacToe(Grammar):
     # Let's allow keywords with alphabetic characters and dashes.
     RE_KEYWORDS = re.compile('^[A-Za-z-]+')
     
-    START = Keyword('Tic-Tac-Toe')
+    START = Keyword('tic-tac-toe', ign_case=True)
     
 ttt_grammar = TicTacToe()
 print(ttt_grammar.parse('Tic-Tac-Toe').is_valid)  # => True
+```
+
+Repeat
+------
+syntax:
+```python
+Repeat(element, mi=0, ma=None)
+```
+The parser needs at least `mi` elements and at most `ma` elements. When `ma` is set to `None` we allow unlimited number of elements. `mi` can be any integer value equal of higher than 0 but not larger then `ma`.
+
+It's not allowed to bind a name to the same element twice and Repeat(element, 1, 1) is a common solution to bind the element a second (or more) time(s).
+For example consider the following:
+```python
+class MyGrammar(Grammar):
+    r_name = Regex('(?:"(?:[^"]*)")+')
+    
+    # Raises a SyntaxError because we try to bind a second time.
+    other_name = r_name # WRONG
+    
+    # Instead use Repeat
+    other_name = Repeat(r_name, 1, 1) # RIGHT
+```
+
+List
+----
+syntax:
+```python
+List(element, delimiter=',', mi=0, ma=None, opt=False)
 ```
 
