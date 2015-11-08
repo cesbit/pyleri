@@ -232,3 +232,49 @@ my_grammar = MyGrammar()
 my_grammar.parse('hi "Iris"').is_valid  # => True
 my_grammar.parse('hi').is_valid  # => True
 ```
+
+Regex
+-----
+syntax:
+```python
+Regex(pattern, flags=0)
+```
+The parser compiles a regular expression using the `re` module. Therefore information about `flags` can be found at https://docs.python.org/3/library/re.html
+
+See the Quick Usage example for how to use `Regex`.
+
+Token
+-----
+syntax:
+```python
+Token(token)
+```
+A token can be one or more characters and is usually used to match operators like `+`, `-`, `//` and so on.
+
+Example:
+```python
+class Ni(Grammar):
+    t_dash = Token('-')
+    START = List(Keyword('ni'), delimiter=t_dash)
+    
+ni = Ni()
+ni.parse('ni-ni-ni-ni-ni').is_valid  # => True
+```
+
+Tokens
+------
+syntax:
+```python
+Tokens(tokens)
+```
+Can be used to register multiple tokens at once. The `tokens` argument should be a string with tokens seperated by spaces. If given tokens are different in size the parser will try to match the longest tokens first.
+
+Example:
+```python
+class Ni(Grammar):
+    tks = Tokens('+ - !=')
+    START = List(Keyword('ni'), delimiter=tks)
+
+ni = Ni()
+ni.parse('ni + ni != ni - ni').is_valid  # => True
+```
