@@ -123,8 +123,8 @@ class MyGrammar(Grammar):
     START = Sequence(Choice(k_hi, k_bye), r_name)
 
 my_grammar = MyGrammar()
-print(my_grammar.parse('hi "Iris"').is_valid)  # => True
-print(my_grammar.parse('bye "Iris"').is_valid)  # => True    
+my_grammar.parse('hi "Iris"').is_valid  # => True
+my_grammar.parse('bye "Iris"').is_valid  # => True    
 ```
 
 Sequence
@@ -141,7 +141,7 @@ class TicTacToe(Grammar):
     START = Sequence(Keyword('Tic'), Keyword('Tac'), Keyword('Toe'))
 
 ttt_grammar = TicTacToe()
-print(ttt_grammar.parse('Tic Tac Toe').is_valid)  # => True
+ttt_grammar.parse('Tic Tac Toe').is_valid  # => True
 ```
 
 Keyword
@@ -162,7 +162,7 @@ class TicTacToe(Grammar):
     START = Keyword('tic-tac-toe', ign_case=True)
     
 ttt_grammar = TicTacToe()
-print(ttt_grammar.parse('Tic-Tac-Toe').is_valid)  # => True
+ttt_grammar.parse('Tic-Tac-Toe').is_valid  # => True
 ```
 
 Repeat
@@ -173,17 +173,27 @@ Repeat(element, mi=0, ma=None)
 ```
 The parser needs at least `mi` elements and at most `ma` elements. When `ma` is set to `None` we allow unlimited number of elements. `mi` can be any integer value equal of higher than 0 but not larger then `ma`.
 
+Example:
+```python
+class Ni(Grammar):
+    START = Repeat(Keyword('ni'))
+
+ni = Ni()
+ni.parse('ni ni ni ni ni').is_valid  # => True
+```
+
 It's not allowed to bind a name to the same element twice and Repeat(element, 1, 1) is a common solution to bind the element a second (or more) time(s).
+
 For example consider the following:
 ```python
 class MyGrammar(Grammar):
     r_name = Regex('(?:"(?:[^"]*)")+')
     
     # Raises a SyntaxError because we try to bind a second time.
-    other_name = r_name # WRONG
+    r_address = r_name # WRONG
     
     # Instead use Repeat
-    other_name = Repeat(r_name, 1, 1) # RIGHT
+    r_address = Repeat(r_name, 1, 1) # RIGHT
 ```
 
 List
@@ -191,5 +201,15 @@ List
 syntax:
 ```python
 List(element, delimiter=',', mi=0, ma=None, opt=False)
+```
+List is like Repeat but with a delimiter. A comma is used as default delimiter but any element is allowed. When a string is used as delimiter it will be converted to a `Token` element. `mi` and `ma` work excatly like with Repeat. An optional keyword argument `opt` can be set to `True` if you allow the list to end with a delimiter. By default this is set to `False` which means the list has to end with an element.
+
+Example:
+```python
+class Ni(Grammar):
+    START = List(Keyword('ni'))
+
+ni = Ni()
+ni.parse('ni, ni, ni, ni, ni').is_valid  # => True
 ```
 
