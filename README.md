@@ -202,7 +202,7 @@ syntax:
 ```python
 List(element, delimiter=',', mi=0, ma=None, opt=False)
 ```
-List is like Repeat but with a delimiter. A comma is used as default delimiter but any element is allowed. When a string is used as delimiter it will be converted to a `Token` element. `mi` and `ma` work excatly like with Repeat. An optional keyword argument `opt` can be set to `True` if you allow the list to end with a delimiter. By default this is set to `False` which means the list has to end with an element.
+List is like Repeat but with a delimiter. A comma is used as default delimiter but any element is allowed. When a string is used as delimiter it will be converted to a `Token` element. `mi` and `ma` work excatly like with Repeat. An optional keyword argument `opt` can be set to `True` to allow the list to end with a delimiter. By default this is set to `False` which means the list has to end with an element.
 
 Example:
 ```python
@@ -213,3 +213,22 @@ ni = Ni()
 ni.parse('ni, ni, ni, ni, ni').is_valid  # => True
 ```
 
+Optional
+--------
+syntax:
+```python
+Optional(element)
+```
+The pasrser looks for an optional element. It's like using `Repeat(element, 0, 1)` but we encourage to use `Optional` since it's more readable. (and slightly faster)
+
+Example:
+```python
+class MyGrammar(Grammar):
+    r_name = Regex('(?:"(?:[^"]*)")+')
+    k_hi = Keyword('hi')
+    START = Sequence(k_hi, Optional(r_name))
+    
+my_grammar = MyGrammar()
+my_grammar.parse('hi "Iris"').is_valid  # => True
+my_grammar.parse('hi').is_valid  # => True
+```
