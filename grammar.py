@@ -32,7 +32,7 @@ class _KeepOrder(dict):
         if isinstance(value, NamedElement):
             if hasattr(value, 'name'):
                 raise SyntaxError(
-                    'Element name is set to {0!r} and therefore cannot be ' +
+                    'Element name is set to {0!r} and therefore cannot be '
                     'set to {1!r}. Use Repeat({0}, 1, 1) as a workaround.'
                     .format(value.name, key))
             value.name = key
