@@ -249,14 +249,16 @@ syntax:
 ```python
 Token(token)
 ```
-A token can be one or more characters and is usually used to match operators like `+`, `-`, `//` and so on.
+A token can be one or more characters and is usually used to match operators like `+`, `-`, `//` and so on. When we parse a string object where pyleri expects an element, it will automatically be converted to a `Token()` object.
 
 Example:
 ```python
 class Ni(Grammar):
     t_dash = Token('-')
+    # We could just write delimiter='-' because
+    # any string will be converted to Token()
     START = List(Keyword('ni'), delimiter=t_dash)
-    
+
 ni = Ni()
 ni.parse('ni-ni-ni-ni-ni').is_valid  # => True
 ```
@@ -278,3 +280,27 @@ class Ni(Grammar):
 ni = Ni()
 ni.parse('ni + ni != ni - ni').is_valid  # => True
 ```
+
+Prio
+----
+syntax:
+```python
+Prio(element, element, ...)
+```
+Choose the first match from the prio elements and allow `THIS` for recursive operations. With `THIS` we point to the `Prio` element. Probably the example below explains how `Prio` and `THIS` can be used. Also note how we add the `(` and `)` to the sequence
+
+Example:
+```python
+class Ni(Grammar):
+    k_ni = Keyword('ni')
+    START = Prio(
+        k_ni,
+        # '(' and ')' are automatically converted to Token('(') and Token(')')
+        Sequence('(', THIS, ')'),  
+        Sequence(THIS, Keyword('or'), THIS),
+        Sequence(THIS, Keyword('and'), THIS))
+
+ni = Ni()
+ni.parse('(ni or ni) and (ni or ni)').is_valid  # => True
+```
+        
