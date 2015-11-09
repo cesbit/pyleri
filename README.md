@@ -287,7 +287,7 @@ syntax:
 ```python
 Prio(element, element, ...)
 ```
-Choose the first match from the prio elements and allow `THIS` for recursive operations. With `THIS` we point to the `Prio` element. Probably the example below explains how `Prio` and `THIS` can be used. Also note how we add the `(` and `)` to the sequence
+Choose the first match from the prio elements and allow `THIS` for recursive operations. With `THIS` we point to the `Prio` element. Probably the example below explains how `Prio` and `THIS` can be used.
 
 Example:
 ```python
