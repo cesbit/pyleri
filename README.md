@@ -41,10 +41,10 @@ syntax:
 Grammar.parse(string)
 ```
 The `parse()` method returns a `NodeResult` object which has the following properties:
-- `expecting`: A Python set() containing elements which pyleri expects at `pos`
+- `expecting`: A Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string.
 - `is_valid`: Boolean value, `True` when the given string is valid, `False` when not valid.
-- `pos`: Position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string)
-- `tree`: Contains the parse tree
+- `pos`: Position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string with `str.rstrip()` applied)
+- `tree`: Contains the parse tree. Even when `is_valid` is `False` the parse tree is returned but will only contain results as far as parsing has succeeded.
 
 Let's take the example from Quick usage.
 ```python
@@ -249,14 +249,16 @@ syntax:
 ```python
 Token(token)
 ```
-A token can be one or more characters and is usually used to match operators like `+`, `-`, `//` and so on.
+A token can be one or more characters and is usually used to match operators like `+`, `-`, `//` and so on. When we parse a string object where pyleri expects an element, it will automatically be converted to a `Token()` object.
 
 Example:
 ```python
 class Ni(Grammar):
     t_dash = Token('-')
+    # We could just write delimiter='-' because
+    # any string will be converted to Token()
     START = List(Keyword('ni'), delimiter=t_dash)
-    
+
 ni = Ni()
 ni.parse('ni-ni-ni-ni-ni').is_valid  # => True
 ```
@@ -278,3 +280,27 @@ class Ni(Grammar):
 ni = Ni()
 ni.parse('ni + ni != ni - ni').is_valid  # => True
 ```
+
+Prio
+----
+syntax:
+```python
+Prio(element, element, ...)
+```
+Choose the first match from the prio elements and allow `THIS` for recursive operations. With `THIS` we point to the `Prio` element. Probably the example below explains how `Prio` and `THIS` can be used.
+
+Example:
+```python
+class Ni(Grammar):
+    k_ni = Keyword('ni')
+    START = Prio(
+        k_ni,
+        # '(' and ')' are automatically converted to Token('(') and Token(')')
+        Sequence('(', THIS, ')'),  
+        Sequence(THIS, Keyword('or'), THIS),
+        Sequence(THIS, Keyword('and'), THIS))
+
+ni = Ni()
+ni.parse('(ni or ni) and (ni or ni)').is_valid  # => True
+```
+        
