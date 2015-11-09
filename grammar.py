@@ -32,6 +32,18 @@ class _KeepOrder(dict):
         self._RE_KEYWORDS = _RE_KEYWORDS
         self._has_keywords = False
 
+    def _check_keywords(self, element):
+        if isinstance(element, Keyword):
+            self._has_keywords = True
+            m = self._RE_KEYWORDS.match(element._keyword)
+            if m is None or m.group(0) != element._keyword:
+                raise SyntaxError(
+                    'Keyword {} does not match Grammars keywords match'
+                    .format(element._keyword))
+        if hasattr(element, '_elements'):
+            for elem in element._elements:
+                self._check_keywords(elem)
+
     def __setitem__(self, key, value):
         if key not in self:
             super().__getitem__('_order').append(key)
@@ -49,15 +61,8 @@ class _KeepOrder(dict):
                     'Element name is set to {0!r} and therefore cannot be '
                     'set to {1!r}. Use Repeat({0}, 1, 1) as a workaround.'
                     .format(value.name, key))
+            self._check_keywords(value)
             value.name = key
-
-        if isinstance(value, Keyword):
-            self._has_keywords = True
-            m = self._RE_KEYWORDS.match(value._keyword)
-            if m is None or m.group(0) != value._keyword:
-                raise SyntaxError(
-                    'Keyword {} does not match Grammars keywords match'
-                    .format(value._keyword))
 
         super().__setitem__(key, value)
 

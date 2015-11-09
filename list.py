@@ -40,6 +40,11 @@ class List(NamedElement):
         # When opt is True the list may end with a delimiter
         self._opt = bool(opt)
 
+    @property
+    def _elements(self):
+        yield self._element
+        yield self._delimiter
+
     def _get_node_result(self, root, tree, rule, s, node):
         pos, i, j = node.start, 0, 0
         while True:

@@ -8,6 +8,10 @@ class Rule(NamedElement):
     def __init__(self, element):
         self._element = element
 
+    @property
+    def _elements(self):
+        yield self._element
+
     def _get_node_result(self, root, tree, rule, s, node):
         self._tested = {}
         self._tree = {}

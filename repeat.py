@@ -23,6 +23,10 @@ class Repeat(NamedElement):
 
         self._max = ma
 
+    @property
+    def _elements(self):
+        yield self._element
+
     def _get_node_result(self, root, tree, rule, s, node):
         pos, i = node.start, 0
         while not self._max or i < self._max:

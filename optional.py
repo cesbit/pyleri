@@ -9,6 +9,10 @@ class Optional(NamedElement):
     def __init__(self, element):
         self._element = self._validate_element(element)
 
+    @property
+    def _elements(self):
+        yield self._element
+
     def _get_node_result(self, root, tree, rule, s, node):
         node_res = root._walk(
             self._element,
