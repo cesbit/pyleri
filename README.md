@@ -1,4 +1,4 @@
-Python Left=>Right Parser
+Python Left>>Right Parser
 ========================
 
 Why Pyleri?
