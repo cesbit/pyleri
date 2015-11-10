@@ -81,7 +81,7 @@ class List(NamedElement):
 
         return NodeResult(is_valid, pos)
 
-    def _new_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_identation, ident, classes):
         return 'List({}, {}, {}, {}, {})'.format(
             self._element._export_js(js_identation, ident, classes),
             self._delimiter._export_js(js_identation, ident, classes),

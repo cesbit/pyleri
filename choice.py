@@ -49,3 +49,6 @@ class Choice(NamedElement):
                 break
 
         return node_res
+
+    def _run_export_js(self, js_identation, ident, classes):
+        return self._export_js_elements(js_identation, ident, classes)

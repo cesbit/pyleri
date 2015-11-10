@@ -25,6 +25,6 @@ class Optional(NamedElement):
 
         return NodeResult(True, node.end or node.start)
 
-    def _new_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_identation, ident, classes):
         return 'Optional({})'.format(
             self._element._export_js(js_identation, ident, classes))

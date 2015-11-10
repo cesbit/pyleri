@@ -23,5 +23,5 @@ class Tokens(NamedElement):
 
         return NodeResult(False, node.start)
 
-    def _new_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_identation, ident, classes):
         return 'Tokens(\'{}\')'.format(' '.join(self._tokens))

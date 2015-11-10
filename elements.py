@@ -34,10 +34,7 @@ class NamedElement(Element):
         classes.add(self.__class__.__name__.lstrip('_'))
         if hasattr(self, 'name') and ident:
             return self.name
-        elif hasattr(self, '_elements'):
-            return self._export_js_elements(js_identation, ident or 1, classes)
-        else:
-            return self._new_export_js(js_identation, ident or 1, classes)
+        return self._run_export_js(js_identation, ident or 1, classes)
 
     def _export_js_elements(self, js_identation, ident, classes):
         new_ident = ident + 1
@@ -51,7 +48,7 @@ class NamedElement(Element):
             value=value,
             ident=js_identation * ident)
 
-    def _new_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_identation, ident, classes):
         return 'not_implemented'
 
 # Added this import to the bottom to prevent circular import cycle.

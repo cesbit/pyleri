@@ -47,7 +47,7 @@ class Repeat(NamedElement):
 
         return NodeResult(is_valid, pos)
 
-    def _new_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_identation, ident, classes):
         return 'Repeat({}, {}, {})'.format(
             self._element._export_js(js_identation, ident, classes),
             self._min,

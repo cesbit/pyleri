@@ -21,3 +21,6 @@ class Sequence(NamedElement):
         root._append_tree(tree, node, node_res.pos)
 
         return node_res
+
+    def _run_export_js(self, js_identation, ident, classes):
+        return self._export_js_elements(js_identation, ident, classes)

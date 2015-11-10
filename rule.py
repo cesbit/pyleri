@@ -8,9 +8,9 @@ class Rule(NamedElement):
     def __init__(self, element):
         self._element = element
 
-    @property
-    def _elements(self):
-        yield self._element
+#     @property
+#     def _elements(self):
+#         yield self._element
 
     def _get_node_result(self, root, tree, rule, s, node):
         self._tested = {}
@@ -25,5 +25,5 @@ class Rule(NamedElement):
             root._append_tree(tree, node, node_res.pos)
         return node_res
 
-    def _new_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_identation, ident, classes):
         return self._element._export_js(js_identation, ident, classes)
