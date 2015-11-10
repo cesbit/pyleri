@@ -40,7 +40,7 @@ class _KeepOrder(dict):
                 raise SyntaxError(
                     'Keyword {} does not match Grammars keywords match'
                     .format(element._keyword))
-        if hasattr(element, '_elements'):
+        elif hasattr(element, '_elements'):
             for elem in element._elements:
                 self._check_keywords(elem)
 
