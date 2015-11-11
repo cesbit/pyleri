@@ -24,3 +24,8 @@ from .sequence import Sequence
 from .this import THIS
 from .token import Token
 from .tokens import Tokens
+from .exceptions import (
+    CompileError,
+    KeywordError,
+    ReKeywordsChangedError,
+    NameAssignedError)

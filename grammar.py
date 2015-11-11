@@ -20,6 +20,10 @@ from .expecting import Expecting
 from .endofstatement import endOfStatement
 from .elements import Element, NamedElement
 from .keyword import Keyword
+from .exceptions import (
+    KeywordError,
+    ReKeywordsChangedError,
+    NameAssignedError)
 
 
 _RE_KEYWORDS = re.compile('^\w+')
@@ -37,7 +41,7 @@ class _KeepOrder(dict):
             self._has_keywords = True
             m = self._RE_KEYWORDS.match(element._keyword)
             if m is None or m.group(0) != element._keyword:
-                raise SyntaxError(
+                raise KeywordError(
                     'Keyword {} does not match Grammars keywords match'
                     .format(element._keyword))
         elif hasattr(element, '_elements'):
@@ -50,14 +54,14 @@ class _KeepOrder(dict):
 
         if key == 'RE_KEYWORDS':
             if self._has_keywords:
-                raise SyntaxError(
+                raise ReKeywordsChangedError(
                     'RE_KEYWORDS must be set on top of Grammar before '
                     'keywords are set.')
             self._RE_KEYWORDS = value
 
         if isinstance(value, NamedElement):
             if hasattr(value, 'name'):
-                raise SyntaxError(
+                raise NameAssignedError(
                     'Element name is set to {0!r} and therefore cannot be '
                     'set to {1!r}. Use Repeat({0}, 1, 1) as a workaround.'
                     .format(value.name, key))
