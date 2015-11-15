@@ -3,7 +3,7 @@ Python Left-Right Parser
 
 Why Pyleri?
 -----------
-Pyleri is an easy-to-use parser create for SiriDB. We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues in lrparsing and also had difficulties keeping the language the same in both projects. That's when we decided to create Pyleri which can export a created language to JavaScript.
+Pyleri is an easy-to-use parser created for SiriDB. We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues in lrparsing and also had difficulties keeping the language the same in both projects. That is when we decided to create Pyleri which can export a created language to JavaScript.
 
 
 Quick usage
@@ -32,7 +32,7 @@ print(my_grammar.parse('bye "Iris"').is_valid) # => False
 
 Grammar
 -------
-When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knowns where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has two methods: `parse()` and `export_js()` which are explained below.
+When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has two methods: `parse()` and `export_js()` which are explained below.
 
 Grammar.parse()
 ---------------
@@ -46,7 +46,7 @@ The `parse()` method returns a `NodeResult` object which has the following prope
 - `pos`: Position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string with `str.rstrip()` applied)
 - `tree`: Contains the parse tree. Even when `is_valid` is `False` the parse tree is returned but will only contain results as far as parsing has succeeded.
 
-Let's take the example from Quick usage.
+Let us take the example from Quick usage.
 ```python
 node_result = my_grammer.parse('bye "Iris"')
 print(node_result.is_valid) # => False
@@ -114,7 +114,7 @@ Choice(element, element, ..., most_greedy=True)
 ```
 The parser needs to choose between one of the given elements. Choice accepts one keyword argument `most_greedy` which is `True` by default. When `most_greedy` is set to `False` the parser will stop at the first match. When `True` the parser will try each element and returns the longest match. Settings `most_greedy` to `False` can provide some extra performance. Note that the parser will try to match each element in the exact same order they are parsed to Choice.
 
-Example: let's use `Choice` to modify the Quick usage example to allow the string 'bye "Iris"'
+Example: let us use `Choice` to modify the Quick usage example to allow the string 'bye "Iris"'
 ```python
 class MyGrammar(Grammar):
     r_name = Regex('(?:"(?:[^"]*)")+')
@@ -182,7 +182,7 @@ ni = Ni()
 ni.parse('ni ni ni ni ni').is_valid  # => True
 ```
 
-It's not allowed to bind a name to the same element twice and Repeat(element, 1, 1) is a common solution to bind the element a second (or more) time(s).
+It is not allowed to bind a name to the same element twice and Repeat(element, 1, 1) is a common solution to bind the element a second (or more) time(s).
 
 For example consider the following:
 ```python
@@ -219,7 +219,7 @@ syntax:
 ```python
 Optional(element)
 ```
-The pasrser looks for an optional element. It's like using `Repeat(element, 0, 1)` but we encourage to use `Optional` since it's more readable. (and slightly faster)
+The pasrser looks for an optional element. It is like using `Repeat(element, 0, 1)` but we encourage to use `Optional` since it is more readable. (and slightly faster)
 
 Example:
 ```python
