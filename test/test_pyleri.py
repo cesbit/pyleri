@@ -5,6 +5,7 @@ from pyleri import (
     Sequence,
     Optional,
     Prio,
+    Choice,
     THIS,
     Grammar,
     KeywordError,
@@ -26,6 +27,15 @@ class _TestGrammar2(Grammar):
         Sequence(THIS, Keyword('or'), THIS))
 
 
+class _TestGrammar3(Grammar):
+    s_tic_tac = Sequence(Keyword('tic'), Keyword('tac'))
+    s_tic_tac_toe = Sequence(Keyword('tic'), Keyword('tac'), Keyword('toe'))
+
+    START = Sequence(
+        Choice(s_tic_tac, s_tic_tac_toe),
+        Choice(s_tic_tac, s_tic_tac_toe, most_greedy=False))
+
+
 class TestPyleri(unittest.TestCase):
 
     def setUp(self):
@@ -35,7 +45,9 @@ class TestPyleri(unittest.TestCase):
         tg = _TestGrammar1()
         self.assertTrue(tg.parse('test ignore_case').is_valid)
         self.assertTrue(tg.parse('test Ignore_Case').is_valid)
+        # test is not case insensitive
         self.assertFalse(tg.parse('Test ignore_case').is_valid)
+        # - is not _
         self.assertFalse(tg.parse('test ignore-case').is_valid)
 
     def test_noderesult_from_sequence(self):
@@ -77,8 +89,21 @@ class TestPyleri(unittest.TestCase):
         self.assertTrue(tg.parse('(ni)').is_valid)
         self.assertTrue(tg.parse('ni and ni').is_valid)
         self.assertTrue(tg.parse('((ni) and ni and (ni or ni))').is_valid)
+        # missing closing )
         self.assertFalse(tg.parse('(ni or ni and ni').is_valid)
+        # missing and/or between ni and (ni)
         self.assertFalse(tg.parse('ni (ni)').is_valid)
+
+    def test_choice(self):
+        tg = _TestGrammar3()
+        # both should stop at first match
+        self.assertTrue(tg.parse('tic tac tic tac').is_valid)
+        # tic tac toe should be matched because most_greede is left default
+        # (True) for the first choice
+        self.assertTrue(tg.parse('tic tac toe tic tac').is_valid)
+        # the second tic tac toe should NOT be matched because most_greede is
+        # set to False for the second choice
+        self.assertFalse(tg.parse('tic tac toe tic tac toe').is_valid)
 
     def tearDown(self):
         self.assertEqual(gc.collect(), 0, msg=self.id())
