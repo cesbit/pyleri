@@ -1,3 +1,7 @@
+'''Rule class.
+
+:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+'''
 from .elements import NamedElement
 
 

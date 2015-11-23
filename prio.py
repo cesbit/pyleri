@@ -1,3 +1,7 @@
+'''Prio class.
+
+:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+'''
 from .noderesult import NodeResult
 from .elements import NamedElement
 from .rule import Rule

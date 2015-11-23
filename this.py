@@ -1,3 +1,7 @@
+'''This class and THIS instance.
+
+:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+'''
 from .elements import Element
 
 

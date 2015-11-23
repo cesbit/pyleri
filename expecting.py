@@ -5,7 +5,6 @@ statement is not correct. This helps building auto-completion, suggestions or
 returning nice messages to the user.
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
-:license: need to decide
 '''
 
 

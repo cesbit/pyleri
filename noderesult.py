@@ -1,3 +1,9 @@
+'''NodeResult class.
+
+:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+'''
+
+
 class NodeResult:
 
     __slots__ = ('is_valid', 'pos', 'expecting', 'tree')

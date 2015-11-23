@@ -5,7 +5,6 @@ the 'longest' element when multiple elements are valid. If most_greedy is
 False we will return the first match.
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
-:license: need to decide
 '''
 
 from .noderesult import NodeResult

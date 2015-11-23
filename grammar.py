@@ -9,7 +9,6 @@ class MyGrammar(Grammar):
 
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
-:license: need to decide
 '''
 
 

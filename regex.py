@@ -1,3 +1,7 @@
+'''Regex class.
+
+:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+'''
 import re
 from .noderesult import NodeResult
 from .elements import NamedElement

@@ -1,3 +1,9 @@
+'''Node class.
+
+:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+'''
+
+
 class Node:
 
     __slots__ = ('element', 'start', 'end', 'string', 'children')

@@ -3,7 +3,6 @@
 These are the base classes used for all other elements.
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
-:license: need to decide
 '''
 
 
