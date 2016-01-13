@@ -19,15 +19,15 @@ class Rule(NamedElement):
     def _get_node_result(self, root, tree, rule, s, node):
         self._tested = {}
         self._tree = {}
-        node_res = root._walk(
+        is_valid, pos = root._walk(
             self._element,
             node.start,
             node.children,
             self,
             True)
-        if node_res.is_valid:
-            root._append_tree(tree, node, node_res.pos)
-        return node_res
+        if is_valid:
+            root._append_tree(tree, node, pos)
+        return is_valid, pos
 
     def _run_export_js(self, js_identation, ident, classes):
         return self._element._export_js(js_identation, ident, classes)

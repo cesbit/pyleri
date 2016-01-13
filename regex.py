@@ -3,7 +3,6 @@
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
 import re
-from .noderesult import NodeResult
 from .elements import NamedElement
 
 
@@ -31,7 +30,7 @@ class Regex(NamedElement):
         else:
             root._expecting.update(self, node.start)
 
-        return NodeResult(is_valid, node.end or node.start)
+        return is_valid, node.end or node.start
 
     def _run_export_js(self, js_identation, ident, classes):
         return 'Regex(\'{}\')'.format(

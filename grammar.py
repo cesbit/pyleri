@@ -19,6 +19,7 @@ from .expecting import Expecting
 from .endofstatement import endOfStatement
 from .elements import Element, NamedElement
 from .keyword import Keyword
+from .noderesult import NodeResult
 from .exceptions import (
     KeywordError,
     ReKeywordsChangedError,
@@ -178,14 +179,14 @@ class Grammar(metaclass=_OrderedClass):
         self._string = string
         self._expecting = Expecting()
         self._cached_kw_match.clear()
-
-        tree = Node(self._element, 0, len(string), string)
-        node_res = self._walk(
+        self._len_string = len(string)
+        tree = Node(self._element, 0, self._len_string, string)
+        node_res = NodeResult(*self._walk(
             self._element,
             0,
             tree.children,
             self._element,
-            True)
+            True))
 
         # get rest if anything
         rest = self._string[node_res.pos:].lstrip()
@@ -218,7 +219,7 @@ class Grammar(metaclass=_OrderedClass):
 
     def _walk(self, element, pos, tree, rule, is_required):
         s = self._string[pos:].lstrip()
-        node = Node(element, len(self._string) - len(s))
+        node = Node(element, self._len_string - len(s))
         self._expecting.set_mode_required(node.start, is_required)
 
         return element._get_node_result(self, tree, rule, s, node)

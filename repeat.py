@@ -2,7 +2,6 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .noderesult import NodeResult
 from .elements import NamedElement
 
 
@@ -34,22 +33,22 @@ class Repeat(NamedElement):
     def _get_node_result(self, root, tree, rule, s, node):
         pos, i = node.start, 0
         while not self._max or i < self._max:
-            node_res = root._walk(
+            is_valid, p = root._walk(
                 self._element,
                 pos,
                 node.children,
                 rule,
                 i < self._min)
-            if not node_res.is_valid:
+            if not is_valid:
                 break
-            pos = node_res.pos
+            pos = p
             i += 1
 
         is_valid = i >= self._min
         if is_valid:
             root._append_tree(tree, node, pos)
 
-        return NodeResult(is_valid, pos)
+        return is_valid, pos
 
     def _run_export_js(self, js_identation, ident, classes):
         return 'Repeat({}, {}, {})'.format(

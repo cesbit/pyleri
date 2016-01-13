@@ -11,7 +11,6 @@ delimiter is given we split using a comma. All arguments:
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .noderesult import NodeResult
 from .elements import NamedElement
 
 
@@ -46,26 +45,26 @@ class List(NamedElement):
     def _get_node_result(self, root, tree, rule, s, node):
         pos, i, j = node.start, 0, 0
         while True:
-            node_res = root._walk(
+            is_valid, p = root._walk(
                 self._element,
                 pos,
                 node.children,
                 rule,
                 i < self._min)
-            if not node_res.is_valid:
+            if not is_valid:
                 break
-            pos = node_res.pos
+            pos = p
             i += 1
 
-            node_res = root._walk(
+            is_valid, p = root._walk(
                 self._delimiter,
                 pos,
                 node.children,
                 rule,
                 i < self._min)
-            if not node_res.is_valid:
+            if not is_valid:
                 break
-            pos = node_res.pos
+            pos = p
             j += 1
 
         is_valid = not (i < self._min or
@@ -77,7 +76,7 @@ class List(NamedElement):
         if is_valid:
             root._append_tree(tree, node, pos)
 
-        return NodeResult(is_valid, pos)
+        return is_valid, pos
 
     def _run_export_js(self, js_identation, ident, classes):
         return 'List({}, {}, {}, {}, {})'.format(

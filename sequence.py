@@ -16,15 +16,15 @@ class Sequence(NamedElement):
         pos = node.start
 
         for elem in self._elements:
-            node_res = root._walk(elem, pos, node.children, rule, True)
-            if node_res.is_valid:
-                pos = node_res.pos
+            is_valid, p = root._walk(elem, pos, node.children, rule, True)
+            if is_valid:
+                pos = p
             else:
-                return node_res
+                return is_valid, p
 
-        root._append_tree(tree, node, node_res.pos)
+        root._append_tree(tree, node, p)
 
-        return node_res
+        return is_valid, p
 
     def _run_export_js(self, js_identation, ident, classes):
         return self._export_js_elements(js_identation, ident, classes)

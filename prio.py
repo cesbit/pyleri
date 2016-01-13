@@ -2,7 +2,6 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .noderesult import NodeResult
 from .elements import NamedElement
 from .rule import Rule
 
@@ -16,18 +15,18 @@ class _Prio(NamedElement):
 
     def _get_node_result(self, root, tree, rule, s, node):
         if node.start not in rule._tested:
-            rule._tested[node.start] = NodeResult(False, node.start)
+            rule._tested[node.start] = False, node.start
 
         for elem in self._elements:
             children = []
-            node_res = root._walk(elem, node.start, children, rule, True)
-            if node_res.is_valid and \
-                    node_res.pos > rule._tested[node.start].pos:
+            is_valid, pos = root._walk(elem, node.start, children, rule, True)
+            if is_valid and \
+                    pos > rule._tested[node.start][1]:
                 node.children = rule._tree[node.start] = children
-                rule._tested[node.start] = node_res
+                rule._tested[node.start] = is_valid, pos
 
-        if rule._tested[node.start].is_valid:
-            root._append_tree(tree, node, rule._tested[node.start].pos)
+        if rule._tested[node.start][0]:
+            root._append_tree(tree, node, rule._tested[node.start][1])
 
         return rule._tested[node.start]
 

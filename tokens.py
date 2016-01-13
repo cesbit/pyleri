@@ -2,7 +2,6 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .noderesult import NodeResult
 from .elements import NamedElement
 
 
@@ -21,11 +20,11 @@ class Tokens(NamedElement):
         for token in self._tokens:
             if s.startswith(token):
                 root._append_tree(tree, node, node.start + len(token))
-                return NodeResult(True, node.end)
+                return True, node.end
 
         root._expecting.update(self, node.start)
 
-        return NodeResult(False, node.start)
+        return False, node.start
 
     def _run_export_js(self, js_identation, ident, classes):
         return 'Tokens(\'{}\')'.format(' '.join(self._tokens))

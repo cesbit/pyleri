@@ -17,9 +17,9 @@ class This(Element):
                 True)
             rule._tree[node.start] = node.children
 
-        if rule._tested[node.start].is_valid:
+        if rule._tested[node.start][0]:
             node.children = rule._tree[node.start]
-            root._append_tree(tree, node, rule._tested[node.start].pos)
+            root._append_tree(tree, node, rule._tested[node.start][1])
 
         return rule._tested[node.start]
 
