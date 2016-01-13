@@ -6,11 +6,15 @@
 
 class Node:
 
-    __slots__ = ('element', 'start', 'end', 'string', 'children')
+    __slots__ = ('element', '_string', 'start', 'end', 'children')
 
-    def __init__(self, element, start, end=None, string=None):
+    def __init__(self, element, string, start, end=None):
         self.element = element
         self.start = start
         self.end = end
-        self.string = string
+        self._string = string
         self.children = []
+
+    @property
+    def string(self):
+        return self._string[self.start:self.end]

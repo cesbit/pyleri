@@ -180,7 +180,8 @@ class Grammar(metaclass=_OrderedClass):
         self._expecting = Expecting()
         self._cached_kw_match.clear()
         self._len_string = len(string)
-        tree = Node(self._element, 0, self._len_string, string)
+        self._pos = None
+        tree = Node(self._element, string, 0, self._len_string)
         node_res = NodeResult(*self._walk(
             self._element,
             0,
@@ -214,12 +215,13 @@ class Grammar(metaclass=_OrderedClass):
         if pos > self._expecting.pos:
             self._expecting.empty()
         node.end = pos
-        node.string = self._string[node.start:node.end]
         tree.append(node)
 
     def _walk(self, element, pos, tree, rule, is_required):
-        s = self._string[pos:].lstrip()
-        node = Node(element, self._len_string - len(s))
+        if self._pos != pos:
+            self._s = self._string[pos:].lstrip()
+            self._pos = self._len_string - len(self._s)
+        node = Node(element, self._string, self._pos)
         self._expecting.set_mode_required(node.start, is_required)
 
-        return element._get_node_result(self, tree, rule, s, node)
+        return element._get_node_result(self, tree, rule, self._s, node)

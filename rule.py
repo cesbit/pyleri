@@ -16,7 +16,7 @@ class Rule(NamedElement):
 #     def _elements(self):
 #         yield self._element
 
-    def _get_node_result(self, root, tree, rule, s, node):
+    def _get_node_result(self, root, tree, rule, _s, node):
         self._tested = {}
         self._tree = {}
         is_valid, pos = root._walk(

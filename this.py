@@ -7,7 +7,7 @@ from .elements import Element
 
 class This(Element):
 
-    def _get_node_result(self, root, tree, rule, s, node):
+    def _get_node_result(self, root, tree, rule, _s, node):
         if node.start not in rule._tested:
             rule._tested[node.start] = root._walk(
                 rule._element,
