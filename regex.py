@@ -16,10 +16,8 @@ class Regex(NamedElement):
         self._compiled = re.compile(pattern, flags=flags)
 
     def __repr__(self):
-        if hasattr(self, 'name'):
-            return '"{}"'.format(self.name)
-        else:
-            return self.__class__.__name__
+        name = getattr(self, 'name', None)
+        return self.__class__.__name__ if name is None else '"{}"'.format(name)
 
     def _get_node_result(self, root, tree, rule, s, node):
         re_match = self._compiled.match(s)
