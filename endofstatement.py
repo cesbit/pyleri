@@ -13,4 +13,4 @@ class _EndOfStatement:
         return 'End-Of-Statement'
 
 
-endOfStatement = _EndOfStatement()
+end_of_statement = _EndOfStatement()

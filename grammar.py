@@ -16,7 +16,7 @@ import re
 import time
 from .node import Node
 from .expecting import Expecting
-from .endofstatement import endOfStatement
+from .endofstatement import end_of_statement
 from .elements import Element, NamedElement
 from .keyword import Keyword
 from .noderesult import NodeResult
@@ -192,14 +192,14 @@ class Grammar(metaclass=_OrderedClass):
         # get rest if anything
         rest = self._string[node_res.pos:].lstrip()
 
-        # set isValid to False if we have 'rest' left.
+        # set is_valid to False if we have 'rest' left.
         if node_res.is_valid and rest:
             node_res.is_valid = False
 
-        # add endOfStatement to expecting if this is possible
+        # add end_of_statement to expecting if this is possible
         if not self._expecting.required and rest:
             self._expecting.set_mode_required(node_res.pos, True)
-            self._expecting.update(endOfStatement, node_res.pos)
+            self._expecting.update(end_of_statement, node_res.pos)
 
         node_res.expecting = self._expecting.get_expecting()
 
