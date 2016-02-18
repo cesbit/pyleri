@@ -9,7 +9,7 @@ Installation
 ------------
 The easiest way is to use PyPI:
 
-    sudo pip3 install trender
+    sudo pip3 install pyleri
 
 Quick usage
 -----------
