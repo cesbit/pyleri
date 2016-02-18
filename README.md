@@ -5,6 +5,11 @@ Why Pyleri?
 -----------
 Pyleri is an easy-to-use parser created for SiriDB. We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues in lrparsing and also had difficulties keeping the language the same in both projects. That is when we decided to create Pyleri which can export a created language to JavaScript.
 
+Installation
+------------
+The easiest way is to use PyPI:
+
+    sudo pip3 install trender
 
 Quick usage
 -----------
