@@ -1,1 +1,7 @@
 __pycache__/
+*.pyc
+*.pyo
+*.module-cache*
+.project
+.pydevproject
+
