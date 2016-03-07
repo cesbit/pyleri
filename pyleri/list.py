@@ -11,7 +11,7 @@ delimiter is given we split using a comma. All arguments:
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement
+from .elements import NamedElement, c_export
 
 
 class List(NamedElement):
@@ -85,3 +85,13 @@ class List(NamedElement):
             self._min,
             self._max or 'undefined',
             'true' if self._opt else 'false')
+
+    @c_export
+    def _run_export_c(self, c_identation, ident, enums, gid):
+        return 'cleri_list({}, {}, {}, {}, {}, {})'.format(
+            gid,
+            self._element._export_c(c_identation, ident, enums),
+            self._delimiter._export_c(c_identation, ident, enums),
+            self._min,
+            self._max or '0',
+            '1' if self._opt else '0')

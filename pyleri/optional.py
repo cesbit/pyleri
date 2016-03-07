@@ -2,7 +2,7 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement
+from .elements import NamedElement, c_export
 
 
 class Optional(NamedElement):
@@ -31,3 +31,9 @@ class Optional(NamedElement):
     def _run_export_js(self, js_identation, ident, classes):
         return 'Optional({})'.format(
             self._element._export_js(js_identation, ident, classes))
+
+    @c_export
+    def _run_export_c(self, c_identation, ident, enums, gid):
+        return 'cleri_optional({}, {})'.format(
+            gid,
+            self._element._export_c(c_identation, ident, enums))

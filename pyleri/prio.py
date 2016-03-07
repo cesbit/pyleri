@@ -8,7 +8,7 @@ from .rule import Rule
 
 class _Prio(NamedElement):
 
-    __slots__ = ('_elements',)
+    __slots__ = ('_elements', '_name')
 
     def __init__(self, *elements):
         self._elements = self._validate_elements(elements)
@@ -32,6 +32,9 @@ class _Prio(NamedElement):
 
     def _run_export_js(self, js_identation, ident, classes):
         return self._export_js_elements(js_identation, ident, classes)
+
+    def _run_export_c(self, c_identation, ident, enums):
+        return self._export_c_elements(c_identation, ident, enums)
 
 _Prio.__name__ = 'Prio'
 

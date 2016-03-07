@@ -27,3 +27,9 @@ class Rule(NamedElement):
 
     def _run_export_js(self, js_identation, ident, classes):
         return self._element._export_js(js_identation, ident, classes)
+
+    def _run_export_c(self, c_identation, ident, enums):
+        name = getattr(self, 'name', None)
+        if name is not None:
+            self._element._name = name
+        return self._element._export_c(c_identation, ident, enums)

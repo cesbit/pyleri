@@ -2,7 +2,7 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement
+from .elements import NamedElement, c_export
 
 
 class Repeat(NamedElement):
@@ -53,5 +53,13 @@ class Repeat(NamedElement):
     def _run_export_js(self, js_identation, ident, classes):
         return 'Repeat({}, {}, {})'.format(
             self._element._export_js(js_identation, ident, classes),
+            self._min,
+            self._max or 'undefined')
+
+    @c_export
+    def _run_export_c(self, c_identation, ident, enums, gid):
+        return 'cleri_repeat({}, {}, {}, {})'.format(
+            gid,
+            self._element._export_c(c_identation, ident, enums),
             self._min,
             self._max or 'undefined')

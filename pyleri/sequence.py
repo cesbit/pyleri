@@ -2,7 +2,7 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement
+from .elements import NamedElement, c_export
 
 
 class Sequence(NamedElement):
@@ -26,3 +26,6 @@ class Sequence(NamedElement):
 
     def _run_export_js(self, js_identation, ident, classes):
         return self._export_js_elements(js_identation, ident, classes)
+
+    def _run_export_c(self, c_identation, ident, enums):
+        return self._export_c_elements(c_identation, ident, enums)

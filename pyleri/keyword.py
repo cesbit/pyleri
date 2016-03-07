@@ -17,7 +17,7 @@ class MyGrammar(Grammar):
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement
+from .elements import NamedElement, c_export
 
 
 class Keyword(NamedElement):
@@ -59,3 +59,11 @@ class Keyword(NamedElement):
         return 'Keyword(\'{}\'{})'.format(
             self._keyword,
             ', true' if self._ign_case else '')
+
+    @c_export
+    def _run_export_c(self, c_identation, ident, enums, gid):
+        return 'cleri_keyword({}, "{}", {})'.format(
+            gid,
+            self._keyword,
+            'CLERI_CASE_INSENSITIVE'
+            if self._ign_case else 'CLERI_CASE_INSENSITIVE')

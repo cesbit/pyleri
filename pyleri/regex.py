@@ -3,7 +3,7 @@
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
 import re
-from .elements import NamedElement
+from .elements import NamedElement, c_export
 
 
 class Regex(NamedElement):
@@ -33,3 +33,13 @@ class Regex(NamedElement):
     def _run_export_js(self, js_identation, ident, classes):
         return 'Regex(\'{}\')'.format(
             self._compiled.pattern.replace('\\', '\\\\').replace('\'', '\\\''))
+
+    @c_export
+    def _run_export_c(self, c_identation, ident, enums, gid):
+        return 'cleri_regex({}, "{}")'.format(
+            gid,
+            self._compiled.pattern
+                .replace('\\', '\\\\')
+                .replace('\'', '\\\'')
+                .replace('\\"', '"')
+                .replace('"', '\\"'))

@@ -2,7 +2,7 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement
+from .elements import NamedElement, c_export
 
 
 class Tokens(NamedElement):
@@ -27,4 +27,10 @@ class Tokens(NamedElement):
         return False, node.start
 
     def _run_export_js(self, js_identation, ident, classes):
-        return 'Tokens(\'{}\')'.format(' '.join(self._tokens))
+        return 'Tokens(\'{}\')'
+
+    @c_export
+    def _run_export_c(self, c_identation, ident, enums, gid):
+        return 'cleri_tokens({}, "{}")'.format(
+            gid,
+            ' '.join(self._tokens))

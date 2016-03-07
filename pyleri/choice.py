@@ -7,7 +7,7 @@ False we will return the first match.
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
 
-from .elements import NamedElement
+from .elements import NamedElement, c_export
 
 
 class Choice(NamedElement):
@@ -50,3 +50,26 @@ class Choice(NamedElement):
 
     def _run_export_js(self, js_identation, ident, classes):
         return self._export_js_elements(js_identation, ident, classes)
+
+    @c_export
+    def _run_export_c(self, c_identation, ident, enums, gid):
+        new_ident = ident + 1
+        value = ',\n'.join(['{ident}{elem}'.format(
+            ident=c_identation * new_ident,
+            elem=elem._export_c(
+                c_identation,
+                new_ident,
+                enums)) for elem in self._elements])
+        return 'cleri_choice(\n{gid},\n{mg},\n{num},\n{val}\n{ident})'.format(
+            gid='{ident}{gid}'.format(
+                ident=c_identation * (ident + 1),
+                gid=gid),
+            mg='{ident}{mg}'.format(
+                ident=c_identation * (ident + 1),
+                mg=('CLERI_FIRST_MATCH', 'CLERI_MOST_GREEDY')[
+                    self._get_node_result == self._most_greedy_result]),
+            num='{ident}{num}'.format(
+                ident=c_identation * (ident + 1),
+                num=len(self._elements)),
+            val=value,
+            ident=c_identation * ident)

@@ -1,5 +1,7 @@
 import unittest
 import gc
+import sys
+sys.path.append('../')
 from pyleri import (
     Keyword,
     Sequence,
@@ -20,9 +22,11 @@ class _TestGrammar1(Grammar):
 
 
 class _TestGrammar2(Grammar):
+    k_ni = Keyword('ni');
+    s_seq = Sequence('(', THIS, ')');
     START = Prio(
-        Keyword('ni'),
-        Sequence('(', THIS, ')'),
+        k_ni,
+        s_seq,
         Sequence(THIS, Keyword('and'), THIS),
         Sequence(THIS, Keyword('or'), THIS))
 

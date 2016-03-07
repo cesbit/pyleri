@@ -27,4 +27,7 @@ class This(Element):
         classes.add('THIS')
         return 'THIS'
 
+    def _export_c(self, c_identation, ident, enums):
+        return 'CLERI_THIS'
+
 THIS = This()

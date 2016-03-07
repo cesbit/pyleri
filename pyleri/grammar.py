@@ -113,6 +113,59 @@ class Grammar(metaclass=_OrderedClass):
 );
 '''.lstrip()
 
+    C_IDENTATION = ' ' * 4
+    C_TARGET = 'grammar'
+    C_TEMPLATE_C = '''
+/*
+ * This grammar is generated using the Grammar.export_c() method and
+ * should be used with the cleri module.
+ *
+ * Source class: {name}
+ * Created at: {datetime}
+ */
+
+#include <{target}.h>
+#include <stdio.h>
+
+#define CLERI_CASE_SENSITIVE 0
+#define CLERI_CASE_INSENSITIVE 1
+
+#define CLERI_FIRST_MATCH 0
+#define CLERI_MOST_GREEDY 1
+
+cleri_grammar_t * compile_grammar(void)
+{{
+{language}
+
+    cleri_grammar_t * grammar = cleri_grammar(START, "{re_keywords}");
+
+    return grammar;
+}}
+'''.lstrip()
+
+    C_TEMPLATE_H = '''
+/*
+ * This grammar is generated using the Grammar.export_c() method and
+ * should be used with the cleri module.
+ *
+ * Source class: {name}
+ * Created at: {datetime}
+ */
+
+#pragma once
+
+#include <{target}.h>
+#include <cleri/object.h>
+
+cleri_grammar_t * compile_grammar(void);
+
+enum Cleri_grammar_ids {{
+    CLERI_GID_NONE,   // used for objects with no name
+{enums}
+}};
+
+'''.lstrip()
+
     def __init__(self):
         '''Initialize the grammar.
 
@@ -162,6 +215,43 @@ class Grammar(metaclass=_OrderedClass):
                         [
                             'window',
                             js_module_name, n]) for n in classes])))
+
+    def export_c(self, target=C_TARGET, c_identation=C_IDENTATION):
+        language = []
+        ident = 0
+        enums = set()
+        for name in self._order:
+            elem = getattr(self, name, None)
+            if not isinstance(elem, Element):
+                continue
+            if not hasattr(elem, '_export_c'):
+                continue
+            language.append('{ident}cleri_object_t * {name} = {value};'.format(
+                ident=c_identation,
+                name=name,
+                value=elem._export_c(c_identation, ident, enums)))
+
+        pattern = self.RE_KEYWORDS.pattern.replace('\\', '\\\\');
+        if not pattern.startswith('^'):
+            pattern = '^' + pattern
+
+        enums = ',\n'.join([
+            '{}{}'.format(c_identation, gid)
+            for gid in enums]).strip(',')
+
+        return (self.__class__.C_TEMPLATE_C.format(
+                    name=self.__class__.__name__,
+                    target=target,
+                    ident=c_identation,
+                    datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
+                    language='\n'.join(language),
+                    re_keywords=pattern),
+                self.__class__.C_TEMPLATE_H.format(
+                    name=self.__class__.__name__,
+                    target=target,
+                    datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
+                    language='\n'.join(language),
+                    enums=enums))
 
     def parse(self, string):
         '''Parse some string to the Grammar.
