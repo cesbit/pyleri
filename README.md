@@ -43,7 +43,7 @@ Grammar.parse()
 ---------------
 syntax:
 ```python
-Grammar.parse(string)
+Grammar().parse(string)
 ```
 The `parse()` method returns a `NodeResult` object which has the following properties:
 - `expecting`: A Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string.
@@ -64,7 +64,7 @@ Grammar.export_js()
 -------------------
 syntax:
 ```python
-Grammar.export_js(
+Grammar().export_js(
     js_module_name='jsleri', 
     js_template=Grammar.JS_TEMPLATE, 
     js_identation=' ' * 4)
