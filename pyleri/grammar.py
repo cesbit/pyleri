@@ -159,9 +159,10 @@ cleri_grammar_t * compile_grammar(void)
 
 cleri_grammar_t * compile_grammar(void);
 
-enum Cleri_grammar_ids {{
-    CLERI_GID_NONE,   // used for objects with no name
+enum cleri_grammar_ids {{
+    CLERI_NONE,   // used for objects with no name
 {enums}
+    CLERI_END // can be used to get the enum length
 }};
 
 '''.lstrip()
@@ -237,7 +238,7 @@ enum Cleri_grammar_ids {{
 
         enums = ',\n'.join([
             '{}{}'.format(c_identation, gid)
-            for gid in enums]).strip(',')
+            for gid in enums]) + ','
 
         return (self.__class__.C_TEMPLATE_C.format(
                     name=self.__class__.__name__,
