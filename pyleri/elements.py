@@ -9,9 +9,6 @@ def c_export(func):
 
     def wrapper(self, c_identation, ident, enums):
         gid = getattr(self, 'name', getattr(self, '_name', 'CLERI_NONE'))
-        if gid is None:
-
-            raise Exception('Got none???: {}', self.__class__.__name__)
         if gid != 'CLERI_NONE':
             gid = 'CLERI_GID_{}'.format(gid.upper())
             enums.add(gid)
