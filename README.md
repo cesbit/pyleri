@@ -37,7 +37,7 @@ print(my_grammar.parse('bye "Iris"').is_valid) # => False
 
 Grammar
 -------
-When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has two methods: `parse()` and `export_js()` which are explained below.
+When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has two methods: `parse()`, `export_js()` and ``export_c()` which are explained below.
 
 Grammar.parse()
 ---------------
@@ -55,7 +55,7 @@ Let us take the example from Quick usage.
 ```python
 node_result = my_grammer.parse('bye "Iris"')
 print(node_result.is_valid) # => False
-print(node_result.expecting) # => {hi} => We expected Keyword 'hi' instead of bye 
+print(node_result.expecting) # => {hi} => We expected Keyword 'hi' instead of bye
 print(node_result.pos) # => 0 => Position in the string where we are expecting the above
 print(node_result.tree) # => Node object containing the parse tree
 ```
@@ -65,8 +65,8 @@ Grammar.export_js()
 syntax:
 ```python
 Grammar().export_js(
-    js_module_name='jsleri', 
-    js_template=Grammar.JS_TEMPLATE, 
+    js_module_name='jsleri',
+    js_template=Grammar.JS_TEMPLATE,
     js_identation=' ' * 4)
 ```
 Optional keyword arguments:
@@ -111,6 +111,81 @@ For example when using our Quick usage grammar, this is the output when running 
 );
 ```
 
+Grammar.export_c()
+-------------------
+syntax:
+```python
+Grammar().export_c(
+    target=Grammar.C_TARGET,
+    c_identation=' ' * 4)
+```
+Optional keyword arguments:
+- `target`: Name of the c module. (default: 'grammar')
+- `c_identation`: identation used in the c files. (default: 4 spaces)
+
+The return value is a tuple containing the source (c) file and header (h) file.
+
+For example when using our Quick usage grammar, this is the output when running `my_grammar.export_c()`:
+```c
+/*
+ * This grammar is generated using the Grammar.export_c() method and
+ * should be used with the cleri module.
+ *
+ * Source class: MyGrammar
+ * Created at: 2016-05-09 12:16:49
+ */
+
+#include <grammar.h>
+#include <stdio.h>
+
+#define CLERI_CASE_SENSITIVE 0
+#define CLERI_CASE_INSENSITIVE 1
+
+#define CLERI_FIRST_MATCH 0
+#define CLERI_MOST_GREEDY 1
+
+cleri_grammar_t * compile_grammar(void)
+{
+    cleri_object_t * r_name = cleri_regex(CLERI_GID_R_NAME, "^(?:\"(?:[^\"]*)\")+");
+    cleri_object_t * k_hi = cleri_keyword(CLERI_GID_K_HI, "hi", CLERI_CASE_INSENSITIVE);
+    cleri_object_t * START = cleri_sequence(
+        CLERI_GID_START,
+        2,
+        k_hi,
+        r_name
+    );
+
+    cleri_grammar_t * grammar = cleri_grammar(START, "^\\w+");
+
+    return grammar;
+}
+```
+and the header file...
+```c
+/*
+ * This grammar is generated using the Grammar.export_c() method and
+ * should be used with the cleri module.
+ *
+ * Source class: MyGrammar
+ * Created at: 2016-05-09 12:16:49
+ */
+
+#pragma once
+
+#include <grammar.h>
+#include <cleri/object.h>
+
+cleri_grammar_t * compile_grammar(void);
+
+enum cleri_grammar_ids {
+    CLERI_NONE,   // used for objects with no name
+    CLERI_GID_K_HI,
+    CLERI_GID_R_NAME,
+    CLERI_GID_START,
+    CLERI_END // can be used to get the enum length
+};
+```
+
 Choice
 ------
 syntax:
@@ -129,7 +204,7 @@ class MyGrammar(Grammar):
 
 my_grammar = MyGrammar()
 my_grammar.parse('hi "Iris"').is_valid  # => True
-my_grammar.parse('bye "Iris"').is_valid  # => True    
+my_grammar.parse('bye "Iris"').is_valid  # => True
 ```
 
 Sequence
@@ -163,9 +238,9 @@ Example:
 class TicTacToe(Grammar):
     # Let's allow keywords with alphabetic characters and dashes.
     RE_KEYWORDS = re.compile('^[A-Za-z-]+')
-    
+
     START = Keyword('tic-tac-toe', ign_case=True)
-    
+
 ttt_grammar = TicTacToe()
 ttt_grammar.parse('Tic-Tac-Toe').is_valid  # => True
 ```
@@ -193,10 +268,10 @@ For example consider the following:
 ```python
 class MyGrammar(Grammar):
     r_name = Regex('(?:"(?:[^"]*)")+')
-    
+
     # Raises a SyntaxError because we try to bind a second time.
     r_address = r_name # WRONG
-    
+
     # Instead use Repeat
     r_address = Repeat(r_name, 1, 1) # RIGHT
 ```
@@ -232,7 +307,7 @@ class MyGrammar(Grammar):
     r_name = Regex('(?:"(?:[^"]*)")+')
     k_hi = Keyword('hi')
     START = Sequence(k_hi, Optional(r_name))
-    
+
 my_grammar = MyGrammar()
 my_grammar.parse('hi "Iris"').is_valid  # => True
 my_grammar.parse('hi').is_valid  # => True
@@ -301,11 +376,11 @@ class Ni(Grammar):
     START = Prio(
         k_ni,
         # '(' and ')' are automatically converted to Token('(') and Token(')')
-        Sequence('(', THIS, ')'),  
+        Sequence('(', THIS, ')'),
         Sequence(THIS, Keyword('or'), THIS),
         Sequence(THIS, Keyword('and'), THIS))
 
 ni = Ni()
 ni.parse('(ni or ni) and (ni or ni)').is_valid  # => True
 ```
-        
+
