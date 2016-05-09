@@ -238,7 +238,7 @@ enum cleri_grammar_ids {{
 
         enums = ',\n'.join([
             '{}{}'.format(c_identation, gid)
-            for gid in enums]) + ','
+            for gid in sorted(enums)]) + ','
 
         return (self.__class__.C_TEMPLATE_C.format(
                     name=self.__class__.__name__,
