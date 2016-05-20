@@ -6,6 +6,7 @@ from pyleri import (
     Keyword,
     Sequence,
     Optional,
+    Regex,
     Prio,
     Choice,
     THIS,
@@ -47,6 +48,40 @@ class _TestGrammar4(Grammar):
     START = Ref()
     ni_item = Choice(Keyword('ni'), START)
     START = Sequence('[', List(ni_item), ']')
+
+
+class JsonGrammar(Grammar):
+    START = Ref()
+
+    # JSON strings should be enclosed in double quoates.
+    # A backslash can be used as escape character.
+    r_string = Regex('(")(?:(?=(\\\?))\\2.)*?\\1')
+
+    # JSON does not support floats or integers prefixed with a + sign
+    # and floats must start with a number, for example .5 is not allowed
+    # but should be written like 0.5
+    r_float = Regex('-?[0-9]+\.?[0-9]+')
+    r_integer = Regex('-?[0-9]+')
+
+    k_true = Keyword('true')
+    k_false = Keyword('false')
+    k_null = Keyword('null')
+
+    json_map_item = Sequence(r_string, ':', START)
+
+    json_map = Sequence('{', List(json_map_item), '}')
+    json_array = Sequence('[', List(START), ']')
+
+    START = Choice(
+        r_string,
+        r_float,
+        r_integer,
+        k_true,
+        k_false,
+        k_null,
+        json_map,
+        json_array)
+
 
 class TestPyleri(unittest.TestCase):
 
@@ -122,12 +157,36 @@ class TestPyleri(unittest.TestCase):
         # should be true
         self.assertTrue(tg.parse('[ni, ni, [ni, [], [ni, ni]]]').is_valid)
 
+    def test_json(self):
+        tg = JsonGrammar()
+        # should be true
+        self.assertTrue(tg.parse('''
+            {
+                "hoi \\"Iris\\"": [
+                    5,
+                    -0.5,
+                    {
+                        "a": true,
+                        "b": false
+                    }
+                ]
+            }''').is_valid)
+
+        # keys must be strings
+        self.assertFalse(tg.parse('{5: true}').is_valid)
+
+        # floats should start with 0-9.
+        self.assertFalse(tg.parse('{"a": .5}').is_valid)
+
+        # wrong escaping
+        self.assertFalse(tg.parse('{"a\\": null}').is_valid)
+
+        # empty strings are not allowed
+        self.assertFalse(tg.parse('').is_valid)
+
     def tearDown(self):
         self.assertEqual(gc.collect(), 0, msg=self.id())
 
 
 if __name__ == '__main__':
-    # unittest.main()
-
-    tg = _TestGrammar4()
-    print(tg.export_js())
+    unittest.main()
