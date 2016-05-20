@@ -19,11 +19,13 @@ from .expecting import Expecting
 from .endofstatement import end_of_statement
 from .elements import Element, NamedElement
 from .keyword import Keyword
+from .ref import Ref
 from .noderesult import NodeResult
 from .exceptions import (
     KeywordError,
     ReKeywordsChangedError,
-    NameAssignedError)
+    NameAssignedError,
+    MissingRefError)
 
 
 _RE_KEYWORDS = re.compile('^\w+')
@@ -32,9 +34,12 @@ _RE_KEYWORDS = re.compile('^\w+')
 class _KeepOrder(dict):
 
     def __init__(self, *args):
-        super().__setitem__('_order', [])
+        self._order = []
+        self._refs = {}
         self._RE_KEYWORDS = _RE_KEYWORDS
         self._has_keywords = False
+        super().__setitem__('_order', self._order)
+        super().__setitem__('_refs', self._refs)
 
     def _check_keywords(self, element):
         if isinstance(element, Keyword):
@@ -50,7 +55,13 @@ class _KeepOrder(dict):
 
     def __setitem__(self, key, value):
         if key not in self:
-            super().__getitem__('_order').append(key)
+            self._order.append(key)
+        elif key in self._refs:
+            self._refs[key].element = value
+            return
+
+        if isinstance(value, Ref):
+            self._refs[key] = value
 
         if key == 'RE_KEYWORDS':
             if self._has_keywords:
@@ -74,8 +85,16 @@ class _KeepOrder(dict):
 class _OrderedClass(type):
 
     @classmethod
-    def __prepare__(mcl, name, bases):
+    def __prepare__(mcs, name, bases):
         return _KeepOrder()
+
+    def __new__(mcs, name, bases, attrs, **kwargs):
+        for n, ref in attrs['_refs'].items():
+            if ref.element is None:
+                raise MissingRefError(
+                    'Forward reference {!r} is createad but the '
+                    'actual reference is missing.'.format(n))
+        return super().__new__(mcs, name, bases, attrs)
 
 
 class Grammar(metaclass=_OrderedClass):
@@ -201,6 +220,17 @@ enum cleri_grammar_ids {{
                 name=name,
                 value=elem._export_js(js_identation, ident, classes)))
 
+        for name, ref in self._refs.items():
+            language.append('{ident}Object.assign({name}, {value});'
+                .format(
+                    ident=js_identation,
+                    name=name,
+                    value=ref._element._export_js(
+                        js_identation,
+                        ident,
+                        classes)))
+
+
         return js_template.format(
             name=self.__class__.__name__,
             ident=js_identation,
@@ -209,7 +239,7 @@ enum cleri_grammar_ids {{
             language='\n'.join(language),
             arguments=',\n'.join(map(lambda s:
                                      js_identation * 3 + s, classes)),
-            re_keywords=self.RE_KEYWORDS.pattern,
+            re_keywords=self.RE_KEYWORDS.pattern.replace('\\', '\\\\'),
             constructors=',\n'.join(
                 map(lambda s: js_identation + s,
                     ['.'.join(
@@ -232,7 +262,7 @@ enum cleri_grammar_ids {{
                 name=name,
                 value=elem._export_c(c_identation, ident, enums)))
 
-        pattern = self.RE_KEYWORDS.pattern.replace('\\', '\\\\');
+        pattern = self.RE_KEYWORDS.pattern.replace('\\', '\\\\')
         if not pattern.startswith('^'):
             pattern = '^' + pattern
 

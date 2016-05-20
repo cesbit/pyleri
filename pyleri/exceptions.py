@@ -18,3 +18,7 @@ class ReKeywordsChangedError(CompileError):
 
 class NameAssignedError(CompileError):
     pass
+
+
+class MissingRefError(CompileError):
+    pass

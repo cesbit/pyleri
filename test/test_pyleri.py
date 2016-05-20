@@ -9,6 +9,9 @@ from pyleri import (
     Prio,
     Choice,
     THIS,
+    Ref,
+    List,
+    Repeat,
     Grammar,
     KeywordError,
     ReKeywordsChangedError,
@@ -39,6 +42,11 @@ class _TestGrammar3(Grammar):
         Choice(s_tic_tac, s_tic_tac_toe),
         Choice(s_tic_tac, s_tic_tac_toe, most_greedy=False))
 
+
+class _TestGrammar4(Grammar):
+    START = Ref()
+    ni_item = Choice(Keyword('ni'), START)
+    START = Sequence('[', List(ni_item), ']')
 
 class TestPyleri(unittest.TestCase):
 
@@ -109,9 +117,17 @@ class TestPyleri(unittest.TestCase):
         # set to False for the second choice
         self.assertFalse(tg.parse('tic tac toe tic tac toe').is_valid)
 
+    def test_ref(self):
+        tg = _TestGrammar4()
+        # should be true
+        self.assertTrue(tg.parse('[ni, ni, [ni, [], [ni, ni]]]').is_valid)
+
     def tearDown(self):
         self.assertEqual(gc.collect(), 0, msg=self.id())
 
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+
+    tg = _TestGrammar4()
+    print(tg.export_js())

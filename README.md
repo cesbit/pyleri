@@ -245,6 +245,26 @@ ttt_grammar = TicTacToe()
 ttt_grammar.parse('Tic-Tac-Toe').is_valid  # => True
 ```
 
+Ref
+---
+syntax:
+```python
+Ref()
+```
+The grammar can make a forward reference to make recursion possible. In the example below we create a forward reference to START but note that
+a reference to any element can be made.
+
+Example:
+```python
+class NestedNi(Grammar):
+    START = Ref()
+    ni_item = Choice(Keyword('ni'), START)
+    START = Sequence('[', List(ni_item), ']')
+
+nested_ni = NestedNi()
+nested_ni.parse('[ni, ni, [ni, [], [ni, ni]]]').is_valid  # => True
+```
+
 Repeat
 ------
 syntax:
