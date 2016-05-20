@@ -14,6 +14,7 @@ pyleri/node.py
 pyleri/noderesult.py
 pyleri/optional.py
 pyleri/prio.py
+pyleri/ref.py
 pyleri/regex.py
 pyleri/repeat.py
 pyleri/rule.py
