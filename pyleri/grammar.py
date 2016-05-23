@@ -58,6 +58,8 @@ class _KeepOrder(dict):
             self._order.append(key)
         elif key in self._refs:
             self._refs[key].element = value
+            if isinstance(value, NamedElement):
+                value.name = key
             return
 
         if isinstance(value, Ref):
@@ -257,10 +259,27 @@ enum cleri_grammar_ids {{
                 continue
             if not hasattr(elem, '_export_c'):
                 continue
-            language.append('{ident}cleri_object_t * {name} = {value};'.format(
-                ident=c_identation,
-                name=name,
-                value=elem._export_c(c_identation, ident, enums)))
+            if isinstance(elem, Ref):
+                language.append(
+                    '{ident}cleri_object_t * {name};'.format(
+                        ident=c_identation,
+                        name=name))
+            else:
+                language.append(
+                    '{ident}cleri_object_t * {name} = {value};'.format(
+                        ident=c_identation,
+                        name=name,
+                        value=elem._export_c(c_identation, ident, enums)))
+
+        for name, ref in self._refs.items():
+            language.append('{ident}{name} = {value};'
+                .format(
+                    ident=c_identation,
+                    name=name,
+                    value=ref._element._export_c(
+                        c_identation,
+                        ident,
+                        enums)))
 
         pattern = self.RE_KEYWORDS.pattern.replace('\\', '\\\\')
         if not pattern.startswith('^'):

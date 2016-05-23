@@ -10,6 +10,10 @@ from .elements import NamedElement
 
 
 class Ref(NamedElement):
+    '''Ref class.
+
+    Note: _run_export_c() is not needed since C does not need a Ref but
+    instead the object will be pre-declared.'''
 
     __slots__ = ('_element', '_get_node_result')
 
@@ -24,4 +28,3 @@ class Ref(NamedElement):
 
     def _run_export_js(self, js_identation, ident, classes):
         return 'Ref({})'.format(self._element.__class__.__name__)
-

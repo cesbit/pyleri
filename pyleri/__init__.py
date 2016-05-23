@@ -10,6 +10,18 @@ module with JavaScript projects.
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 :license: need to decide
+
+
+Changelog
+
+Version 1.1.2
+    - Fixed export_c() to support Ref(). An update to cleri is not needed since
+      in C we can simply pre-define a variable and later assign the actual
+      object.
+Version 1.1.0
+    - Added Ref() support which can be used to create forward references.
+    - Updated jsleri to support Ref() and updated export_js() method to support
+      this new class.
 '''
 
 from .choice import Choice
@@ -34,4 +46,4 @@ from .exceptions import (
 __author__ = 'Jeroen van der Heijden'
 __maintainer__ = 'Jeroen van der Heijden'
 __email__ = 'jeroen@transceptor.technology'
-__version__ = '1.1.0'
+__version__ = '1.1.2'

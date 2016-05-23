@@ -189,4 +189,7 @@ class TestPyleri(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+
+    grammar = JsonGrammar()
+    print(grammar.export_c()[0])

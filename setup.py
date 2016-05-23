@@ -1,8 +1,11 @@
 #
 #  Got documentation from: http://peterdowns.com/posts/first-time-with-pypi.html
 #
+#   0. Update __init__.py
+#       changelog + version
+#
 #   1. Create tag:
-#       git tag 1.1.0 -m "Adds a tag so that we can put this new version on PyPI."
+#       git tag 1.1.2 -m "Adds a tag so that we can put this new version on PyPI."
 #
 #   2. Push tag:
 #       git push --tags origin master
@@ -20,12 +23,12 @@ from distutils.core import setup
 setup(
     name='pyleri',
     packages=['pyleri'],
-    version='1.1.0',
+    version='1.1.2',
     description='Python Left-Right Parser',
     author='Jeroen van der Heijden',
     author_email='jeroen@transceptor.technology',
     url='https://github.com/transceptor-technology/pyleri',
-    download_url='https://github.com/transceptor-technology/pyleri/tarball/1.1.0',
+    download_url='https://github.com/transceptor-technology/pyleri/tarball/1.1.2',
     keywords=['parser', 'grammar', 'autocompletion'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
