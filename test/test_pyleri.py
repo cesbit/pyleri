@@ -17,6 +17,7 @@ from pyleri import (
     KeywordError,
     ReKeywordsChangedError,
     NameAssignedError)
+from examples import JsonGrammar
 
 
 class _TestGrammar1(Grammar):
@@ -48,39 +49,6 @@ class _TestGrammar4(Grammar):
     START = Ref()
     ni_item = Choice(Keyword('ni'), START)
     START = Sequence('[', List(ni_item), ']')
-
-
-class JsonGrammar(Grammar):
-    START = Ref()
-
-    # JSON strings should be enclosed in double quoates.
-    # A backslash can be used as escape character.
-    r_string = Regex('(")(?:(?=(\\\?))\\2.)*?\\1')
-
-    # JSON does not support floats or integers prefixed with a + sign
-    # and floats must start with a number, for example .5 is not allowed
-    # but should be written like 0.5
-    r_float = Regex('-?[0-9]+\.?[0-9]+')
-    r_integer = Regex('-?[0-9]+')
-
-    k_true = Keyword('true')
-    k_false = Keyword('false')
-    k_null = Keyword('null')
-
-    json_map_item = Sequence(r_string, ':', START)
-
-    json_map = Sequence('{', List(json_map_item), '}')
-    json_array = Sequence('[', List(START), ']')
-
-    START = Choice(
-        r_string,
-        r_float,
-        r_integer,
-        k_true,
-        k_false,
-        k_null,
-        json_map,
-        json_array)
 
 
 class TestPyleri(unittest.TestCase):
@@ -189,7 +157,7 @@ class TestPyleri(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    # unittest.main()
+    unittest.main()
 
-    grammar = JsonGrammar()
-    print(grammar.export_c()[0])
+    # grammar = JsonGrammar()
+    # print(grammar.export_c()[0])

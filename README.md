@@ -403,4 +403,3 @@ class Ni(Grammar):
 ni = Ni()
 ni.parse('(ni or ni) and (ni or ni)').is_valid  # => True
 ```
-
