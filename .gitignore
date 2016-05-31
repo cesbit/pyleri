@@ -4,4 +4,4 @@ __pycache__/
 *.module-cache*
 .project
 .pydevproject
-
+.idea
