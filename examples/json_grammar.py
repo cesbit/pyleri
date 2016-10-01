@@ -13,7 +13,7 @@ from pyleri import (
 class JsonGrammar(Grammar):
     START = Ref()
 
-    # JSON strings should be enclosed in double quoates.
+    # JSON strings should be enclosed in double quotes.
     # A backslash can be used as escape character.
     r_string = Regex('(")(?:(?=(\\\?))\\2.)*?\\1')
 
