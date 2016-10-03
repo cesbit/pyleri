@@ -1,34 +1,18 @@
-#
-#  Got documentation from: http://peterdowns.com/posts/first-time-with-pypi.html
-#
-#   0. Update __init__.py
-#       changelog + version
-#
-#   1. Create tag:
-#       git tag 1.1.2 -m "Adds a tag so that we can put this new version on PyPI."
-#
-#   2. Push tag:
-#       git push --tags origin master
-#
-#   3. Upload your package to PyPI Test:
-#       python setup.py register -r pypitest
-#       python setup.py sdist upload -r pypitest
-#
-#   4. Upload to PyPI Live
-#       python setup.py register -r pypi
-#       python setup.py sdist upload -r pypi
-#
-
 from distutils.core import setup
+
+VERSION = '1.1.2'
+
 setup(
     name='pyleri',
     packages=['pyleri'],
-    version='1.1.2',
+    version=VERSION,
     description='Python Left-Right Parser',
     author='Jeroen van der Heijden',
     author_email='jeroen@transceptor.technology',
     url='https://github.com/transceptor-technology/pyleri',
-    download_url='https://github.com/transceptor-technology/pyleri/tarball/1.1.2',
+    download_url=
+        'https://github.com/transceptor-technology/'
+        'pyleri/tarball/{}'.format(VERSION),
     keywords=['parser', 'grammar', 'autocompletion'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

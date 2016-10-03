@@ -1,0 +1,11 @@
+2016.07.02, Version 1.1.2 (Stable)
+
+    - Fixed export_c() to support Ref(). An update to cleri is not needed since
+      in C we can simply pre-define a variable and later assign the actual
+      object.
+
+2016.03.07, Version 1.1.0 (BETA)
+
+    - Added Ref() support which can be used to create forward references.
+    - Updated jsleri to support Ref() and updated export_js() method to support
+      this new class.
