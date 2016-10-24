@@ -1,5 +1,8 @@
 import unittest
 import gc
+import sys
+sys.path.append('..')
+
 from pyleri import (
     Keyword,
     Sequence,

@@ -56,6 +56,12 @@ class Repeat(NamedElement):
             self._min,
             self._max or 'undefined')
 
+    def _run_export_py(self, py_identation, ident, classes):
+        return 'Repeat({}, {}, {})'.format(
+            self._element._export_py(py_identation, ident, classes),
+            self._min,
+            self._max or 'None')
+
     @c_export
     def _run_export_c(self, c_identation, ident, enums, gid):
         return 'cleri_repeat({}, {}, {}, {})'.format(

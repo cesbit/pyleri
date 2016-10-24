@@ -31,6 +31,9 @@ class Token(NamedElement):
     def _run_export_js(self, js_identation, ident, classes):
         return 'Token(\'{}\')'.format(self._token)
 
+    def _run_export_py(self, py_identation, ident, classes):
+        return 'Token(\'{}\')'.format(self._token)
+
     @c_export
     def _run_export_c(self, js_identation, ident, enums, gid):
         return 'cleri_token({}, "{}")'.format(

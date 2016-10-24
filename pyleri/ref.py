@@ -28,3 +28,6 @@ class Ref(NamedElement):
 
     def _run_export_js(self, js_identation, ident, classes):
         return 'Ref({})'.format(self._element.__class__.__name__)
+
+    def _run_export_py(self, py_identation, ident, classes):
+        return 'Ref()'

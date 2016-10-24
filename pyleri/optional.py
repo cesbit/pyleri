@@ -32,6 +32,10 @@ class Optional(NamedElement):
         return 'Optional({})'.format(
             self._element._export_js(js_identation, ident, classes))
 
+    def _run_export_py(self, py_identation, ident, classes):
+        return 'Optional({})'.format(
+            self._element._export_py(py_identation, ident, classes))
+
     @c_export
     def _run_export_c(self, c_identation, ident, enums, gid):
         return 'cleri_optional({}, {})'.format(

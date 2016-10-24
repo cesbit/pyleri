@@ -86,6 +86,14 @@ class List(NamedElement):
             self._max or 'undefined',
             'true' if self._opt else 'false')
 
+    def _run_export_py(self, py_identation, ident, classes):
+        return 'List({}, {}, {}, {}, {})'.format(
+            self._element._export_py(py_identation, ident, classes),
+            self._delimiter._export_py(py_identation, ident, classes),
+            self._min,
+            self._max or 'None',
+            'True' if self._opt else 'False')
+
     @c_export
     def _run_export_c(self, c_identation, ident, enums, gid):
         return 'cleri_list({}, {}, {}, {}, {}, {})'.format(

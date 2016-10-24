@@ -34,6 +34,10 @@ class Regex(NamedElement):
         return 'Regex(\'{}\')'.format(
             self._compiled.pattern.replace('\\', '\\\\').replace('\'', '\\\''))
 
+    def _run_export_py(self, py_identation, ident, classes):
+        return 'Regex(\'{}\')'.format(
+            self._compiled.pattern.replace('\\', '\\\\').replace('\'', '\\\''))
+
     @c_export
     def _run_export_c(self, c_identation, ident, enums, gid):
         return 'cleri_regex({}, "{}")'.format(

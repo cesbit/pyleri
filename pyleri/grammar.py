@@ -134,6 +134,25 @@ class Grammar(metaclass=_OrderedClass):
 );
 '''.lstrip()
 
+    PY_IDENTATION = ' ' * 4
+    PY_MODULE_NAME = 'pyleri'
+    PY_TEMPLATE = '''
+"""
+ This grammar is generated using the Grammar.export_py() method and
+ should be used with the {py_module} python module.
+
+ Source class: {name}
+ Created at: {datetime}
+"""
+import re
+{imports}
+
+class {name}(Grammar):
+{ident}
+{ident}RE_KEYWORDS = re.compile('{re_keywords}')
+{language}
+'''.lstrip()
+
     C_IDENTATION = ' ' * 4
     C_TARGET = 'grammar'
     C_TEMPLATE_C = '''
@@ -204,7 +223,7 @@ enum cleri_grammar_ids {{
             js_module_name=JS_MODULE_NAME,
             js_template=JS_TEMPLATE,
             js_identation=JS_IDENTATION):
-        '''Export the grammar as a JavaScript file which can be
+        '''Export the grammar to a JavaScript file which can be
         used with the js-lrparsing module.'''
 
         language = []
@@ -249,7 +268,56 @@ enum cleri_grammar_ids {{
                             'window',
                             js_module_name, n]) for n in classes])))
 
+    def export_py(
+            self,
+            py_module_name=PY_MODULE_NAME,
+            py_template=PY_TEMPLATE,
+            py_identation=PY_IDENTATION):
+        '''Export the grammar to a python file which can be
+        used with the pyleri module. This can be useful when python code
+        if used to auto-create a grammar and an export of the final result is
+        required.'''
+
+        language = []
+        classes = {'Grammar'}
+        ident = 0
+
+        for name in self._order:
+            elem = getattr(self, name, None)
+            if not isinstance(elem, Element):
+                continue
+            if not hasattr(elem, '_export_py'):
+                continue
+            language.append('{ident}{name} = {value}'.format(
+                ident=py_identation,
+                name=name,
+                value=elem._export_py(py_identation, ident, classes)))
+
+        for name, ref in self._refs.items():
+            language.append('{ident}{name} = {value}'
+                .format(
+                    ident=py_identation,
+                    name=name,
+                    value=ref._element._export_py(
+                        py_identation,
+                        ident,
+                        classes)))
+
+        return py_template.format(
+            name=self.__class__.__name__,
+            ident=py_identation,
+            py_module=py_module_name,
+            datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
+            language='\n'.join(language),
+            re_keywords=self.RE_KEYWORDS.pattern.replace('\\', '\\\\'),
+            imports='\n'.join(
+                map(lambda s: s,
+                    [' '.join(['from', py_module_name, 'import', n])
+                    for n in classes if n != 'Rule'])))
+
     def export_c(self, target=C_TARGET, c_identation=C_IDENTATION):
+        '''Export the grammar to a c (source and header) file which can be
+        used with the cleri module.'''
         language = []
         ident = 0
         enums = set()

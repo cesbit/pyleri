@@ -1,3 +1,8 @@
+2016.10.24, Version 1.1.3 (Stable)
+
+    - Added export to Python method. This can be useful even if the source is
+      already defined in Python language. (see issue #1)
+
 2016.07.02, Version 1.1.2 (Stable)
 
     - Fixed export_c() to support Ref(). An update to cleri is not needed since

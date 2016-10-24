@@ -27,5 +27,8 @@ class Sequence(NamedElement):
     def _run_export_js(self, js_identation, ident, classes):
         return self._export_js_elements(js_identation, ident, classes)
 
+    def _run_export_py(self, py_identation, ident, classes):
+        return self._export_py_elements(py_identation, ident, classes)
+
     def _run_export_c(self, c_identation, ident, enums):
         return self._export_c_elements(c_identation, ident, enums)

@@ -51,6 +51,22 @@ class Choice(NamedElement):
     def _run_export_js(self, js_identation, ident, classes):
         return self._export_js_elements(js_identation, ident, classes)
 
+    def _run_export_py(self, py_identation, ident, classes):
+        new_ident = ident + 1
+        value = ',\n'.join(['{ident}{elem}'.format(
+            ident=py_identation * new_ident,
+            elem=elem._export_py(
+                py_identation,
+                new_ident,
+                classes)) for elem in self._elements])
+        return 'Choice(\n{val},\n{ident}most_greedy={mg})'.format(
+            mg='{mg}'.format(
+                ident=py_identation * (ident + 1),
+                mg=('False', 'True')[
+                    self._get_node_result == self._most_greedy_result]),
+            val=value,
+            ident=py_identation * new_ident)
+
     @c_export
     def _run_export_c(self, c_identation, ident, enums, gid):
         new_ident = ident + 1

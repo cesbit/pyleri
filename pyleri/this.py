@@ -27,6 +27,10 @@ class This(Element):
         classes.add('THIS')
         return 'THIS'
 
+    def _export_py(self, py_identation, ident, classes):
+        classes.add('THIS')
+        return 'THIS'
+
     def _export_c(self, c_identation, ident, enums):
         return 'CLERI_THIS'
 

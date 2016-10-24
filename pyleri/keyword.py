@@ -60,6 +60,11 @@ class Keyword(NamedElement):
             self._keyword,
             ', true' if self._ign_case else '')
 
+    def _run_export_py(self, py_identation, ident, classes):
+        return 'Keyword(\'{}\'{})'.format(
+            self._keyword,
+            ', True' if self._ign_case else '')
+
     @c_export
     def _run_export_c(self, c_identation, ident, enums, gid):
         return 'cleri_keyword({}, "{}", {})'.format(

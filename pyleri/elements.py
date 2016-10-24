@@ -60,6 +60,27 @@ class NamedElement(Element):
     def _run_export_js(self, js_identation, ident, classes):
         return 'not_implemented'
 
+    def _export_py(self, py_identation, ident, classes):
+        classes.add(self.__class__.__name__.lstrip('_'))
+        if hasattr(self, 'name') and ident:
+            return self.name
+        return self._run_export_py(py_identation, ident or 1, classes)
+
+    def _export_py_elements(self, py_identation, ident, classes):
+        new_ident = ident + 1
+        value = ',\n'.join(['{ident}{elem}'.format(
+            ident=py_identation * new_ident,
+            elem=elem._export_py(
+                py_identation,
+                new_ident, classes)) for elem in self._elements])
+        return '{class_name}(\n{value}\n{ident})'.format(
+            class_name=self.__class__.__name__.lstrip('_'),
+            value=value,
+            ident=py_identation * ident)
+
+    def _run_export_py(self, py_identation, ident, classes):
+        return 'not_implemented'
+
     @c_export
     def _export_c(self, c_identation, ident, enums, gid):
         if hasattr(self, 'name') and ident:
