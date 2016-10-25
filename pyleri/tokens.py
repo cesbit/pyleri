@@ -27,10 +27,10 @@ class Tokens(NamedElement):
         return False, node.start
 
     def _run_export_js(self, js_identation, ident, classes):
-        return 'Tokens(\'{}\')'
+        return 'Tokens(\'{}\')'.format(' '.join(self._tokens))
 
     def _run_export_py(self, py_identation, ident, classes):
-        return 'Tokens(\'{}\')'
+        return 'Tokens(\'{}\')'.format(' '.join(self._tokens))
 
     @c_export
     def _run_export_c(self, c_identation, ident, enums, gid):
