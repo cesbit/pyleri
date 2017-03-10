@@ -242,15 +242,15 @@ enum cleri_grammar_ids {{
                 value=elem._export_js(js_identation, ident, classes)))
 
         for name, ref in self._refs.items():
-            language.append('{ident}Object.assign({name}, {value});'
-                .format(
-                    ident=js_identation,
-                    name=name,
-                    value=ref._element._export_js(
-                        js_identation,
-                        ident,
-                        classes)))
-
+            language.append(
+                    '{ident}Object.assign({name}, {value});'
+                    .format(
+                        ident=js_identation,
+                        name=name,
+                        value=ref._element._export_js(
+                            js_identation,
+                            ident,
+                            classes)))
 
         return js_template.format(
             name=self.__class__.__name__,
@@ -294,7 +294,8 @@ enum cleri_grammar_ids {{
                 value=elem._export_py(py_identation, ident, classes)))
 
         for name, ref in self._refs.items():
-            language.append('{ident}{name} = {value}'
+            language.append(
+                '{ident}{name} = {value}'
                 .format(
                     ident=py_identation,
                     name=name,
@@ -311,8 +312,8 @@ enum cleri_grammar_ids {{
             language='\n'.join(language),
             re_keywords=self.RE_KEYWORDS.pattern.replace('\\', '\\\\'),
             imports='\n'.join(
-                map(lambda s: s,
-                    [' '.join(['from', py_module_name, 'import', n])
+                map(lambda s: s, [
+                    ' '.join(['from', py_module_name, 'import', n])
                     for n in classes if n != 'Rule'])))
 
     def export_c(self, target=C_TARGET, c_identation=C_IDENTATION):
@@ -340,7 +341,8 @@ enum cleri_grammar_ids {{
                         value=elem._export_c(c_identation, ident, enums)))
 
         for name, ref in self._refs.items():
-            language.append('{ident}{name} = {value};'
+            language.append(
+                '{ident}{name} = {value};'
                 .format(
                     ident=c_identation,
                     name=name,
@@ -361,13 +363,17 @@ enum cleri_grammar_ids {{
                     name=self.__class__.__name__,
                     target=target,
                     ident=c_identation,
-                    datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
+                    datetime=time.strftime(
+                        '%Y-%m-%d %H:%M:%S',
+                        time.localtime()),
                     language='\n'.join(language),
                     re_keywords=pattern),
                 self.__class__.C_TEMPLATE_H.format(
                     name=self.__class__.__name__,
                     target=target,
-                    datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
+                    datetime=time.strftime(
+                        '%Y-%m-%d %H:%M:%S',
+                        time.localtime()),
                     language='\n'.join(language),
                     enums=enums))
 
