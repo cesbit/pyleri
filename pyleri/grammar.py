@@ -218,17 +218,22 @@ package {package}
 // Source class: {name}
 // Created at: {datetime}
 
-import "github.com/transceptor-technology/goleri"
+import (
+\t"regexp"
 
+\t"github.com/transceptor-technology/goleri"
+)
+
+// Element identifiers
 const (
-    NoGid = iota
-    {enums}
+\tNoGid = iota
+{enums}
 )
 
 // {name} returns a compiled goleri grammar.
 func {name}() *goleri.Grammar {{
 {language}
-{ident}return NewGrammar(START, regexp.MustCompile(`{re_keywords}`))
+{ident}return goleri.NewGrammar(START, regexp.MustCompile(`{re_keywords}`))
 }}
 '''.lstrip()
 
@@ -413,7 +418,7 @@ func {name}() *goleri.Grammar {{
         language = []
         enums = set()
         ident = 0
-        pattern = self.RE_KEYWORDS.pattern
+        pattern = self.RE_KEYWORDS.pattern.replace('`', '` + "`" + `')
         if not pattern.startswith('^'):
             pattern = '^' + pattern
 
@@ -439,9 +444,9 @@ func {name}() *goleri.Grammar {{
                             ident,
                             enums)))
 
-        enums = '= iota\n'.join([
+        enums = ' = iota\n'.join([
             '{}{}'.format(go_identation, gid)
-            for gid in sorted(enums)])
+            for gid in sorted(enums)]) + ' = iota'
 
         return go_template.format(
             name=self.__class__.__name__,
@@ -449,7 +454,8 @@ func {name}() *goleri.Grammar {{
             package=go_package,
             datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
             language='\n'.join(language),
-            re_keywords=pattern)
+            re_keywords=pattern,
+            enums=enums)
 
     def parse(self, string):
         '''Parse some string to the Grammar.

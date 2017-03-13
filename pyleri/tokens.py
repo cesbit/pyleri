@@ -39,7 +39,7 @@ class Tokens(NamedElement):
             ' '.join(self._tokens))
 
     @go_export
-    def _run_export_c(self, c_identation, ident, enums, gid):
+    def _run_export_go(self, go_identation, ident, enums, gid):
         return 'goleri.NewTokens({}, "{}")'.format(
             gid,
             ' '.join(self._tokens))

@@ -50,6 +50,6 @@ class Regex(NamedElement):
 
     @go_export
     def _run_export_go(self, go_identation, ident, enums, gid):
-        return 'goleri.NewRegex({}, regexp.MustCompile(`{}`)'.format(
+        return 'goleri.NewRegex({}, regexp.MustCompile(`{}`))'.format(
             gid,
-            self._compiled.pattern)
+            self._compiled.pattern.replace('`', '` + "`" + `'))

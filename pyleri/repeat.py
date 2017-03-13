@@ -71,7 +71,7 @@ class Repeat(NamedElement):
             self._max or 'undefined')
 
     @go_export
-    def _run_export_c(self, go_identation, ident, enums, gid):
+    def _run_export_go(self, go_identation, ident, enums, gid):
         return 'goleri.NewRepeat({}, {}, {}, {})'.format(
             gid,
             self._element._export_go(go_identation, ident, enums),

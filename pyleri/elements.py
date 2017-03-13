@@ -13,7 +13,7 @@ def camel_case(s):
 
 
 def cap_case(s):
-    return ''.join(p[0].upper() + p[1:] for p in s.split('_'))
+    return ''.join(p[0].upper() + p[1:] for p in s.split('_') if p)
 
 
 def c_export(func):
@@ -137,7 +137,7 @@ class NamedElement(Element):
     @go_export
     def _export_go(self, go_identation, ident, enums, gid):
         if hasattr(self, 'name') and ident:
-            return self.name
+            return camel_case(self.name)
         return self._run_export_go(go_identation, ident or 1, enums)
 
     @go_export
@@ -149,7 +149,7 @@ class NamedElement(Element):
                 go_identation,
                 new_ident,
                 enums)) for elem in self._elements])
-        return '{class_name}(\n{gid},\n{value}\n{ident})'.format(
+        return '{class_name}(\n{gid},\n{value},\n{ident})'.format(
             class_name='goleri.New' + self.__class__.__name__.lstrip('_'),
             gid='{ident}{gid}'.format(
                 ident=go_identation * (ident + 1),

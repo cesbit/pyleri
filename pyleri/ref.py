@@ -32,5 +32,5 @@ class Ref(NamedElement):
     def _run_export_py(self, py_identation, ident, classes):
         return 'Ref()'
 
-    def _run_export_go(self, py_identation, ident, classes):
+    def _run_export_go(self, go_identation, ident, classes):
         return 'goleri.NewRef()'

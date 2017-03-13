@@ -43,7 +43,7 @@ class Optional(NamedElement):
             self._element._export_c(c_identation, ident, enums))
 
     @go_export
-    def _run_export_c(self, go_identation, ident, enums, gid):
+    def _run_export_go(self, go_identation, ident, enums, gid):
         return 'goleri.NewOptional({}, {})'.format(
             gid,
             self._element._export_go(go_identation, ident, enums))
