@@ -7,7 +7,7 @@ False we will return the first match.
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
 
-from .elements import NamedElement, c_export
+from .elements import NamedElement, c_export, go_export
 
 
 class Choice(NamedElement):
@@ -50,6 +50,26 @@ class Choice(NamedElement):
 
     def _run_export_js(self, js_identation, ident, classes):
         return self._export_js_elements(js_identation, ident, classes)
+
+    @go_export
+    def _run_export_go(self, go_identation, ident, enums, gid):
+        new_ident = ident + 1
+        value = ',\n'.join(['{ident}{elem}'.format(
+            ident=go_identation * new_ident,
+            elem=elem._export_go(
+                go_identation,
+                new_ident,
+                enums)) for elem in self._elements])
+        return 'goleri.NewChoice(\n{gid},\n{mg},\n{val}\n{ident})'.format(
+            gid='{ident}{gid}'.format(
+                ident=go_identation * (ident + 1),
+                gid=gid),
+            mg='{ident}{mg}'.format(
+                ident=go_identation * (ident + 1),
+                mg=('false', 'true')[
+                    self._get_node_result == self._most_greedy_result]),
+            val=value,
+            ident=go_identation * ident)
 
     def _run_export_py(self, py_identation, ident, classes):
         new_ident = ident + 1

@@ -39,6 +39,9 @@ class _Prio(NamedElement):
     def _run_export_c(self, c_identation, ident, enums):
         return self._export_c_elements(c_identation, ident, enums)
 
+    def _run_export_go(self, go_identation, ident, enums):
+        return self._export_go_elements(go_identation, ident, enums)
+
 _Prio.__name__ = 'Prio'
 
 

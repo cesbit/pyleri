@@ -36,3 +36,9 @@ class Rule(NamedElement):
         if name is not None:
             self._element._name = name
         return self._element._export_c(c_identation, ident, enums)
+
+    def _run_export_go(self, go_identation, ident, enums):
+        name = getattr(self, 'name', None)
+        if name is not None:
+            self._element._name = name
+        return self._element._export_go(go_identation, ident, enums)

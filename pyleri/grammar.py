@@ -17,7 +17,7 @@ import time
 from .node import Node
 from .expecting import Expecting
 from .endofstatement import end_of_statement
-from .elements import Element, NamedElement
+from .elements import Element, NamedElement, camel_case
 from .keyword import Keyword
 from .ref import Ref
 from .noderesult import NodeResult
@@ -207,6 +207,31 @@ enum cleri_grammar_ids {{
 
 '''.lstrip()
 
+    GO_IDENTATION = '\t'
+    GO_PACKAGE = 'grammar'
+    GO_TEMPLATE = '''
+package {package}
+
+// This grammar is generated using the Grammar.export_go() method and
+// should be used with the goleri module.
+//
+// Source class: {name}
+// Created at: {datetime}
+
+import "github.com/transceptor-technology/goleri"
+
+const (
+    NoGid = iota
+    {enums}
+)
+
+// {name} returns a compiled goleri grammar.
+func {name}() *goleri.Grammar {{
+{language}
+{ident}return NewGrammar(START, regexp.MustCompile(`{re_keywords}`))
+}}
+'''.lstrip()
+
     def __init__(self):
         '''Initialize the grammar.
 
@@ -376,6 +401,55 @@ enum cleri_grammar_ids {{
                         time.localtime()),
                     language='\n'.join(language),
                     enums=enums))
+
+    def export_go(
+            self,
+            go_template=GO_TEMPLATE,
+            go_identation=GO_IDENTATION,
+            go_package=GO_PACKAGE):
+        '''Export the grammar to a JavaScript file which can be
+        used with the js-lrparsing module.'''
+
+        language = []
+        enums = set()
+        ident = 0
+        pattern = self.RE_KEYWORDS.pattern
+        if not pattern.startswith('^'):
+            pattern = '^' + pattern
+
+        for name in self._order:
+            elem = getattr(self, name, None)
+            if not isinstance(elem, Element):
+                continue
+            if not hasattr(elem, '_export_go'):
+                continue
+            language.append('{ident}{name} := {value}'.format(
+                ident=go_identation,
+                name=camel_case(name),
+                value=elem._export_go(go_identation, ident, enums)))
+
+        for name, ref in self._refs.items():
+            language.append(
+                    '{ident}{name}.Set({value})'
+                    .format(
+                        ident=go_identation,
+                        name=camel_case(name),
+                        value=ref._element._export_go(
+                            go_identation,
+                            ident,
+                            enums)))
+
+        enums = '= iota\n'.join([
+            '{}{}'.format(go_identation, gid)
+            for gid in sorted(enums)])
+
+        return go_template.format(
+            name=self.__class__.__name__,
+            ident=go_identation,
+            package=go_package,
+            datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
+            language='\n'.join(language),
+            re_keywords=pattern)
 
     def parse(self, string):
         '''Parse some string to the Grammar.

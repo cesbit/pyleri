@@ -2,7 +2,7 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement, c_export
+from .elements import NamedElement, c_export, go_export
 
 
 class Token(NamedElement):
@@ -37,5 +37,11 @@ class Token(NamedElement):
     @c_export
     def _run_export_c(self, js_identation, ident, enums, gid):
         return 'cleri_token({}, "{}")'.format(
+            gid,
+            self._token)
+
+    @go_export
+    def _run_export_go(self, go_identation, ident, enums, gid):
+        return 'goleri.NewToken({}, "{}")'.format(
             gid,
             self._token)

@@ -3,7 +3,7 @@
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
 import re
-from .elements import NamedElement, c_export
+from .elements import NamedElement, c_export, go_export
 
 
 class Regex(NamedElement):
@@ -47,3 +47,9 @@ class Regex(NamedElement):
                 .replace('\'', '\\\'')
                 .replace('\\"', '"')
                 .replace('"', '\\"'))
+
+    @go_export
+    def _run_export_go(self, go_identation, ident, enums, gid):
+        return 'goleri.NewRegex({}, regexp.MustCompile(`{}`)'.format(
+            gid,
+            self._compiled.pattern)

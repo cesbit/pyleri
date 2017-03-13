@@ -1,5 +1,6 @@
 '''JSON Grammar.'''
-
+import sys
+sys.path.insert(0, '../')
 from pyleri import (
     Ref,
     Choice,
@@ -41,3 +42,7 @@ class JsonGrammar(Grammar):
         k_null,
         json_map,
         json_array)
+
+if __name__ == '__main__':
+    grammar = JsonGrammar()
+    print(grammar.export_go())

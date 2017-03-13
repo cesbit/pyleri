@@ -1,3 +1,8 @@
+2017.x.x, Version 1.1.5 (Stable)
+
+  * Fixed exporting keyword case sensitive to C.
+  * Added export to Go language for the goleri module.
+
 2016.10.25, Version 1.1.4 (Stable)
 
   * Fixed exporting Tokens to JavaScript and Python. (issue #2)

@@ -2,7 +2,7 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement, c_export
+from .elements import NamedElement, c_export, go_export
 
 
 class Repeat(NamedElement):
@@ -69,3 +69,11 @@ class Repeat(NamedElement):
             self._element._export_c(c_identation, ident, enums),
             self._min,
             self._max or 'undefined')
+
+    @go_export
+    def _run_export_c(self, go_identation, ident, enums, gid):
+        return 'goleri.NewRepeat({}, {}, {}, {})'.format(
+            gid,
+            self._element._export_go(go_identation, ident, enums),
+            self._min,
+            self._max or '0')

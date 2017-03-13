@@ -17,7 +17,7 @@ class MyGrammar(Grammar):
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement, c_export
+from .elements import NamedElement, c_export, go_export
 
 
 class Keyword(NamedElement):
@@ -71,4 +71,11 @@ class Keyword(NamedElement):
             gid,
             self._keyword,
             'CLERI_CASE_INSENSITIVE'
-            if self._ign_case else 'CLERI_CASE_INSENSITIVE')
+            if self._ign_case else 'CLERI_CASE_SENSITIVE')
+
+    @go_export
+    def _run_export_go(self, go_identation, ident, enums, gid):
+        return 'goleri.NewKeyword({}, "{}", {})'.format(
+            gid,
+            self._keyword,
+            'true' if self._ign_case else 'false')

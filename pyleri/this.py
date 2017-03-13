@@ -34,4 +34,7 @@ class This(Element):
     def _export_c(self, c_identation, ident, enums):
         return 'CLERI_THIS'
 
+    def _export_go(self, go_identation, ident, enums):
+        return 'goleri.THIS'
+
 THIS = This()
