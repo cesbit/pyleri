@@ -1,9 +1,10 @@
 Python Left-Right Parser
 ========================
+Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues in lrparsing and also had difficulties keeping the language the same in both projects. That is when we decided to create Pyleri which can export a created grammar to JavaScript, C and/or Go.
+
 ---------------------------------------
   * [Related projects](#related-projects)
   * [Installation](#installation)
-  * [Why Pyleri](#why-pyleri)
   * [Quick usage](#quick-usage)
   * [Grammar](#grammar)
     * [Grammar.parse()](#parse)
@@ -28,9 +29,6 @@ Python Left-Right Parser
 - [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
 - [cleri](https://github.com/transceptor-technology/cleri): C parser
 - [goleri](https://github.com/transceptor-technology/goleri): Go parser
-
-## Why Pyleri?
-Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues in lrparsing and also had difficulties keeping the language the same in both projects. That is when we decided to create Pyleri which can export a created grammar to JavaScript, C and/or Go.
 
 ## Installation
 The easiest way is to use PyPI:
