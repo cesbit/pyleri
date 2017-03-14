@@ -11,7 +11,18 @@ Python Left-Right Parser
     * [Grammar.export_c()](#export_c)
     * [Grammar.export_go()](#export_go)
     * [Grammar.export_py()](#export_py)
-  
+  * [Elements](#elements)
+    * [Choice](#choice)
+    * [Sequence](#sequence)
+    * [Keyword](#keyword)
+    * [Ref](#ref)
+    * [Repeat](#repeat)
+    * [Optional](#optional)
+    * [Regex](#regex)
+    * [Token](#token)
+    * [Tokens](#tokens)
+    * [Prio](#prio)
+
 ---------------------------------------
 ## Related projects
 - [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
@@ -282,8 +293,10 @@ class MyGrammar(Grammar):
         r_name
     )
 ```
-Choice
-------
+## Elements
+Pyleri has several elements which can be used to create a grammar.
+
+### Choice
 syntax:
 ```python
 Choice(element, element, ..., most_greedy=True)
@@ -303,8 +316,7 @@ my_grammar.parse('hi "Iris"').is_valid  # => True
 my_grammar.parse('bye "Iris"').is_valid  # => True
 ```
 
-Sequence
---------
+### Sequence
 syntax:
 ```python
 Sequence(element, element, ...)
@@ -320,8 +332,7 @@ ttt_grammar = TicTacToe()
 ttt_grammar.parse('Tic Tac Toe').is_valid  # => True
 ```
 
-Keyword
--------
+### Keyword
 syntax:
 ```python
 Keyword(keyword, ign_case=Fasle)
@@ -341,8 +352,7 @@ ttt_grammar = TicTacToe()
 ttt_grammar.parse('Tic-Tac-Toe').is_valid  # => True
 ```
 
-Ref
----
+### Ref
 syntax:
 ```python
 Ref()
@@ -361,8 +371,7 @@ nested_ni = NestedNi()
 nested_ni.parse('[ni, ni, [ni, [], [ni, ni]]]').is_valid  # => True
 ```
 
-Repeat
-------
+### Repeat
 syntax:
 ```python
 Repeat(element, mi=0, ma=None)
@@ -392,8 +401,7 @@ class MyGrammar(Grammar):
     r_address = Repeat(r_name, 1, 1) # RIGHT
 ```
 
-List
-----
+### List
 syntax:
 ```python
 List(element, delimiter=',', mi=0, ma=None, opt=False)
@@ -409,8 +417,7 @@ ni = Ni()
 ni.parse('ni, ni, ni, ni, ni').is_valid  # => True
 ```
 
-Optional
---------
+### Optional
 syntax:
 ```python
 Optional(element)
@@ -429,8 +436,7 @@ my_grammar.parse('hi "Iris"').is_valid  # => True
 my_grammar.parse('hi').is_valid  # => True
 ```
 
-Regex
------
+### Regex
 syntax:
 ```python
 Regex(pattern, flags=0)
@@ -439,8 +445,7 @@ The parser compiles a regular expression using the `re` module. Therefore inform
 
 See the Quick Usage example for how to use `Regex`.
 
-Token
------
+### Token
 syntax:
 ```python
 Token(token)
@@ -458,9 +463,7 @@ class Ni(Grammar):
 ni = Ni()
 ni.parse('ni-ni-ni-ni-ni').is_valid  # => True
 ```
-
-Tokens
-------
+### Tokens
 syntax:
 ```python
 Tokens(tokens)
@@ -477,8 +480,7 @@ ni = Ni()
 ni.parse('ni + ni != ni - ni').is_valid  # => True
 ```
 
-Prio
-----
+### Prio
 syntax:
 ```python
 Prio(element, element, ...)
