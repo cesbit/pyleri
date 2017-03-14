@@ -1,24 +1,28 @@
 Python Left-Right Parser
 ========================
-
-Related projects
-----------------
+---------------------------------------
+  * [Related projects](#related-projects)
+  * [Installation](#installation)
+  * [Why Pyleri](#why-pyleri)
+  * [Quick usage](#quick-usage)
+  * [Grammar](#grammar)
+    * [Grammar.parse()](#grammar-parse)
+  
+---------------------------------------
+## Related projects
 - [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
 - [cleri](https://github.com/transceptor-technology/cleri): C parser
 - [goleri](https://github.com/transceptor-technology/goleri): Go parser
 
-Why Pyleri?
------------
+## Why Pyleri?
 Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues in lrparsing and also had difficulties keeping the language the same in both projects. That is when we decided to create Pyleri which can export a created grammar to JavaScript, C and/or Go.
 
-Installation
-------------
+## Installation
 The easiest way is to use PyPI:
 
     sudo pip3 install pyleri
 
-Quick usage
------------
+## Quick usage
 ```python
 # Imports, note that we skip the imports in other examples...
 from pyleri import (
@@ -41,12 +45,10 @@ print(my_grammar.parse('hi "Iris"').is_valid) # => True
 print(my_grammar.parse('bye "Iris"').is_valid) # => False
 ```
 
-Grammar
--------
+## Grammar
 When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has a parse method: `parse()`, and a few export methods: `export_js()`, `export_c()` and `export_go()` which are explained below.
 
-Grammar.parse()
----------------
+### Grammar.parse()
 syntax:
 ```python
 Grammar().parse(string)
@@ -66,8 +68,7 @@ print(node_result.pos) # => 0 => Position in the string where we are expecting t
 print(node_result.tree) # => Node object containing the parse tree
 ```
 
-Grammar.export_js()
--------------------
+### Grammar.export_js()
 syntax:
 ```python
 Grammar().export_js(
@@ -117,8 +118,7 @@ For example when using our Quick usage grammar, this is the output when running 
 );
 ```
 
-Grammar.export_c()
--------------------
+### Grammar.export_c()
 syntax:
 ```python
 Grammar().export_c(
@@ -191,8 +191,7 @@ enum cleri_grammar_ids {
     CLERI_END // can be used to get the enum length
 };
 ```
-Grammar.export_go()
--------------------
+### Grammar.export_go()
 syntax:
 ```python
 Grammar().export_go(
