@@ -191,6 +191,56 @@ enum cleri_grammar_ids {
     CLERI_END // can be used to get the enum length
 };
 ```
+Grammar.export_go()
+-------------------
+syntax:
+```python
+Grammar().export_go(
+    go_template=Grammar.GO_TEMPLATE,
+    go_identation='\t',
+    go_package='grammar')
+```
+Optional keyword arguments:
+- `go_template`: Template String used for the export. You might want to look at the default string which can be found at Grammar.GO_TEMPLATE.
+- `go_identation`: identation used in the Go file. (default: one tab)
+- `go_package`: Name of the go package. (default: 'grammar')
+
+For example when using our Quick usage grammar, this is the output when running `my_grammar.export_go()`:
+```go
+package grammar
+
+// This grammar is generated using the Grammar.export_go() method and
+// should be used with the goleri module.
+//
+// Source class: MyGrammar
+// Created at: 2017-03-14 19:07:09
+
+import (
+        "regexp"
+
+        "github.com/transceptor-technology/goleri"
+)
+
+// Element identifiers
+const (
+        NoGid = iota
+        GidKHi = iota
+        GidRName = iota
+        GidSTART = iota
+)
+
+// MyGrammar returns a compiled goleri grammar.
+func MyGrammar() *goleri.Grammar {
+        rName := goleri.NewRegex(GidRName, regexp.MustCompile(`^(?:"(?:[^"]*)")+`))
+        kHi := goleri.NewKeyword(GidKHi, "hi", false)
+        START := goleri.NewSequence(
+                GidSTART,
+                kHi,
+                rName,
+        )
+        return goleri.NewGrammar(START, regexp.MustCompile(`^\w+`))
+}
+```
 
 Choice
 ------
