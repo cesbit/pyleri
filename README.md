@@ -10,6 +10,7 @@ Python Left-Right Parser
     * [Grammar.export_js()](#export_js)
     * [Grammar.export_c()](#export_c)
     * [Grammar.export_go()](#export_go)
+    * [Grammar.export_py()](#export_py)
   
 ---------------------------------------
 ## Related projects
@@ -243,7 +244,44 @@ func MyGrammar() *goleri.Grammar {
         return goleri.NewGrammar(START, regexp.MustCompile(`^\w+`))
 }
 ```
+### export_py
+syntax:
+```python
+Grammar().export_py(
+    py_module_name='pyleri',
+    py_template=Grammar.PY_TEMPLATE,
+    py_identation=' ' * 4)
+```
+Optional keyword arguments:
+- `py_module_name`: Name of the Pyleri Module. (default: 'pyleri')
+- `py_template`: Template String used for the export. You might want to look at the default string which can be found at Grammar.PY_TEMPLATE.
+- `py_identation`: identation used in the Python file. (default: 4 spaces)
 
+For example when using our Quick usage grammar, this is the output when running `my_grammar.export_py()`:
+```python
+"""
+ This grammar is generated using the Grammar.export_py() method and
+ should be used with the pyleri python module.
+
+ Source class: MyGrammar
+ Created at: 2017-03-14 19:14:51
+"""
+import re
+from pyleri import Sequence
+from pyleri import Keyword
+from pyleri import Grammar
+from pyleri import Regex
+
+class MyGrammar(Grammar):
+
+    RE_KEYWORDS = re.compile('^\\w+')
+    r_name = Regex('^(?:"(?:[^"]*)")+')
+    k_hi = Keyword('hi')
+    START = Sequence(
+        k_hi,
+        r_name
+    )
+```
 Choice
 ------
 syntax:
