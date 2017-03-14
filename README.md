@@ -6,7 +6,7 @@ Python Left-Right Parser
   * [Why Pyleri](#why-pyleri)
   * [Quick usage](#quick-usage)
   * [Grammar](#grammar)
-    * [Grammar.parse()](#grammar.parse())
+    * [Grammar.parse()](#grammar.parse)
   
 ---------------------------------------
 ## Related projects
