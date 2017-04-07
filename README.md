@@ -67,7 +67,7 @@ syntax:
 Grammar().parse(string)
 ```
 The `parse()` method returns a `NodeResult` object which has the following properties:
-- `expecting`: A Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string.
+- `expecting`: A Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string. Expecting is useful if you want to implement things like auto-completion, syntax error handling, auto-syntax-correction etc.
 - `is_valid`: Boolean value, `True` when the given string is valid, `False` when not valid.
 - `pos`: Position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string with `str.rstrip()` applied)
 - `tree`: Contains the parse tree. Even when `is_valid` is `False` the parse tree is returned but will only contain results as far as parsing has succeeded.
