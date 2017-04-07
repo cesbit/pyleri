@@ -59,7 +59,7 @@ print(my_grammar.parse('bye "Iris"').is_valid) # => False
 ```
 
 ## Grammar
-When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has a parse method: `parse()`, and a few export methods: `export_js()`, `export_c()` and `export_go()` which are explained below.
+When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has a parse method: `parse()`, and a few export methods: `export_js()`, `export_c()`, `export_py()` and `export_go()` which are explained below.
 
 ### parse
 syntax:
