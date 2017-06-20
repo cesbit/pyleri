@@ -147,6 +147,8 @@ The return value is a tuple containing the source (c) file and header (h) file.
 For example when using our Quick usage grammar, this is the output when running `my_grammar.export_c()`:
 ```c
 /*
+ * grammar.c
+ *
  * This grammar is generated using the Grammar.export_c() method and
  * should be used with the cleri module.
  *
@@ -154,7 +156,7 @@ For example when using our Quick usage grammar, this is the output when running 
  * Created at: 2016-05-09 12:16:49
  */
 
-#include <grammar.h>
+#include "grammar.h"
 #include <stdio.h>
 
 #define CLERI_CASE_SENSITIVE 0
@@ -182,14 +184,16 @@ cleri_grammar_t * compile_grammar(void)
 and the header file...
 ```c
 /*
+ * grammar.h
+ *
  * This grammar is generated using the Grammar.export_c() method and
  * should be used with the cleri module.
  *
  * Source class: MyGrammar
  * Created at: 2016-05-09 12:16:49
  */
-
-#pragma once
+#ifndef CLERI_EXPORT_GRAMMAR_H_
+#define CLERI_EXPORT_GRAMMAR_H_
 
 #include <grammar.h>
 #include <cleri/object.h>
@@ -203,6 +207,9 @@ enum cleri_grammar_ids {
     CLERI_GID_START,
     CLERI_END // can be used to get the enum length
 };
+
+#endif /* CLERI_EXPORT_GRAMMAR_H_ */
+
 ```
 ### export_go
 syntax:
