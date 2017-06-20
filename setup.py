@@ -1,3 +1,13 @@
+"""setup.py
+
+Upload to PyPI, Thx to: http://peterdowns.com/posts/first-time-with-pypi.html
+
+python3 setup.py register -r pypitest
+python3 setup.py sdist upload -r pypitest
+
+python3 setup.py register -r pypi
+python3 setup.py sdist upload -r pypi
+"""
 from distutils.core import setup
 
 VERSION = '1.1.6'
