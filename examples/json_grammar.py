@@ -40,4 +40,3 @@ class JsonGrammar(Grammar):
         k_null,
         json_map,
         json_array)
-

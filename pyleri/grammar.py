@@ -157,6 +157,8 @@ class {name}(Grammar):
     C_TARGET = 'grammar'
     C_TEMPLATE_C = '''
 /*
+ * {target}.c
+ *
  * This grammar is generated using the Grammar.export_c() method and
  * should be used with the cleri module.
  *
@@ -164,7 +166,7 @@ class {name}(Grammar):
  * Created at: {datetime}
  */
 
-#include <{target}.h>
+#include "{target}.h"
 #include <stdio.h>
 
 #define CLERI_CASE_SENSITIVE 0
@@ -185,16 +187,17 @@ cleri_grammar_t * compile_grammar(void)
 
     C_TEMPLATE_H = '''
 /*
+ * {target}.h
+ *
  * This grammar is generated using the Grammar.export_c() method and
  * should be used with the cleri module.
  *
  * Source class: {name}
  * Created at: {datetime}
  */
+#ifndef CLERI_EXPORT_{utarget}_H_
+#define CLERI_EXPORT_{utarget}_H_
 
-#pragma once
-
-#include <{target}.h>
 #include <cleri/object.h>
 
 cleri_grammar_t * compile_grammar(void);
@@ -204,6 +207,8 @@ enum cleri_grammar_ids {{
 {enums}
     CLERI_END // can be used to get the enum length
 }};
+
+#endif /* CLERI_EXPORT_{utarget}_H_ */
 
 '''.lstrip()
 
@@ -358,21 +363,21 @@ func {name}() *goleri.Grammar {{
                 continue
             if not hasattr(elem, '_export_c'):
                 continue
-            if isinstance(elem, Ref):
-                language.append(
-                    '{ident}cleri_object_t * {name};'.format(
-                        ident=c_identation,
-                        name=name))
-            else:
-                language.append(
-                    '{ident}cleri_object_t * {name} = {value};'.format(
-                        ident=c_identation,
-                        name=name,
-                        value=elem._export_c(c_identation, ident, enums)))
+            # if isinstance(elem, Ref):
+            #     language.append(
+            #         '{ident}cleri_object_t * {name};'.format(
+            #             ident=c_identation,
+            #             name=name))
+            # else:
+            language.append(
+                '{ident}cleri_object_t * {name} = {value};'.format(
+                    ident=c_identation,
+                    name=name,
+                    value=elem._export_c(c_identation, ident, enums)))
 
         for name, ref in self._refs.items():
             language.append(
-                '{ident}{name} = {value};'
+                '{ident}cleri_ref_set({name}, {value});'
                 .format(
                     ident=c_identation,
                     name=name,
@@ -401,6 +406,7 @@ func {name}() *goleri.Grammar {{
                 self.__class__.C_TEMPLATE_H.format(
                     name=self.__class__.__name__,
                     target=target,
+                    utarget=target.upper(),
                     datetime=time.strftime(
                         '%Y-%m-%d %H:%M:%S',
                         time.localtime()),

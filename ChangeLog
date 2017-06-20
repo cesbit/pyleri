@@ -1,3 +1,7 @@
+2017.06.20, Version 1.1.6 (Stable)
+
+  * Fixed exporting ref to C.
+
 2017.03.13, Version 1.1.5 (Stable)
 
   * Fixed exporting keywords (case sensitive) to C.

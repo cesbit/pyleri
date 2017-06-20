@@ -10,10 +10,7 @@ from .elements import NamedElement
 
 
 class Ref(NamedElement):
-    '''Ref class.
-
-    Note: _run_export_c() is not needed since C does not need a Ref but
-    instead the object will be pre-declared.'''
+    '''Ref class.'''
 
     __slots__ = ('_element', '_get_node_result')
 
@@ -31,6 +28,9 @@ class Ref(NamedElement):
 
     def _run_export_py(self, py_identation, ident, classes):
         return 'Ref()'
+
+    def _run_export_c(self, c_identation, ident, enums):
+        return 'cleri_ref()'
 
     def _run_export_go(self, go_identation, ident, classes):
         return 'goleri.NewRef()'
