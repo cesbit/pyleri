@@ -64,6 +64,14 @@ class Repeat(NamedElement):
 
     @c_export
     def _run_export_c(self, c_identation, ident, enums, gid):
+        # If the repeat is used as a duplication we can use the duplication
+        # which is supported by libcleri
+        if hasattr(self._element, 'name') \
+                and self._min == 1 \
+                and self._max == 1:
+            return 'cleri_object_dup({}, {})'.format(
+                self._element.name,
+                gid)
         return 'cleri_repeat({}, {}, {}, {})'.format(
             gid,
             self._element._export_c(c_identation, ident, enums),

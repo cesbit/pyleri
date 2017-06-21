@@ -195,8 +195,8 @@ cleri_grammar_t * compile_grammar(void)
  * Source class: {name}
  * Created at: {datetime}
  */
-#ifndef CLERI_EXPORT_{utarget}_H_
-#define CLERI_EXPORT_{utarget}_H_
+#ifndef CLERI_EXPORT_{guard}_H_
+#define CLERI_EXPORT_{guard}_H_
 
 #include <cleri/object.h>
 
@@ -208,7 +208,7 @@ enum cleri_grammar_ids {{
     CLERI_END // can be used to get the enum length
 }};
 
-#endif /* CLERI_EXPORT_{utarget}_H_ */
+#endif /* CLERI_EXPORT_{guard}_H_ */
 
 '''.lstrip()
 
@@ -406,7 +406,7 @@ func {name}() *goleri.Grammar {{
                 self.__class__.C_TEMPLATE_H.format(
                     name=self.__class__.__name__,
                     target=target,
-                    utarget=target.upper(),
+                    guard=target.upper().replace('/', '_').replace('\\', '_'),
                     datetime=time.strftime(
                         '%Y-%m-%d %H:%M:%S',
                         time.localtime()),

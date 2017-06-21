@@ -1,3 +1,9 @@
+2017.06.20, Version 1.1.7 (Stable)
+
+  * Added support for cleri_object_dup() in export to C. (issue #5)
+
+  * Fixed header guards while exporting to C. (issue #6)
+
 2017.06.20, Version 1.1.6 (Stable)
 
   * Fixed exporting ref to C. (issue #4)
