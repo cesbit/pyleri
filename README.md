@@ -1,6 +1,6 @@
 Python Left-Right Parser
 ========================
-Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues in lrparsing and also had difficulties keeping the language the same in both projects. That is when we decided to create Pyleri which can export a created grammar to JavaScript, C, Python and Go.
+Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues in lrparsing and also had difficulties keeping the language the same in all projects. That is when we decided to create Pyleri which can export a created grammar to JavaScript, C, Python and Go.
 
 ---------------------------------------
   * [Related projects](#related-projects)
@@ -27,7 +27,7 @@ Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We fir
 ---------------------------------------
 ## Related projects
 - [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
-- [cleri](https://github.com/transceptor-technology/cleri): C parser
+- [libcleri](https://github.com/transceptor-technology/libcleri): C parser
 - [goleri](https://github.com/transceptor-technology/goleri): Go parser
 
 ## Installation
@@ -150,7 +150,7 @@ For example when using our Quick usage grammar, this is the output when running 
  * grammar.c
  *
  * This grammar is generated using the Grammar.export_c() method and
- * should be used with the cleri module.
+ * should be used with the libcleri module.
  *
  * Source class: MyGrammar
  * Created at: 2016-05-09 12:16:49
@@ -187,7 +187,7 @@ and the header file...
  * grammar.h
  *
  * This grammar is generated using the Grammar.export_c() method and
- * should be used with the cleri module.
+ * should be used with the libcleri module.
  *
  * Source class: MyGrammar
  * Created at: 2016-05-09 12:16:49
