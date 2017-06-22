@@ -69,9 +69,9 @@ class Repeat(NamedElement):
         if hasattr(self._element, 'name') \
                 and self._min == 1 \
                 and self._max == 1:
-            return 'cleri_object_dup({}, {})'.format(
-                self._element.name,
-                gid)
+            return 'cleri_dup({}, {})'.format(
+                gid,
+                self._element.name)
         return 'cleri_repeat({}, {}, {}, {})'.format(
             gid,
             self._element._export_c(c_identation, ident, enums),
