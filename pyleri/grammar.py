@@ -160,7 +160,7 @@ class {name}(Grammar):
  * {target}.c
  *
  * This grammar is generated using the Grammar.export_c() method and
- * should be used with the cleri module.
+ * should be used with the libcleri module.
  *
  * Source class: {name}
  * Created at: {datetime}
@@ -190,7 +190,7 @@ cleri_grammar_t * compile_grammar(void)
  * {target}.h
  *
  * This grammar is generated using the Grammar.export_c() method and
- * should be used with the cleri module.
+ * should be used with the libcleri module.
  *
  * Source class: {name}
  * Created at: {datetime}
@@ -353,7 +353,7 @@ func {name}() *goleri.Grammar {{
 
     def export_c(self, target=C_TARGET, c_identation=C_IDENTATION):
         '''Export the grammar to a c (source and header) file which can be
-        used with the cleri module.'''
+        used with the libcleri module.'''
         language = []
         ident = 0
         enums = set()
