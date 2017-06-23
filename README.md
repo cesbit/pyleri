@@ -167,9 +167,9 @@ For example when using our Quick usage grammar, this is the output when running 
 
 cleri_grammar_t * compile_grammar(void)
 {
-    cleri_object_t * r_name = cleri_regex(CLERI_GID_R_NAME, "^(?:\"(?:[^\"]*)\")+");
-    cleri_object_t * k_hi = cleri_keyword(CLERI_GID_K_HI, "hi", CLERI_CASE_INSENSITIVE);
-    cleri_object_t * START = cleri_sequence(
+    cleri_t * r_name = cleri_regex(CLERI_GID_R_NAME, "^(?:\"(?:[^\"]*)\")+");
+    cleri_t * k_hi = cleri_keyword(CLERI_GID_K_HI, "hi", CLERI_CASE_INSENSITIVE);
+    cleri_t * START = cleri_sequence(
         CLERI_GID_START,
         2,
         k_hi,
@@ -196,7 +196,7 @@ and the header file...
 #define CLERI_EXPORT_GRAMMAR_H_
 
 #include <grammar.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 cleri_grammar_t * compile_grammar(void);
 

@@ -198,7 +198,7 @@ cleri_grammar_t * compile_grammar(void)
 #ifndef CLERI_EXPORT_{guard}_H_
 #define CLERI_EXPORT_{guard}_H_
 
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 cleri_grammar_t * compile_grammar(void);
 
@@ -363,14 +363,8 @@ func {name}() *goleri.Grammar {{
                 continue
             if not hasattr(elem, '_export_c'):
                 continue
-            # if isinstance(elem, Ref):
-            #     language.append(
-            #         '{ident}cleri_object_t * {name};'.format(
-            #             ident=c_identation,
-            #             name=name))
-            # else:
             language.append(
-                '{ident}cleri_object_t * {name} = {value};'.format(
+                '{ident}cleri_t * {name} = {value};'.format(
                     ident=c_identation,
                     name=name,
                     value=elem._export_c(c_identation, ident, enums)))

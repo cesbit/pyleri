@@ -1,3 +1,7 @@
+2017.06.20, Version 1.1.8 (Stable)
+
+  * Rename cleri_object_t to cleri_t.
+
 2017.06.20, Version 1.1.7 (Stable)
 
   * Added support for cleri_dup() in export to C. (issue #5)
