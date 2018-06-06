@@ -9,19 +9,26 @@ python3 setup.py register -r pypi
 python3 setup.py sdist upload -r pypi
 """
 from distutils.core import setup
-from pyleri import __version__
+from pyleri import __version__ as version
+
+
+with open('README.md', 'r') as f:
+    long_description = f.read()
+
 
 setup(
     name='pyleri',
     packages=['pyleri'],
-    version=__version__,
+    version=version,
     description='Python Left-Right Parser',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Jeroen van der Heijden',
     author_email='jeroen@transceptor.technology',
     url='https://github.com/transceptor-technology/pyleri',
-    download_url=
+    download_url=(
         'https://github.com/transceptor-technology/'
-        'pyleri/tarball/{}'.format(__version__),
+        'pyleri/tarball/{}'.format(version)),
     keywords=['parser', 'grammar', 'autocompletion'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
