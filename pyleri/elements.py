@@ -164,4 +164,6 @@ class NamedElement(Element):
 # Note: usually this is bad design but in this case we do want class
 #       inheritance which allows us to create a new class Token which
 #       is sub-classed from the 'NamedElement' class.
+
+
 from .token import Token  # nopep8
