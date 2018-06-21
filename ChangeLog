@@ -1,3 +1,7 @@
+2018.xx.xx, Version 1.1.9 (Stable)
+
+  * Typo in List mi/ma exception.
+
 2017.06.23, Version 1.1.8 (Stable)
 
   * Rename cleri_object_t to cleri_t.

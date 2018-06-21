@@ -23,13 +23,13 @@ class List(NamedElement):
             map(self._validate_element, (element, delimiter))
 
         if not isinstance(mi, int) or mi < 0:
-            raise TypeError('Repeat(): "mi" must be an integer value larger '
+            raise TypeError('List(): "mi" must be an integer value larger '
                             'than or equal to 0, got: {}'.format(mi))
         self._min = mi
 
         if not isinstance(ma, (int, type(None))) or \
                 (ma is not None and ma < mi):
-            raise TypeError('Repeat(): "ma" must be an integer or None value. '
+            raise TypeError('List(): "ma" must be an integer or None value. '
                             'If an integer is specified it must be larger '
                             'than or equal to "mi"')
         self._max = ma
