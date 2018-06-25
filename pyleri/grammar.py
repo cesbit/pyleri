@@ -242,6 +242,35 @@ func {name}() *goleri.Grammar {{
 }}
 '''.lstrip()
 
+    JAVA_IDENTATION = '    '
+    JAVA_PACKAGE = 'grammar'
+    JAVA_TEMPLATE = '''
+package {package};
+
+/**
+ * This grammar is generated using the Grammar.export_java() method and
+ * should be used with the goleri module.
+ *
+ * Source class: {name}
+ * Created at: {datetime}
+ */
+
+import jleri.Grammar;
+{imports}
+
+class {name} extends Grammar {{
+{ident}enum Ids {{
+{enums}
+{ident}}}
+
+{language}
+
+{ident}{name}() {{
+{ident}super(START, "{re_keywords}");
+{ident}}}
+}}
+'''.lstrip()
+
     def __init__(self):
         '''Initialize the grammar.
 
@@ -412,6 +441,56 @@ func {name}() *goleri.Grammar {{
             go_template=GO_TEMPLATE,
             go_identation=GO_IDENTATION,
             go_package=GO_PACKAGE):
+        '''Export the grammar to a JavaScript file which can be
+        used with the js-lrparsing module.'''
+
+        language = []
+        enums = set()
+        ident = 0
+        pattern = self.RE_KEYWORDS.pattern.replace('`', '` + "`" + `')
+        if not pattern.startswith('^'):
+            pattern = '^' + pattern
+
+        for name in self._order:
+            elem = getattr(self, name, None)
+            if not isinstance(elem, Element):
+                continue
+            if not hasattr(elem, '_export_go'):
+                continue
+            language.append('{ident}{name} := {value}'.format(
+                ident=go_identation,
+                name=camel_case(name),
+                value=elem._export_go(go_identation, ident, enums)))
+
+        for name, ref in self._refs.items():
+            language.append(
+                    '{ident}{name}.Set({value})'
+                    .format(
+                        ident=go_identation,
+                        name=camel_case(name),
+                        value=ref._element._export_go(
+                            go_identation,
+                            ident,
+                            enums)))
+
+        enums = ' = iota\n'.join([
+            '{}{}'.format(go_identation, gid)
+            for gid in sorted(enums)]) + ' = iota'
+
+        return go_template.format(
+            name=self.__class__.__name__,
+            ident=go_identation,
+            package=go_package,
+            datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
+            language='\n'.join(language),
+            re_keywords=pattern,
+            enums=enums)
+
+    def export_java(
+            self,
+            java_template=JAVA_TEMPLATE,
+            java_identation=JAVA_IDENTATION,
+            java_package=JAVA_PACKAGE):
         '''Export the grammar to a JavaScript file which can be
         used with the js-lrparsing module.'''
 

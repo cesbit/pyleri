@@ -2,6 +2,8 @@
 
   * Typo in List mi/ma exception.
 
+  * Added export to Java for the jleri module.
+
 2017.06.23, Version 1.1.8 (Stable)
 
   * Rename cleri_object_t to cleri_t.
