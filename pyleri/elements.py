@@ -16,16 +16,19 @@ def cap_case(s):
     return ''.join(p[0].upper() + p[1:] for p in s.split('_') if p)
 
 
+_cref = None
+
+
 def c_export(func):
 
-    def wrapper(self, c_indentation, ident, enums, _gid, ref=None):
-        elem = self if ref is None else ref
+    def wrapper(self, c_indentation, ident, enums, ref=None):
+        global _cref
+        elem, _cref = self if _cref is None else _cref, ref
         gid = getattr(elem, 'name', getattr(elem, '_name', 'CLERI_NONE'))
         if gid != 'CLERI_NONE':
             gid = 'CLERI_GID_{}'.format(gid.upper())
             enums.add(gid)
-        if ref:
-            print(self, gid)
+
         return func(self, c_indentation, ident, enums, gid)
 
     return wrapper
@@ -41,6 +44,7 @@ def go_export(func):
         return func(self, go_indentation, ident, enums, gid)
 
     return wrapper
+
 
 def java_export(func):
 
@@ -123,7 +127,7 @@ class NamedElement(Element):
     def _export_c(self, c_indentation, ident, enums, gid):
         if hasattr(self, 'name') and ident:
             return self.name
-        return self._run_export_c(c_indentation, ident or 1, enums, gid)
+        return self._run_export_c(c_indentation, ident or 1, enums)
 
     @c_export
     def _export_c_elements(self, c_indentation, ident, enums, gid):
@@ -145,7 +149,7 @@ class NamedElement(Element):
             value=value,
             ident=c_indentation * ident)
 
-    def _run_export_c(self, c_indentation, ident, enums, gid):
+    def _run_export_c(self, c_indentation, ident, enums):
         return 'not_implemented'
 
     @go_export

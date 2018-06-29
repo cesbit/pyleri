@@ -31,11 +31,11 @@ class Rule(NamedElement):
     def _run_export_py(self, py_indentation, ident, classes):
         return self._element._export_py(py_indentation, ident, classes)
 
-    def _run_export_c(self, c_indentation, ident, enums, gid):
+    def _run_export_c(self, c_indentation, ident, enums):
         name = getattr(self, 'name', None)
         if name is not None:
             self._element._name = name
-        return self._element._export_c(c_indentation, ident, enums), gid
+        return self._element._export_c(c_indentation, ident, enums)
 
     def _run_export_go(self, go_indentation, ident, enums):
         name = getattr(self, 'name', None)

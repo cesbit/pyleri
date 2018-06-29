@@ -432,7 +432,7 @@ class {name} extends Grammar {{
                 '{ident}cleri_t * {name} = {value};'.format(
                     ident=c_indentation,
                     name=name,
-                    value=elem._export_c(c_indentation, ident, enums, None)))
+                    value=elem._export_c(c_indentation, ident, enums)))
 
         for name, ref in self._refs.items():
             language.append(

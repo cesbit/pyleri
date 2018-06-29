@@ -30,8 +30,8 @@ class Sequence(NamedElement):
     def _run_export_py(self, py_indentation, ident, classes):
         return self._export_py_elements(py_indentation, ident, classes)
 
-    def _run_export_c(self, c_indentation, ident, enums, gid):
-        return self._export_c_elements(c_indentation, ident, enums, gid)
+    def _run_export_c(self, c_indentation, ident, enums):
+        return self._export_c_elements(c_indentation, ident, enums)
 
     def _run_export_go(self, go_indentation, ident, enums):
         return self._export_go_elements(go_indentation, ident, enums)

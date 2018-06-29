@@ -29,7 +29,7 @@ class Ref(NamedElement):
     def _run_export_py(self, py_indentation, ident, classes):
         return 'Ref()'
 
-    def _run_export_c(self, c_indentation, ident, enums, gid):
+    def _run_export_c(self, c_indentation, ident, enums):
         return 'cleri_ref()'
 
     def _run_export_go(self, go_indentation, ident, classes):
