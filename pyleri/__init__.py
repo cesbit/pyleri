@@ -29,7 +29,9 @@ from .exceptions import (
     CompileError,
     KeywordError,
     ReKeywordsChangedError,
-    NameAssignedError)
+    NameAssignedError,
+    MissingStartError,
+    UnusedElementError)
 
 __author__ = 'Jeroen van der Heijden'
 __maintainer__ = 'Jeroen van der Heijden'

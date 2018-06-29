@@ -22,3 +22,11 @@ class NameAssignedError(CompileError):
 
 class MissingRefError(CompileError):
     pass
+
+
+class MissingStartError(CompileError):
+    pass
+
+
+class UnusedElementError(CompileError):
+    pass

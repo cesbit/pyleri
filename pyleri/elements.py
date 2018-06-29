@@ -18,11 +18,14 @@ def cap_case(s):
 
 def c_export(func):
 
-    def wrapper(self, c_identation, ident, enums):
-        gid = getattr(self, 'name', getattr(self, '_name', 'CLERI_NONE'))
+    def wrapper(self, c_identation, ident, enums, ref=None):
+        elem = self if ref is None else ref
+        gid = getattr(elem, 'name', getattr(elem, '_name', 'CLERI_NONE'))
         if gid != 'CLERI_NONE':
             gid = 'CLERI_GID_{}'.format(gid.upper())
             enums.add(gid)
+        if ref:
+            print(gid)
         return func(self, c_identation, ident, enums, gid)
 
     return wrapper
@@ -34,6 +37,17 @@ def go_export(func):
         gid = getattr(self, 'name', getattr(self, '_name', 'NoGid'))
         if gid != 'NoGid':
             gid = 'Gid{}'.format(cap_case(gid))
+            enums.add(gid)
+        return func(self, go_identation, ident, enums, gid)
+
+    return wrapper
+
+def java_export(func):
+
+    def wrapper(self, go_identation, ident, enums):
+        gid = getattr(self, 'name', getattr(self, '_name', None))
+        if gid is not None:
+            gid = 'ID_{}'.format(gid.upper())
             enums.add(gid)
         return func(self, go_identation, ident, enums, gid)
 
@@ -158,6 +172,9 @@ class NamedElement(Element):
             ident=go_identation * ident)
 
     def _run_export_go(self, go_identation, ident, enums):
+        return 'not_implemented'
+
+    def _run_export_java(self, java_identation, ident, enums, classes):
         return 'not_implemented'
 
 # Added this import to the bottom to prevent circular import cycle.

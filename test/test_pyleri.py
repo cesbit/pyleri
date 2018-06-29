@@ -15,7 +15,9 @@ from pyleri import (
     Grammar,
     KeywordError,
     ReKeywordsChangedError,
-    NameAssignedError)
+    NameAssignedError,
+    MissingStartError,
+    UnusedElementError)
 from examples import JsonGrammar
 
 
@@ -96,6 +98,20 @@ class TestPyleri(unittest.TestCase):
             class _G4(Grammar):
                 k_test = Keyword('test')
                 k_test2 = k_test
+
+        with self.assertRaises(NameAssignedError):
+            class _G5(Grammar):
+                k_test = Keyword('test')
+                k_Test = Keyword('duplicate')
+
+        with self.assertRaises(MissingStartError):
+            class _G6(Grammar):
+                k_test = Keyword('test')
+
+        with self.assertRaises(UnusedElementError):
+            class _G7(Grammar):
+                k_test = Keyword('test')
+                START = Keyword('bla')
 
     def test_prio(self):
         tg = _TestGrammar2()

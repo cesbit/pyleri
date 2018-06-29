@@ -25,7 +25,9 @@ from .exceptions import (
     KeywordError,
     ReKeywordsChangedError,
     NameAssignedError,
-    MissingRefError)
+    MissingRefError,
+    MissingStartError,
+    UnusedElementError)
 
 
 _RE_KEYWORDS = re.compile('^\w+')
@@ -55,6 +57,12 @@ class _KeepOrder(dict):
 
     def __setitem__(self, key, value):
         if key not in self:
+            for k in self._order:
+                if k.upper() == key.upper():
+                    raise NameAssignedError(
+                        'Element names must be unique in a case in-sensitive '
+                        'way. Cannot set both "{}" and "{}".'.format(
+                            k, key))
             self._order.append(key)
         elif key in self._refs:
             self._refs[key].element = value
@@ -84,6 +92,20 @@ class _KeepOrder(dict):
         super().__setitem__(key, value)
 
 
+def _used_checker(elem, used):
+    if hasattr(elem, 'name') and not isinstance(elem, Ref):
+        if elem.name in used:
+            return
+        used.add(elem.name)
+    if hasattr(elem, '_element'):
+        _used_checker(elem._element, used)
+        if hasattr(elem, '_delimiter'):
+            _used_checker(elem._delimiter, used)
+    elif hasattr(elem, '_elements'):
+        for el in elem._elements:
+            _used_checker(el, used)
+
+
 class _OrderedClass(type):
 
     @classmethod
@@ -96,6 +118,20 @@ class _OrderedClass(type):
                 raise MissingRefError(
                     'Forward reference {!r} is createad but the '
                     'actual reference is missing.'.format(n))
+        if bases and not isinstance(attrs.get('START'), Element):
+            raise MissingStartError(
+                'Grammar is mising the required START element entry point.')
+        if bases:
+            used = set()
+            _used_checker(attrs['START'], used)
+            elems = {
+                elem for elem in attrs['_order']
+                if isinstance(attrs[elem], Element)}
+            if used != elems:
+                raise UnusedElementError(
+                    'Unused element(s) found: {}'.format(
+                        ', '.join(elems - used)))
+
         return super().__new__(mcs, name, bases, attrs)
 
 
@@ -407,7 +443,8 @@ class {name} extends Grammar {{
                     value=ref._element._export_c(
                         c_identation,
                         ident,
-                        enums)))
+                        enums,
+                        ref)))
 
         pattern = self.RE_KEYWORDS.pattern.replace('\\', '\\\\')
         if not pattern.startswith('^'):
@@ -441,8 +478,8 @@ class {name} extends Grammar {{
             go_template=GO_TEMPLATE,
             go_identation=GO_IDENTATION,
             go_package=GO_PACKAGE):
-        '''Export the grammar to a JavaScript file which can be
-        used with the js-lrparsing module.'''
+        '''Export the grammar to a Go file which can be
+        used with the goleri module.'''
 
         language = []
         enums = set()
@@ -491,13 +528,13 @@ class {name} extends Grammar {{
             java_template=JAVA_TEMPLATE,
             java_identation=JAVA_IDENTATION,
             java_package=JAVA_PACKAGE):
-        '''Export the grammar to a JavaScript file which can be
-        used with the js-lrparsing module.'''
+        '''Export the grammar to a Java file which can be
+        used with the jleri module.'''
 
         language = []
         enums = set()
         ident = 0
-        pattern = self.RE_KEYWORDS.pattern.replace('`', '` + "`" + `')
+        pattern = self.RE_KEYWORDS.pattern.replace('\\', '\\\\')
         if not pattern.startswith('^'):
             pattern = '^' + pattern
 
@@ -505,12 +542,12 @@ class {name} extends Grammar {{
             elem = getattr(self, name, None)
             if not isinstance(elem, Element):
                 continue
-            if not hasattr(elem, '_export_go'):
+            if not hasattr(elem, '_export_java'):
                 continue
-            language.append('{ident}{name} := {value}'.format(
+            language.append('{ident}Element {name} = {value}'.format(
                 ident=go_identation,
                 name=camel_case(name),
-                value=elem._export_go(go_identation, ident, enums)))
+                value=elem._export_java(go_identation, ident, enums)))
 
         for name, ref in self._refs.items():
             language.append(

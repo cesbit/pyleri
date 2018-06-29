@@ -1,6 +1,8 @@
-2018.xx.xx, Version 1.1.9 (Stable)
+2018.xx.xx, Version 1.2.0 (Stable)
 
   * Typo in List mi/ma exception.
+
+  * Do not allow duplicate names in lower or upper case.
 
   * Added export to Java for the jleri module.
 
