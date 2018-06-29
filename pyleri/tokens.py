@@ -26,20 +26,20 @@ class Tokens(NamedElement):
 
         return False, node.start
 
-    def _run_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_indentation, ident, classes):
         return 'Tokens(\'{}\')'.format(' '.join(self._tokens))
 
-    def _run_export_py(self, py_identation, ident, classes):
+    def _run_export_py(self, py_indentation, ident, classes):
         return 'Tokens(\'{}\')'.format(' '.join(self._tokens))
 
     @c_export
-    def _run_export_c(self, c_identation, ident, enums, gid):
+    def _run_export_c(self, c_indentation, ident, enums, gid):
         return 'cleri_tokens({}, "{}")'.format(
             gid,
             ' '.join(self._tokens))
 
     @go_export
-    def _run_export_go(self, go_identation, ident, enums, gid):
+    def _run_export_go(self, go_indentation, ident, enums, gid):
         return 'goleri.NewTokens({}, "{}")'.format(
             gid,
             ' '.join(self._tokens))

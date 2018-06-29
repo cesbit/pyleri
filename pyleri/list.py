@@ -78,38 +78,38 @@ class List(NamedElement):
 
         return is_valid, pos
 
-    def _run_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_indentation, ident, classes):
         return 'List({}, {}, {}, {}, {})'.format(
-            self._element._export_js(js_identation, ident, classes),
-            self._delimiter._export_js(js_identation, ident, classes),
+            self._element._export_js(js_indentation, ident, classes),
+            self._delimiter._export_js(js_indentation, ident, classes),
             self._min,
             self._max or 'undefined',
             'true' if self._opt else 'false')
 
-    def _run_export_py(self, py_identation, ident, classes):
+    def _run_export_py(self, py_indentation, ident, classes):
         return 'List({}, {}, {}, {}, {})'.format(
-            self._element._export_py(py_identation, ident, classes),
-            self._delimiter._export_py(py_identation, ident, classes),
+            self._element._export_py(py_indentation, ident, classes),
+            self._delimiter._export_py(py_indentation, ident, classes),
             self._min,
             self._max or 'None',
             'True' if self._opt else 'False')
 
     @c_export
-    def _run_export_c(self, c_identation, ident, enums, gid):
+    def _run_export_c(self, c_indentation, ident, enums, gid):
         return 'cleri_list({}, {}, {}, {}, {}, {})'.format(
             gid,
-            self._element._export_c(c_identation, ident, enums),
-            self._delimiter._export_c(c_identation, ident, enums),
+            self._element._export_c(c_indentation, ident, enums),
+            self._delimiter._export_c(c_indentation, ident, enums),
             self._min,
             self._max or '0',
             '1' if self._opt else '0')
 
     @go_export
-    def _run_export_go(self, go_identation, ident, enums, gid):
+    def _run_export_go(self, go_indentation, ident, enums, gid):
         return 'goleri.NewList({}, {}, {}, {}, {}, {})'.format(
             gid,
-            self._element._export_go(go_identation, ident, enums),
-            self._delimiter._export_go(go_identation, ident, enums),
+            self._element._export_go(go_indentation, ident, enums),
+            self._delimiter._export_go(go_indentation, ident, enums),
             self._min,
             self._max or '0',
             'true' if self._opt else 'false')

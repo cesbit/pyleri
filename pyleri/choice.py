@@ -48,64 +48,64 @@ class Choice(NamedElement):
 
         return is_valid, pos
 
-    def _run_export_js(self, js_identation, ident, classes):
-        return self._export_js_elements(js_identation, ident, classes)
+    def _run_export_js(self, js_indentation, ident, classes):
+        return self._export_js_elements(js_indentation, ident, classes)
 
-    def _run_export_py(self, py_identation, ident, classes):
+    def _run_export_py(self, py_indentation, ident, classes):
         new_ident = ident + 1
         value = ',\n'.join(['{ident}{elem}'.format(
-            ident=py_identation * new_ident,
+            ident=py_indentation * new_ident,
             elem=elem._export_py(
-                py_identation,
+                py_indentation,
                 new_ident,
                 classes)) for elem in self._elements])
         return 'Choice(\n{val},\n{ident}most_greedy={mg})'.format(
             mg='{mg}'.format(
-                ident=py_identation * (ident + 1),
+                ident=py_indentation * (ident + 1),
                 mg=('False', 'True')[
                     self._get_node_result == self._most_greedy_result]),
             val=value,
-            ident=py_identation * new_ident)
+            ident=py_indentation * new_ident)
 
     @c_export
-    def _run_export_c(self, c_identation, ident, enums, gid):
+    def _run_export_c(self, c_indentation, ident, enums, gid):
         new_ident = ident + 1
         value = ',\n'.join(['{ident}{elem}'.format(
-            ident=c_identation * new_ident,
+            ident=c_indentation * new_ident,
             elem=elem._export_c(
-                c_identation,
+                c_indentation,
                 new_ident,
                 enums)) for elem in self._elements])
         return 'cleri_choice(\n{gid},\n{mg},\n{num},\n{val}\n{ident})'.format(
             gid='{ident}{gid}'.format(
-                ident=c_identation * (ident + 1),
+                ident=c_indentation * (ident + 1),
                 gid=gid),
             mg='{ident}{mg}'.format(
-                ident=c_identation * (ident + 1),
+                ident=c_indentation * (ident + 1),
                 mg=('CLERI_FIRST_MATCH', 'CLERI_MOST_GREEDY')[
                     self._get_node_result == self._most_greedy_result]),
             num='{ident}{num}'.format(
-                ident=c_identation * (ident + 1),
+                ident=c_indentation * (ident + 1),
                 num=len(self._elements)),
             val=value,
-            ident=c_identation * ident)
+            ident=c_indentation * ident)
 
     @go_export
-    def _run_export_go(self, go_identation, ident, enums, gid):
+    def _run_export_go(self, go_indentation, ident, enums, gid):
         new_ident = ident + 1
         value = ',\n'.join(['{ident}{elem}'.format(
-            ident=go_identation * new_ident,
+            ident=go_indentation * new_ident,
             elem=elem._export_go(
-                go_identation,
+                go_indentation,
                 new_ident,
                 enums)) for elem in self._elements])
         return 'goleri.NewChoice(\n{gid},\n{mg},\n{val},\n{ident})'.format(
             gid='{ident}{gid}'.format(
-                ident=go_identation * (ident + 1),
+                ident=go_indentation * (ident + 1),
                 gid=gid),
             mg='{ident}{mg}'.format(
-                ident=go_identation * (ident + 1),
+                ident=go_indentation * (ident + 1),
                 mg=('false', 'true')[
                     self._get_node_result == self._most_greedy_result]),
             val=value,
-            ident=go_identation * ident)
+            ident=go_indentation * ident)

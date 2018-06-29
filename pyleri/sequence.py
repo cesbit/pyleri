@@ -24,14 +24,14 @@ class Sequence(NamedElement):
 
         return is_valid, pos
 
-    def _run_export_js(self, js_identation, ident, classes):
-        return self._export_js_elements(js_identation, ident, classes)
+    def _run_export_js(self, js_indentation, ident, classes):
+        return self._export_js_elements(js_indentation, ident, classes)
 
-    def _run_export_py(self, py_identation, ident, classes):
-        return self._export_py_elements(py_identation, ident, classes)
+    def _run_export_py(self, py_indentation, ident, classes):
+        return self._export_py_elements(py_indentation, ident, classes)
 
-    def _run_export_c(self, c_identation, ident, enums):
-        return self._export_c_elements(c_identation, ident, enums)
+    def _run_export_c(self, c_indentation, ident, enums, gid):
+        return self._export_c_elements(c_indentation, ident, enums, gid)
 
-    def _run_export_go(self, go_identation, ident, enums):
-        return self._export_go_elements(go_identation, ident, enums)
+    def _run_export_go(self, go_indentation, ident, enums):
+        return self._export_go_elements(go_indentation, ident, enums)

@@ -8,3 +8,4 @@ __pycache__/
 checklist.txt
 build/
 dist/
+.vscode/

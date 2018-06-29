@@ -18,38 +18,38 @@ def cap_case(s):
 
 def c_export(func):
 
-    def wrapper(self, c_identation, ident, enums, ref=None):
+    def wrapper(self, c_indentation, ident, enums, _gid, ref=None):
         elem = self if ref is None else ref
         gid = getattr(elem, 'name', getattr(elem, '_name', 'CLERI_NONE'))
         if gid != 'CLERI_NONE':
             gid = 'CLERI_GID_{}'.format(gid.upper())
             enums.add(gid)
         if ref:
-            print(gid)
-        return func(self, c_identation, ident, enums, gid)
+            print(self, gid)
+        return func(self, c_indentation, ident, enums, gid)
 
     return wrapper
 
 
 def go_export(func):
 
-    def wrapper(self, go_identation, ident, enums):
+    def wrapper(self, go_indentation, ident, enums):
         gid = getattr(self, 'name', getattr(self, '_name', 'NoGid'))
         if gid != 'NoGid':
             gid = 'Gid{}'.format(cap_case(gid))
             enums.add(gid)
-        return func(self, go_identation, ident, enums, gid)
+        return func(self, go_indentation, ident, enums, gid)
 
     return wrapper
 
 def java_export(func):
 
-    def wrapper(self, go_identation, ident, enums):
+    def wrapper(self, go_indentation, ident, enums):
         gid = getattr(self, 'name', getattr(self, '_name', None))
         if gid is not None:
             gid = 'ID_{}'.format(gid.upper())
             enums.add(gid)
-        return func(self, go_identation, ident, enums, gid)
+        return func(self, go_indentation, ident, enums, gid)
 
     return wrapper
 
@@ -77,104 +77,104 @@ class NamedElement(Element):
 
     __slots__ = ('name',)
 
-    def _export_js(self, js_identation, ident, classes):
+    def _export_js(self, js_indentation, ident, classes):
         classes.add(self.__class__.__name__.lstrip('_'))
         if hasattr(self, 'name') and ident:
             return self.name
-        return self._run_export_js(js_identation, ident or 1, classes)
+        return self._run_export_js(js_indentation, ident or 1, classes)
 
-    def _export_js_elements(self, js_identation, ident, classes):
+    def _export_js_elements(self, js_indentation, ident, classes):
         new_ident = ident + 1
         value = ',\n'.join(['{ident}{elem}'.format(
-            ident=js_identation * new_ident,
+            ident=js_indentation * new_ident,
             elem=elem._export_js(
-                js_identation,
+                js_indentation,
                 new_ident, classes)) for elem in self._elements])
         return '{class_name}(\n{value}\n{ident})'.format(
             class_name=self.__class__.__name__.lstrip('_'),
             value=value,
-            ident=js_identation * ident)
+            ident=js_indentation * ident)
 
-    def _run_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_indentation, ident, classes):
         return 'not_implemented'
 
-    def _export_py(self, py_identation, ident, classes):
+    def _export_py(self, py_indentation, ident, classes):
         classes.add(self.__class__.__name__.lstrip('_'))
         if hasattr(self, 'name') and ident:
             return self.name
-        return self._run_export_py(py_identation, ident or 1, classes)
+        return self._run_export_py(py_indentation, ident or 1, classes)
 
-    def _export_py_elements(self, py_identation, ident, classes):
+    def _export_py_elements(self, py_indentation, ident, classes):
         new_ident = ident + 1
         value = ',\n'.join(['{ident}{elem}'.format(
-            ident=py_identation * new_ident,
+            ident=py_indentation * new_ident,
             elem=elem._export_py(
-                py_identation,
+                py_indentation,
                 new_ident, classes)) for elem in self._elements])
         return '{class_name}(\n{value}\n{ident})'.format(
             class_name=self.__class__.__name__.lstrip('_'),
             value=value,
-            ident=py_identation * ident)
+            ident=py_indentation * ident)
 
-    def _run_export_py(self, py_identation, ident, classes):
+    def _run_export_py(self, py_indentation, ident, classes):
         return 'not_implemented'
 
     @c_export
-    def _export_c(self, c_identation, ident, enums, gid):
+    def _export_c(self, c_indentation, ident, enums, gid):
         if hasattr(self, 'name') and ident:
             return self.name
-        return self._run_export_c(c_identation, ident or 1, enums)
+        return self._run_export_c(c_indentation, ident or 1, enums, gid)
 
     @c_export
-    def _export_c_elements(self, c_identation, ident, enums, gid):
+    def _export_c_elements(self, c_indentation, ident, enums, gid):
         new_ident = ident + 1
         value = ',\n'.join(['{ident}{elem}'.format(
-            ident=c_identation * new_ident,
+            ident=c_indentation * new_ident,
             elem=elem._export_c(
-                c_identation,
+                c_indentation,
                 new_ident,
                 enums)) for elem in self._elements])
         return 'cleri_{class_name}(\n{gid},\n{num},\n{value}\n{ident})'.format(
             class_name=self.__class__.__name__.lstrip('_').lower(),
             gid='{ident}{gid}'.format(
-                ident=c_identation * (ident + 1),
+                ident=c_indentation * (ident + 1),
                 gid=gid),
             num='{ident}{num}'.format(
-                ident=c_identation * (ident + 1),
+                ident=c_indentation * (ident + 1),
                 num=len(self._elements)),
             value=value,
-            ident=c_identation * ident)
+            ident=c_indentation * ident)
 
-    def _run_export_c(self, c_identation, ident, enums):
+    def _run_export_c(self, c_indentation, ident, enums, gid):
         return 'not_implemented'
 
     @go_export
-    def _export_go(self, go_identation, ident, enums, gid):
+    def _export_go(self, go_indentation, ident, enums, gid):
         if hasattr(self, 'name') and ident:
             return camel_case(self.name)
-        return self._run_export_go(go_identation, ident or 1, enums)
+        return self._run_export_go(go_indentation, ident or 1, enums)
 
     @go_export
-    def _export_go_elements(self, go_identation, ident, enums, gid):
+    def _export_go_elements(self, go_indentation, ident, enums, gid):
         new_ident = ident + 1
         value = ',\n'.join(['{ident}{elem}'.format(
-            ident=go_identation * new_ident,
+            ident=go_indentation * new_ident,
             elem=elem._export_go(
-                go_identation,
+                go_indentation,
                 new_ident,
                 enums)) for elem in self._elements])
         return '{class_name}(\n{gid},\n{value},\n{ident})'.format(
             class_name='goleri.New' + self.__class__.__name__.lstrip('_'),
             gid='{ident}{gid}'.format(
-                ident=go_identation * (ident + 1),
+                ident=go_indentation * (ident + 1),
                 gid=gid),
             value=value,
-            ident=go_identation * ident)
+            ident=go_indentation * ident)
 
-    def _run_export_go(self, go_identation, ident, enums):
+    def _run_export_go(self, go_indentation, ident, enums):
         return 'not_implemented'
 
-    def _run_export_java(self, java_identation, ident, enums, classes):
+    def _run_export_java(self, java_indentation, ident, enums, classes):
         return 'not_implemented'
 
 # Added this import to the bottom to prevent circular import cycle.

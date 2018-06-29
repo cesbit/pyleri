@@ -23,14 +23,14 @@ class Ref(NamedElement):
         self._element = self._validate_element(element)
         self._get_node_result = self._element._get_node_result
 
-    def _run_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_indentation, ident, classes):
         return 'Ref({})'.format(self._element.__class__.__name__)
 
-    def _run_export_py(self, py_identation, ident, classes):
+    def _run_export_py(self, py_indentation, ident, classes):
         return 'Ref()'
 
-    def _run_export_c(self, c_identation, ident, enums):
+    def _run_export_c(self, c_indentation, ident, enums, gid):
         return 'cleri_ref()'
 
-    def _run_export_go(self, go_identation, ident, classes):
+    def _run_export_go(self, go_indentation, ident, classes):
         return 'goleri.NewRef()'

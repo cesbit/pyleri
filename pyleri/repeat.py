@@ -50,20 +50,20 @@ class Repeat(NamedElement):
 
         return is_valid, pos
 
-    def _run_export_js(self, js_identation, ident, classes):
+    def _run_export_js(self, js_indentation, ident, classes):
         return 'Repeat({}, {}, {})'.format(
-            self._element._export_js(js_identation, ident, classes),
+            self._element._export_js(js_indentation, ident, classes),
             self._min,
             self._max or 'undefined')
 
-    def _run_export_py(self, py_identation, ident, classes):
+    def _run_export_py(self, py_indentation, ident, classes):
         return 'Repeat({}, {}, {})'.format(
-            self._element._export_py(py_identation, ident, classes),
+            self._element._export_py(py_indentation, ident, classes),
             self._min,
             self._max or 'None')
 
     @c_export
-    def _run_export_c(self, c_identation, ident, enums, gid):
+    def _run_export_c(self, c_indentation, ident, enums, gid):
         # If the repeat is used as a duplication we can use the duplication
         # which is supported by libcleri
         if hasattr(self._element, 'name') \
@@ -74,14 +74,14 @@ class Repeat(NamedElement):
                 self._element.name)
         return 'cleri_repeat({}, {}, {}, {})'.format(
             gid,
-            self._element._export_c(c_identation, ident, enums),
+            self._element._export_c(c_indentation, ident, enums),
             self._min,
             self._max or 'undefined')
 
     @go_export
-    def _run_export_go(self, go_identation, ident, enums, gid):
+    def _run_export_go(self, go_indentation, ident, enums, gid):
         return 'goleri.NewRepeat({}, {}, {}, {})'.format(
             gid,
-            self._element._export_go(go_identation, ident, enums),
+            self._element._export_go(go_indentation, ident, enums),
             self._min,
             self._max or '0')
