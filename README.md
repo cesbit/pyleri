@@ -310,7 +310,6 @@ public class MyGrammar extends Grammar {
 
     public MyGrammar() {
         super(START, "^\\w+");
-
     }
 }
 ```
