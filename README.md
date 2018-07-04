@@ -11,6 +11,7 @@ Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We fir
     * [Grammar.export_js()](#export_js)
     * [Grammar.export_c()](#export_c)
     * [Grammar.export_go()](#export_go)
+    * [Grammar.export_java()](#export_java)
     * [Grammar.export_py()](#export_py)
   * [Elements](#elements)
     * [Choice](#choice)
@@ -29,6 +30,7 @@ Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We fir
 - [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
 - [libcleri](https://github.com/transceptor-technology/libcleri): C parser
 - [goleri](https://github.com/transceptor-technology/goleri): Go parser
+- [jleri](https://github.com/transceptor-technology/jleri): Java parser
 
 ## Installation
 The easiest way is to use PyPI:
