@@ -284,7 +284,7 @@ func {name}() *goleri.Grammar {{
 {package}
 /**
  * This grammar is generated using the Grammar.export_java() method and
- * should be used with the goleri module.
+ * should be used with the jleri module.
  *
  * Source class: {name}
  * Created at: {datetime}

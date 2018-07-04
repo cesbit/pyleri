@@ -260,6 +260,58 @@ func MyGrammar() *goleri.Grammar {
         return goleri.NewGrammar(START, regexp.MustCompile(`^\w+`))
 }
 ```
+### export_java
+syntax:
+```python
+Grammar().export_java(
+    java_template=Grammar.JAVA_TEMPLATE,
+    java_indent=' ' * 4,
+    java_package=None,
+    is_public=True)
+```
+Optional keyword arguments:
+- `java_template`: Template String used for the export. You might want to look at the default string which can be found at Grammar.JAVA_TEMPLATE.
+- `java_indent`: indentation used in the Java file. (default: four spaces)
+- `java_package`: Name of the Java package or None when no package is specified. (default: None)
+- `is_public`: Class and constructor are defined as public when True, else they will be defined as package private.
+
+For example when using our Quick usage grammar, this is the output when running `my_grammar.export_java()`:
+```java
+/**
+ * This grammar is generated using the Grammar.export_java() method and
+ * should be used with the jleri module.
+ *
+ * Source class: MyGrammar
+ * Created at: 2018-07-04 12:12:34
+ */
+
+import jleri.Grammar;
+import jleri.Element;
+import jleri.Sequence;
+import jleri.Regex;
+import jleri.Keyword;
+
+public class MyGrammar extends Grammar {
+    enum Ids {
+        K_HI,
+        R_NAME,
+        START
+    }
+
+    private static final Element R_NAME = new Regex(Ids.R_NAME, "^(?:\"(?:[^\"]*)\")+");
+    private static final Element K_HI = new Keyword(Ids.K_HI, "hi", false);
+    private static final Element START = new Sequence(
+        Ids.START,
+        K_HI,
+        R_NAME
+    );
+
+    public MyGrammar() {
+        super(START, "^\\w+");
+
+    }
+}
+```
 ### export_py
 syntax:
 ```python
