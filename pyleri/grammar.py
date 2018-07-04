@@ -303,8 +303,7 @@ import jleri.Element;
 
 {indent}{public}{name}() {{
 {indent}{indent}super(START, "{re_keywords}");
-{refs}
-{indent}}}
+{refs}{indent}}}
 }}
 '''.lstrip()
 
@@ -573,7 +572,6 @@ import jleri.Element;
                             -2,
                             enums,
                             classes)))
-
         return java_template.format(
             name=self.__class__.__name__,
             imports='\n'.join(
@@ -586,7 +584,7 @@ import jleri.Element;
             datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
             language='\n'.join(language),
             re_keywords=pattern,
-            refs='\n'.join(refs),
+            refs='' if not refs else '{}\n'.format('\n'.join(refs)),
             enums=enum_str,
             public='public ' if is_public else '')
 
