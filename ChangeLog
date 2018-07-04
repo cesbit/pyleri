@@ -1,12 +1,14 @@
 2018.xx.xx, Version 1.2.0 (Stable)
 
-  * Typo in List mi/ma exception.
+  * Fixed typo in List mi/ma exception.
 
   * Do not allow duplicate names in lower or upper case.
 
   * Added export to Java for the jleri module.
 
-  * Fixed type indentation.
+  * Fixed typo indentation.
+
+  * Added grammar check for missing START point.
 
 2017.06.23, Version 1.1.8 (Stable)
 

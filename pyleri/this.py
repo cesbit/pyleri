@@ -23,19 +23,23 @@ class This(Element):
 
         return rule._tested[node.start]
 
-    def _export_js(self, js_indentation, ident, classes):
+    def _export_js(self, js_indent, indent, classes):
         classes.add('THIS')
         return 'THIS'
 
-    def _export_py(self, py_indentation, ident, classes):
+    def _export_py(self, py_indent, indent, classes):
         classes.add('THIS')
         return 'THIS'
 
-    def _export_c(self, c_indentation, ident, enums):
+    def _export_c(self, c_indent, indent, enums):
         return 'CLERI_THIS'
 
-    def _export_go(self, go_indentation, ident, enums):
+    def _export_go(self, go_indent, indent, enums):
         return 'goleri.THIS'
+
+    def _export_java(self, java_indent, indent, enums, classes):
+        classes.add('This')
+        return 'This.THIS'
 
 
 THIS = This()

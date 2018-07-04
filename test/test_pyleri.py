@@ -17,8 +17,8 @@ from pyleri import (
     ReKeywordsChangedError,
     NameAssignedError,
     MissingStartError,
-    UnusedElementError)
-from examples import JsonGrammar
+    UnusedElementError)  # nopep8
+from examples import JsonGrammar  # nopep8
 
 
 class _TestGrammar1(Grammar):
@@ -175,4 +175,4 @@ if __name__ == '__main__':
     unittest.main()
 
     # grammar = JsonGrammar()
-    # print(grammar.export_c()[0])
+    # print(grammar.export_java(java_package='jlerijson'))

@@ -2,7 +2,7 @@
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement, c_export, go_export
+from .elements import NamedElement, c_export, go_export, java_export
 
 
 class Tokens(NamedElement):
@@ -26,20 +26,26 @@ class Tokens(NamedElement):
 
         return False, node.start
 
-    def _run_export_js(self, js_indentation, ident, classes):
+    def _run_export_js(self, js_indent, indent, classes):
         return 'Tokens(\'{}\')'.format(' '.join(self._tokens))
 
-    def _run_export_py(self, py_indentation, ident, classes):
+    def _run_export_py(self, py_indent, indent, classes):
         return 'Tokens(\'{}\')'.format(' '.join(self._tokens))
 
     @c_export
-    def _run_export_c(self, c_indentation, ident, enums, gid):
+    def _run_export_c(self, c_indent, indent, enums, gid):
         return 'cleri_tokens({}, "{}")'.format(
             gid,
             ' '.join(self._tokens))
 
     @go_export
-    def _run_export_go(self, go_indentation, ident, enums, gid):
+    def _run_export_go(self, go_indent, indent, enums, gid):
         return 'goleri.NewTokens({}, "{}")'.format(
             gid,
+            ' '.join(self._tokens))
+
+    @java_export
+    def _run_export_java(self, java_indent, indent, enums, classes, gid):
+        return 'new Tokens({}"{}")'.format(
+            '' if gid is None else 'Ids.{}, '.format(gid),
             ' '.join(self._tokens))

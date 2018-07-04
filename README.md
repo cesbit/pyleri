@@ -87,12 +87,12 @@ syntax:
 Grammar().export_js(
     js_module_name='jsleri',
     js_template=Grammar.JS_TEMPLATE,
-    js_indentation=' ' * 4)
+    js_indent=' ' * 4)
 ```
 Optional keyword arguments:
 - `js_module_name`: Name of the JavaScript module. (default: 'jsleri')
 - `js_template`: Template String used for the export. You might want to look at the default string which can be found at Grammar.JS_TEMPLATE.
-- `js_indentation`: indentation used in the JavaScript file. (default: 4 spaces)
+- `js_indent`: indentation used in the JavaScript file. (default: 4 spaces)
 
 For example when using our Quick usage grammar, this is the output when running `my_grammar.export_js()`:
 ```javascript
@@ -136,11 +136,11 @@ syntax:
 ```python
 Grammar().export_c(
     target=Grammar.C_TARGET,
-    c_indentation=' ' * 4)
+    c_indent=' ' * 4)
 ```
 Optional keyword arguments:
 - `target`: Name of the c module. (default: 'grammar')
-- `c_indentation`: indentation used in the c files. (default: 4 spaces)
+- `c_indent`: indentation used in the c files. (default: 4 spaces)
 
 The return value is a tuple containing the source (c) file and header (h) file.
 
@@ -216,12 +216,12 @@ syntax:
 ```python
 Grammar().export_go(
     go_template=Grammar.GO_TEMPLATE,
-    go_indentation='\t',
+    go_indent='\t',
     go_package='grammar')
 ```
 Optional keyword arguments:
 - `go_template`: Template String used for the export. You might want to look at the default string which can be found at Grammar.GO_TEMPLATE.
-- `go_indentation`: indentation used in the Go file. (default: one tab)
+- `go_indent`: indentation used in the Go file. (default: one tab)
 - `go_package`: Name of the go package. (default: 'grammar')
 
 For example when using our Quick usage grammar, this is the output when running `my_grammar.export_go()`:
@@ -240,7 +240,7 @@ import (
         "github.com/transceptor-technology/goleri"
 )
 
-// Element identifiers
+// Element indentifiers
 const (
         NoGid = iota
         GidKHi = iota
@@ -266,12 +266,12 @@ syntax:
 Grammar().export_py(
     py_module_name='pyleri',
     py_template=Grammar.PY_TEMPLATE,
-    py_indentation=' ' * 4)
+    py_indent=' ' * 4)
 ```
 Optional keyword arguments:
 - `py_module_name`: Name of the Pyleri Module. (default: 'pyleri')
 - `py_template`: Template String used for the export. You might want to look at the default string which can be found at Grammar.PY_TEMPLATE.
-- `py_indentation`: indentation used in the Python file. (default: 4 spaces)
+- `py_indent`: indentation used in the Python file. (default: 4 spaces)
 
 For example when using our Quick usage grammar, this is the output when running `my_grammar.export_py()`:
 ```python

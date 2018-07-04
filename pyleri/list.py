@@ -11,7 +11,7 @@ delimiter is given we split using a comma. All arguments:
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
-from .elements import NamedElement, c_export, go_export
+from .elements import NamedElement, c_export, go_export, java_export
 
 
 class List(NamedElement):
@@ -78,38 +78,48 @@ class List(NamedElement):
 
         return is_valid, pos
 
-    def _run_export_js(self, js_indentation, ident, classes):
+    def _run_export_js(self, js_indent, indent, classes):
         return 'List({}, {}, {}, {}, {})'.format(
-            self._element._export_js(js_indentation, ident, classes),
-            self._delimiter._export_js(js_indentation, ident, classes),
+            self._element._export_js(js_indent, indent, classes),
+            self._delimiter._export_js(js_indent, indent, classes),
             self._min,
             self._max or 'undefined',
             'true' if self._opt else 'false')
 
-    def _run_export_py(self, py_indentation, ident, classes):
+    def _run_export_py(self, py_indent, indent, classes):
         return 'List({}, {}, {}, {}, {})'.format(
-            self._element._export_py(py_indentation, ident, classes),
-            self._delimiter._export_py(py_indentation, ident, classes),
+            self._element._export_py(py_indent, indent, classes),
+            self._delimiter._export_py(py_indent, indent, classes),
             self._min,
             self._max or 'None',
             'True' if self._opt else 'False')
 
     @c_export
-    def _run_export_c(self, c_indentation, ident, enums, gid):
+    def _run_export_c(self, c_indent, indent, enums, gid):
         return 'cleri_list({}, {}, {}, {}, {}, {})'.format(
             gid,
-            self._element._export_c(c_indentation, ident, enums),
-            self._delimiter._export_c(c_indentation, ident, enums),
+            self._element._export_c(c_indent, indent, enums),
+            self._delimiter._export_c(c_indent, indent, enums),
             self._min,
             self._max or '0',
             '1' if self._opt else '0')
 
     @go_export
-    def _run_export_go(self, go_indentation, ident, enums, gid):
+    def _run_export_go(self, go_indent, indent, enums, gid):
         return 'goleri.NewList({}, {}, {}, {}, {}, {})'.format(
             gid,
-            self._element._export_go(go_indentation, ident, enums),
-            self._delimiter._export_go(go_indentation, ident, enums),
+            self._element._export_go(go_indent, indent, enums),
+            self._delimiter._export_go(go_indent, indent, enums),
             self._min,
             self._max or '0',
+            'true' if self._opt else 'false')
+
+    @java_export
+    def _run_export_java(self, java_indent, indent, enums, classes, gid):
+        return 'new List({}{}, {}, {}, {}, {})'.format(
+            '' if gid is None else 'Ids.{}, '.format(gid),
+            self._element._export_java(java_indent, indent, enums, classes),
+            self._delimiter._export_java(java_indent, indent, enums, classes),
+            self._min,
+            self._max or 'null',
             'true' if self._opt else 'false')

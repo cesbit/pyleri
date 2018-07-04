@@ -38,7 +38,7 @@ class _KeepOrder(dict):
     def __init__(self, *args):
         self._order = []
         self._refs = {}
-        self._RE_KEYWORDS = _RE_KEYWORDS
+        self._re_keywords = _RE_KEYWORDS
         self._has_keywords = False
         super().__setitem__('_order', self._order)
         super().__setitem__('_refs', self._refs)
@@ -46,7 +46,7 @@ class _KeepOrder(dict):
     def _check_keywords(self, element):
         if isinstance(element, Keyword):
             self._has_keywords = True
-            m = self._RE_KEYWORDS.match(element._keyword)
+            m = self._re_keywords.match(element._keyword)
             if m is None or m.group(0) != element._keyword:
                 raise KeywordError(
                     'Keyword {} does not match Grammars keywords match'
@@ -78,7 +78,7 @@ class _KeepOrder(dict):
                 raise ReKeywordsChangedError(
                     'RE_KEYWORDS must be set on top of Grammar before '
                     'keywords are set.')
-            self._RE_KEYWORDS = value
+            self._re_keywords = value
 
         if isinstance(value, NamedElement):
             if hasattr(value, 'name'):
@@ -143,7 +143,7 @@ class Grammar(metaclass=_OrderedClass):
     RE_KEYWORDS = _RE_KEYWORDS
     RE_WHITESPACE = re.compile('\s+')
 
-    JS_indentation = ' ' * 4
+    JS_INDENTATION = ' ' * 4
     JS_MODULE_NAME = 'jsleri'
     JS_TEMPLATE = '''
 /* jshint newcap: false */
@@ -160,17 +160,17 @@ class Grammar(metaclass=_OrderedClass):
 
 (function (
 {arguments}
-{ident}{ident}) {{
+{indent}{indent}) {{
 {language}
 
-{ident}window.{name} = Grammar(START, '{re_keywords}');
+{indent}window.{name} = Grammar(START, '{re_keywords}');
 
 }})(
 {constructors}
 );
 '''.lstrip()
 
-    PY_indentation = ' ' * 4
+    PY_INDENTATION = ' ' * 4
     PY_MODULE_NAME = 'pyleri'
     PY_TEMPLATE = '''
 """
@@ -184,12 +184,12 @@ import re
 {imports}
 
 class {name}(Grammar):
-{ident}
-{ident}RE_KEYWORDS = re.compile('{re_keywords}')
+{indent}
+{indent}RE_KEYWORDS = re.compile('{re_keywords}')
 {language}
 '''.lstrip()
 
-    C_indentation = ' ' * 4
+    C_INDENTATION = ' ' * 4
     C_TARGET = 'grammar'
     C_TEMPLATE_C = '''
 /*
@@ -248,7 +248,7 @@ enum cleri_grammar_ids {{
 
 '''.lstrip()
 
-    GO_indentation = '\t'
+    GO_INDENTATION = '\t'
     GO_PACKAGE = 'grammar'
     GO_TEMPLATE = '''
 package {package}
@@ -265,7 +265,7 @@ import (
 \t"github.com/transceptor-technology/goleri"
 )
 
-// Element identifiers
+// Element indentifiers
 const (
 \tNoGid = iota
 {enums}
@@ -274,15 +274,14 @@ const (
 // {name} returns a compiled goleri grammar.
 func {name}() *goleri.Grammar {{
 {language}
-{ident}return goleri.NewGrammar(START, regexp.MustCompile(`{re_keywords}`))
+{indent}return goleri.NewGrammar(START, regexp.MustCompile(`{re_keywords}`))
 }}
 '''.lstrip()
 
-    JAVA_indentation = '    '
-    JAVA_PACKAGE = 'grammar'
+    JAVA_INDENTATION = '    '
+    JAVA_PACKAGE = None
     JAVA_TEMPLATE = '''
-package {package};
-
+{package}
 /**
  * This grammar is generated using the Grammar.export_java() method and
  * should be used with the goleri module.
@@ -292,18 +291,20 @@ package {package};
  */
 
 import jleri.Grammar;
+import jleri.Element;
 {imports}
 
-class {name} extends Grammar {{
-{ident}enum Ids {{
+{public}class {name} extends Grammar {{
+{indent}enum Ids {{
 {enums}
-{ident}}}
+{indent}}}
 
 {language}
 
-{ident}{name}() {{
-{ident}super(START, "{re_keywords}");
-{ident}}}
+{indent}{public}{name}() {{
+{indent}{indent}super(START, "{re_keywords}");
+{refs}
+{indent}}}
 }}
 '''.lstrip()
 
@@ -322,13 +323,13 @@ class {name} extends Grammar {{
             self,
             js_module_name=JS_MODULE_NAME,
             js_template=JS_TEMPLATE,
-            js_indentation=JS_indentation):
+            js_indent=JS_INDENTATION):
         '''Export the grammar to a JavaScript file which can be
         used with the js-lrparsing module.'''
 
         language = []
         classes = {'Grammar'}
-        ident = 0
+        indent = 0
 
         for name in self._order:
             elem = getattr(self, name, None)
@@ -336,33 +337,33 @@ class {name} extends Grammar {{
                 continue
             if not hasattr(elem, '_export_js'):
                 continue
-            language.append('{ident}var {name} = {value};'.format(
-                ident=js_indentation,
+            language.append('{indent}var {name} = {value};'.format(
+                indent=js_indent,
                 name=name,
-                value=elem._export_js(js_indentation, ident, classes)))
+                value=elem._export_js(js_indent, indent, classes)))
 
         for name, ref in self._refs.items():
             language.append(
-                    '{ident}Object.assign({name}, {value});'
+                    '{indent}Object.assign({name}, {value});'
                     .format(
-                        ident=js_indentation,
+                        indent=js_indent,
                         name=name,
                         value=ref._element._export_js(
-                            js_indentation,
-                            ident,
+                            js_indent,
+                            indent,
                             classes)))
 
         return js_template.format(
             name=self.__class__.__name__,
-            ident=js_indentation,
+            indent=js_indent,
             js_module=js_module_name,
             datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
             language='\n'.join(language),
             arguments=',\n'.join(map(lambda s:
-                                     js_indentation * 3 + s, classes)),
+                                     js_indent * 3 + s, classes)),
             re_keywords=self.RE_KEYWORDS.pattern.replace('\\', '\\\\'),
             constructors=',\n'.join(
-                map(lambda s: js_indentation + s,
+                map(lambda s: js_indent + s,
                     ['.'.join(
                         [
                             'window',
@@ -372,7 +373,7 @@ class {name} extends Grammar {{
             self,
             py_module_name=PY_MODULE_NAME,
             py_template=PY_TEMPLATE,
-            py_indentation=PY_indentation):
+            py_indent=PY_INDENTATION):
         '''Export the grammar to a python file which can be
         used with the pyleri module. This can be useful when python code
         if used to auto-create a grammar and an export of the final result is
@@ -380,7 +381,7 @@ class {name} extends Grammar {{
 
         language = []
         classes = {'Grammar'}
-        ident = 0
+        indent = 0
 
         for name in self._order:
             elem = getattr(self, name, None)
@@ -388,25 +389,25 @@ class {name} extends Grammar {{
                 continue
             if not hasattr(elem, '_export_py'):
                 continue
-            language.append('{ident}{name} = {value}'.format(
-                ident=py_indentation,
+            language.append('{indent}{name} = {value}'.format(
+                indent=py_indent,
                 name=name,
-                value=elem._export_py(py_indentation, ident, classes)))
+                value=elem._export_py(py_indent, indent, classes)))
 
         for name, ref in self._refs.items():
             language.append(
-                '{ident}{name} = {value}'
+                '{indent}{name} = {value}'
                 .format(
-                    ident=py_indentation,
+                    indent=py_indent,
                     name=name,
                     value=ref._element._export_py(
-                        py_indentation,
-                        ident,
+                        py_indent,
+                        indent,
                         classes)))
 
         return py_template.format(
             name=self.__class__.__name__,
-            ident=py_indentation,
+            indent=py_indent,
             py_module=py_module_name,
             datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
             language='\n'.join(language),
@@ -416,11 +417,11 @@ class {name} extends Grammar {{
                     ' '.join(['from', py_module_name, 'import', n])
                     for n in classes if n != 'Rule'])))
 
-    def export_c(self, target=C_TARGET, c_indentation=C_indentation):
+    def export_c(self, target=C_TARGET, c_indent=C_INDENTATION):
         '''Export the grammar to a c (source and header) file which can be
         used with the libcleri module.'''
         language = []
-        ident = 0
+        indent = 0
         enums = set()
         for name in self._order:
             elem = getattr(self, name, None)
@@ -429,20 +430,20 @@ class {name} extends Grammar {{
             if not hasattr(elem, '_export_c'):
                 continue
             language.append(
-                '{ident}cleri_t * {name} = {value};'.format(
-                    ident=c_indentation,
+                '{indent}cleri_t * {name} = {value};'.format(
+                    indent=c_indent,
                     name=name,
-                    value=elem._export_c(c_indentation, ident, enums)))
+                    value=elem._export_c(c_indent, indent, enums)))
 
         for name, ref in self._refs.items():
             language.append(
-                '{ident}cleri_ref_set({name}, {value});'
+                '{indent}cleri_ref_set({name}, {value});'
                 .format(
-                    ident=c_indentation,
+                    indent=c_indent,
                     name=name,
                     value=ref._element._export_c(
-                        c_indentation,
-                        ident,
+                        c_indent,
+                        indent,
                         enums,
                         ref)))
 
@@ -451,13 +452,13 @@ class {name} extends Grammar {{
             pattern = '^' + pattern
 
         enums = ',\n'.join([
-            '{}{}'.format(c_indentation, gid)
+            '{}{}'.format(c_indent, gid)
             for gid in sorted(enums)]) + ','
 
         return (self.__class__.C_TEMPLATE_C.format(
                     name=self.__class__.__name__,
                     target=target,
-                    ident=c_indentation,
+                    indent=c_indent,
                     datetime=time.strftime(
                         '%Y-%m-%d %H:%M:%S',
                         time.localtime()),
@@ -476,14 +477,14 @@ class {name} extends Grammar {{
     def export_go(
             self,
             go_template=GO_TEMPLATE,
-            go_indentation=GO_indentation,
+            go_indent=GO_INDENTATION,
             go_package=GO_PACKAGE):
         '''Export the grammar to a Go file which can be
         used with the goleri module.'''
 
         language = []
         enums = set()
-        ident = 0
+        indent = 0
         pattern = self.RE_KEYWORDS.pattern.replace('`', '` + "`" + `')
         if not pattern.startswith('^'):
             pattern = '^' + pattern
@@ -494,29 +495,29 @@ class {name} extends Grammar {{
                 continue
             if not hasattr(elem, '_export_go'):
                 continue
-            language.append('{ident}{name} := {value}'.format(
-                ident=go_indentation,
+            language.append('{indent}{name} := {value}'.format(
+                indent=go_indent,
                 name=camel_case(name),
-                value=elem._export_go(go_indentation, ident, enums)))
+                value=elem._export_go(go_indent, indent, enums)))
 
         for name, ref in self._refs.items():
             language.append(
-                    '{ident}{name}.Set({value})'
+                    '{indent}{name}.Set({value})'
                     .format(
-                        ident=go_indentation,
+                        indent=go_indent,
                         name=camel_case(name),
                         value=ref._element._export_go(
-                            go_indentation,
-                            ident,
+                            go_indent,
+                            indent,
                             enums)))
 
         enums = ' = iota\n'.join([
-            '{}{}'.format(go_indentation, gid)
+            '{}{}'.format(go_indent, gid)
             for gid in sorted(enums)]) + ' = iota'
 
         return go_template.format(
             name=self.__class__.__name__,
-            ident=go_indentation,
+            indent=go_indent,
             package=go_package,
             datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
             language='\n'.join(language),
@@ -526,14 +527,17 @@ class {name} extends Grammar {{
     def export_java(
             self,
             java_template=JAVA_TEMPLATE,
-            java_indentation=JAVA_indentation,
-            java_package=JAVA_PACKAGE):
+            java_indent=JAVA_INDENTATION,
+            java_package=JAVA_PACKAGE,
+            is_public=True):
         '''Export the grammar to a Java file which can be
         used with the jleri module.'''
 
         language = []
         enums = set()
-        ident = 0
+        classes = set()
+        refs = []
+        indent = 0
         pattern = self.RE_KEYWORDS.pattern.replace('\\', '\\\\')
         if not pattern.startswith('^'):
             pattern = '^' + pattern
@@ -544,34 +548,47 @@ class {name} extends Grammar {{
                 continue
             if not hasattr(elem, '_export_java'):
                 continue
-            language.append('{ident}Element {name} = {value}'.format(
-                ident=go_indentation,
-                name=camel_case(name),
-                value=elem._export_java(go_indentation, ident, enums)))
+            language.append(
+                '{indent}private static final Element {name} = {value};'
+                .format(
+                    indent=java_indent,
+                    name=name.upper(),
+                    value=elem._export_java(
+                        java_indent, indent, enums, classes)))
+
+        enum_str = ',\n'.join([
+            '{indent}{indent}{gid}'.format(
+                indent=java_indent,
+                gid=gid)
+            for gid in sorted(enums)])
 
         for name, ref in self._refs.items():
-            language.append(
-                    '{ident}{name}.Set({value})'
+            refs.append(
+                    '{indent}{indent}((Ref) {name}).set({value});'
                     .format(
-                        ident=go_indentation,
-                        name=camel_case(name),
-                        value=ref._element._export_go(
-                            go_indentation,
-                            ident,
-                            enums)))
+                        indent=java_indent,
+                        name=name.upper(),
+                        value=ref._element._export_java(
+                            java_indent,
+                            -2,
+                            enums,
+                            classes)))
 
-        enums = ' = iota\n'.join([
-            '{}{}'.format(go_indentation, gid)
-            for gid in sorted(enums)]) + ' = iota'
-
-        return go_template.format(
+        return java_template.format(
             name=self.__class__.__name__,
-            ident=go_indentation,
-            package=go_package,
+            imports='\n'.join(
+                map(lambda s: s, [
+                    'import jleri.{};'.format(c)
+                    for c in classes if c != 'Rule'])),
+            indent=java_indent,
+            package='' if java_package is None
+                    else 'package {};\n'.format(java_package),
             datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
             language='\n'.join(language),
             re_keywords=pattern,
-            enums=enums)
+            refs='\n'.join(refs),
+            enums=enum_str,
+            public='public ' if is_public else '')
 
     def parse(self, string):
         '''Parse some string to the Grammar.

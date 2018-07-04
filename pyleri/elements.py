@@ -21,7 +21,7 @@ _cref = None
 
 def c_export(func):
 
-    def wrapper(self, c_indentation, ident, enums, ref=None):
+    def wrapper(self, c_indent, indent, enums, ref=None):
         global _cref
         elem, _cref = self if _cref is None else _cref, ref
         gid = getattr(elem, 'name', getattr(elem, '_name', 'CLERI_NONE'))
@@ -29,31 +29,32 @@ def c_export(func):
             gid = 'CLERI_GID_{}'.format(gid.upper())
             enums.add(gid)
 
-        return func(self, c_indentation, ident, enums, gid)
+        return func(self, c_indent, indent, enums, gid)
 
     return wrapper
 
 
 def go_export(func):
 
-    def wrapper(self, go_indentation, ident, enums):
+    def wrapper(self, go_indent, indent, enums):
         gid = getattr(self, 'name', getattr(self, '_name', 'NoGid'))
         if gid != 'NoGid':
             gid = 'Gid{}'.format(cap_case(gid))
             enums.add(gid)
-        return func(self, go_indentation, ident, enums, gid)
+        return func(self, go_indent, indent, enums, gid)
 
     return wrapper
 
 
 def java_export(func):
 
-    def wrapper(self, go_indentation, ident, enums):
+    def wrapper(self, java_indent, indent, enums, classes):
+        classes.add(self.__class__.__name__.lstrip('_'))
         gid = getattr(self, 'name', getattr(self, '_name', None))
         if gid is not None:
-            gid = 'ID_{}'.format(gid.upper())
+            gid = gid.upper()
             enums.add(gid)
-        return func(self, go_indentation, ident, enums, gid)
+        return func(self, java_indent, indent, enums, classes, gid)
 
     return wrapper
 
@@ -81,104 +82,131 @@ class NamedElement(Element):
 
     __slots__ = ('name',)
 
-    def _export_js(self, js_indentation, ident, classes):
+    def _export_js(self, js_indent, indent, classes):
         classes.add(self.__class__.__name__.lstrip('_'))
-        if hasattr(self, 'name') and ident:
+        if hasattr(self, 'name') and indent:
             return self.name
-        return self._run_export_js(js_indentation, ident or 1, classes)
+        return self._run_export_js(js_indent, indent or 1, classes)
 
-    def _export_js_elements(self, js_indentation, ident, classes):
-        new_ident = ident + 1
-        value = ',\n'.join(['{ident}{elem}'.format(
-            ident=js_indentation * new_ident,
+    def _export_js_elements(self, js_indent, indent, classes):
+        new_indent = indent + 1
+        value = ',\n'.join(['{indent}{elem}'.format(
+            indent=js_indent * new_indent,
             elem=elem._export_js(
-                js_indentation,
-                new_ident, classes)) for elem in self._elements])
-        return '{class_name}(\n{value}\n{ident})'.format(
+                js_indent,
+                new_indent, classes)) for elem in self._elements])
+        return '{class_name}(\n{value}\n{indent})'.format(
             class_name=self.__class__.__name__.lstrip('_'),
             value=value,
-            ident=js_indentation * ident)
+            indent=js_indent * indent)
 
-    def _run_export_js(self, js_indentation, ident, classes):
+    def _run_export_js(self, js_indent, indent, classes):
         return 'not_implemented'
 
-    def _export_py(self, py_indentation, ident, classes):
+    def _export_py(self, py_indent, indent, classes):
         classes.add(self.__class__.__name__.lstrip('_'))
-        if hasattr(self, 'name') and ident:
+        if hasattr(self, 'name') and indent:
             return self.name
-        return self._run_export_py(py_indentation, ident or 1, classes)
+        return self._run_export_py(py_indent, indent or 1, classes)
 
-    def _export_py_elements(self, py_indentation, ident, classes):
-        new_ident = ident + 1
-        value = ',\n'.join(['{ident}{elem}'.format(
-            ident=py_indentation * new_ident,
+    def _export_py_elements(self, py_indent, indent, classes):
+        new_indent = indent + 1
+        value = ',\n'.join(['{indent}{elem}'.format(
+            indent=py_indent * new_indent,
             elem=elem._export_py(
-                py_indentation,
-                new_ident, classes)) for elem in self._elements])
-        return '{class_name}(\n{value}\n{ident})'.format(
+                py_indent,
+                new_indent, classes)) for elem in self._elements])
+        return '{class_name}(\n{value}\n{indent})'.format(
             class_name=self.__class__.__name__.lstrip('_'),
             value=value,
-            ident=py_indentation * ident)
+            indent=py_indent * indent)
 
-    def _run_export_py(self, py_indentation, ident, classes):
+    def _run_export_py(self, py_indent, indent, classes):
         return 'not_implemented'
 
     @c_export
-    def _export_c(self, c_indentation, ident, enums, gid):
-        if hasattr(self, 'name') and ident:
+    def _export_c(self, c_indent, indent, enums, gid):
+        if hasattr(self, 'name') and indent:
             return self.name
-        return self._run_export_c(c_indentation, ident or 1, enums)
+        return self._run_export_c(c_indent, indent or 1, enums)
 
     @c_export
-    def _export_c_elements(self, c_indentation, ident, enums, gid):
-        new_ident = ident + 1
-        value = ',\n'.join(['{ident}{elem}'.format(
-            ident=c_indentation * new_ident,
+    def _export_c_elements(self, c_indent, indent, enums, gid):
+        new_indent = indent + 1
+        value = ',\n'.join(['{indent}{elem}'.format(
+            indent=c_indent * new_indent,
             elem=elem._export_c(
-                c_indentation,
-                new_ident,
+                c_indent,
+                new_indent,
                 enums)) for elem in self._elements])
-        return 'cleri_{class_name}(\n{gid},\n{num},\n{value}\n{ident})'.format(
-            class_name=self.__class__.__name__.lstrip('_').lower(),
-            gid='{ident}{gid}'.format(
-                ident=c_indentation * (ident + 1),
-                gid=gid),
-            num='{ident}{num}'.format(
-                ident=c_indentation * (ident + 1),
-                num=len(self._elements)),
-            value=value,
-            ident=c_indentation * ident)
+        return \
+            'cleri_{class_name}(\n{gid},\n{num},\n{value}\n{indent})'.format(
+                class_name=self.__class__.__name__.lstrip('_').lower(),
+                gid='{indent}{gid}'.format(
+                    indent=c_indent * (indent + 1),
+                    gid=gid),
+                num='{indent}{num}'.format(
+                    indent=c_indent * (indent + 1),
+                    num=len(self._elements)),
+                value=value,
+                indent=c_indent * indent)
 
-    def _run_export_c(self, c_indentation, ident, enums):
+    def _run_export_c(self, c_indent, indent, enums):
         return 'not_implemented'
 
     @go_export
-    def _export_go(self, go_indentation, ident, enums, gid):
-        if hasattr(self, 'name') and ident:
+    def _export_go(self, go_indent, indent, enums, gid):
+        if hasattr(self, 'name') and indent:
             return camel_case(self.name)
-        return self._run_export_go(go_indentation, ident or 1, enums)
+        return self._run_export_go(go_indent, indent or 1, enums)
 
     @go_export
-    def _export_go_elements(self, go_indentation, ident, enums, gid):
-        new_ident = ident + 1
-        value = ',\n'.join(['{ident}{elem}'.format(
-            ident=go_indentation * new_ident,
+    def _export_go_elements(self, go_indent, indent, enums, gid):
+        new_indent = indent + 1
+        value = ',\n'.join(['{indent}{elem}'.format(
+            indent=go_indent * new_indent,
             elem=elem._export_go(
-                go_indentation,
-                new_ident,
+                go_indent,
+                new_indent,
                 enums)) for elem in self._elements])
-        return '{class_name}(\n{gid},\n{value},\n{ident})'.format(
+        return '{class_name}(\n{gid},\n{value},\n{indent})'.format(
             class_name='goleri.New' + self.__class__.__name__.lstrip('_'),
-            gid='{ident}{gid}'.format(
-                ident=go_indentation * (ident + 1),
+            gid='{indent}{gid}'.format(
+                indent=go_indent * (indent + 1),
                 gid=gid),
             value=value,
-            ident=go_indentation * ident)
+            indent=go_indent * indent)
 
-    def _run_export_go(self, go_indentation, ident, enums):
+    def _run_export_go(self, go_indent, indent, enums):
         return 'not_implemented'
 
-    def _run_export_java(self, java_indentation, ident, enums, classes):
+    @java_export
+    def _export_java(self, java_indent, indent, enums, classes, gid):
+        if hasattr(self, 'name') and indent > 0:
+            return self.name.upper()
+        return self._run_export_java(
+            java_indent, abs(indent) or 1, enums, classes)
+
+    @java_export
+    def _export_java_elements(
+            self, java_indent, indent, enums, classes, gid):
+        new_indent = indent + 1
+        value = ',\n'.join(['{indent}{elem}'.format(
+            indent=java_indent * new_indent,
+            elem=elem._export_java(
+                java_indent,
+                new_indent,
+                enums,
+                classes)) for elem in self._elements])
+        return '{class_name}({gid}\n{value}\n{indent})'.format(
+            class_name='new ' + self.__class__.__name__.lstrip('_'),
+            gid='' if gid is None else '\n{indent}Ids.{gid},'.format(
+                indent=java_indent * (indent + 1),
+                gid=gid),
+            value=value,
+            indent=java_indent * indent)
+
+    def _run_export_java(self, java_indent, indent, enums, classes):
         return 'not_implemented'
 
 # Added this import to the bottom to prevent circular import cycle.

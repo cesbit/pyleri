@@ -3,7 +3,7 @@
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
 import re
-from .elements import NamedElement, c_export, go_export
+from .elements import NamedElement, c_export, go_export, java_export
 
 
 class Regex(NamedElement):
@@ -30,16 +30,16 @@ class Regex(NamedElement):
 
         return is_valid, node.end or node.start
 
-    def _run_export_js(self, js_indentation, ident, classes):
+    def _run_export_js(self, js_indent, indent, classes):
         return 'Regex(\'{}\')'.format(
             self._compiled.pattern.replace('\\', '\\\\').replace('\'', '\\\''))
 
-    def _run_export_py(self, py_indentation, ident, classes):
+    def _run_export_py(self, py_indent, indent, classes):
         return 'Regex(\'{}\')'.format(
             self._compiled.pattern.replace('\\', '\\\\').replace('\'', '\\\''))
 
     @c_export
-    def _run_export_c(self, c_indentation, ident, enums, gid):
+    def _run_export_c(self, c_indent, indent, enums, gid):
         return 'cleri_regex({}, "{}")'.format(
             gid,
             self._compiled.pattern
@@ -49,7 +49,17 @@ class Regex(NamedElement):
                 .replace('"', '\\"'))
 
     @go_export
-    def _run_export_go(self, go_indentation, ident, enums, gid):
+    def _run_export_go(self, go_indent, indent, enums, gid):
         return 'goleri.NewRegex({}, regexp.MustCompile(`{}`))'.format(
             gid,
             self._compiled.pattern.replace('`', '` + "`" + `'))
+
+    @java_export
+    def _run_export_java(self, java_indent, indent, enums, classes, gid):
+        return 'new Regex({}"{}")'.format(
+            '' if gid is None else 'Ids.{}, '.format(gid),
+            self._compiled.pattern
+                .replace('\\', '\\\\')
+                .replace('\'', '\\\'')
+                .replace('\\"', '"')
+                .replace('"', '\\"'))

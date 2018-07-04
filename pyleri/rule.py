@@ -25,20 +25,26 @@ class Rule(NamedElement):
             root._append_tree(tree, node, pos)
         return is_valid, pos
 
-    def _run_export_js(self, js_indentation, ident, classes):
-        return self._element._export_js(js_indentation, ident, classes)
+    def _run_export_js(self, js_indent, indent, classes):
+        return self._element._export_js(js_indent, indent, classes)
 
-    def _run_export_py(self, py_indentation, ident, classes):
-        return self._element._export_py(py_indentation, ident, classes)
+    def _run_export_py(self, py_indent, indent, classes):
+        return self._element._export_py(py_indent, indent, classes)
 
-    def _run_export_c(self, c_indentation, ident, enums):
+    def _run_export_c(self, c_indent, indent, enums):
         name = getattr(self, 'name', None)
         if name is not None:
             self._element._name = name
-        return self._element._export_c(c_indentation, ident, enums)
+        return self._element._export_c(c_indent, indent, enums)
 
-    def _run_export_go(self, go_indentation, ident, enums):
+    def _run_export_go(self, go_indent, indent, enums):
         name = getattr(self, 'name', None)
         if name is not None:
             self._element._name = name
-        return self._element._export_go(go_indentation, ident, enums)
+        return self._element._export_go(go_indent, indent, enums)
+
+    def _run_export_java(self, java_indent, indent, enums, classes):
+        name = getattr(self, 'name', None)
+        if name is not None:
+            self._element._name = name
+        return self._element._export_java(java_indent, indent, enums, classes)
