@@ -500,7 +500,7 @@ syntax:
 Regex(pattern, flags=0)
 ```
 The parser compiles a regular expression using the `re` module. The current version of pyleri has only support for the `re.IGNORECASE` flag.
-See the Quick Usage example for how to use `Regex`.
+See the [Quick usage](#quick-usage) example for how to use `Regex`.
 
 ### Token
 syntax:
@@ -525,7 +525,7 @@ syntax:
 ```python
 Tokens(tokens)
 ```
-Can be used to register multiple tokens at once. The `tokens` argument should be a string with tokens seperated by spaces. If given tokens are different in size the parser will try to match the longest tokens first.
+Can be used to register multiple tokens at once. The `tokens` argument should be a string with tokens separated by spaces. If given tokens are different in size the parser will try to match the longest tokens first.
 
 Example:
 ```python
