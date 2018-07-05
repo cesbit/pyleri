@@ -4,6 +4,8 @@ Upload to PyPI, Thx to: http://peterdowns.com/posts/first-time-with-pypi.html
 
 python3 setup.py sdist upload -r pypitest
 
+Checkout: https://test.pypi.org/project/pyleri/
+
 python3 setup.py sdist upload -r pypi
 """
 import pypandoc
@@ -11,6 +13,7 @@ from distutils.core import setup
 from pyleri import __version__ as version
 
 long_description = pypandoc.convert('README.md', 'rst')
+
 setup(
     name='pyleri',
     packages=['pyleri'],
