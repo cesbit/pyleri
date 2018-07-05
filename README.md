@@ -418,6 +418,15 @@ Ref()
 The grammar can make a forward reference to make recursion possible. In the example below we create a forward reference to START but note that
 a reference to any element can be made.
 
+>Warning: A reference is not protected against testing the same position in
+>in a string. This could potentially lead to an infinite loop.
+>For example:
+>```python
+>r = Ref()
+>r = Optional(r)  # DON'T DO THIS
+>```
+>Use [Prio](#prio) if such recursive construction is required.
+
 Example:
 ```python
 class NestedNi(Grammar):
@@ -543,6 +552,10 @@ syntax:
 Prio(element, element, ...)
 ```
 Choose the first match from the prio elements and allow `THIS` for recursive operations. With `THIS` we point to the `Prio` element. Probably the example below explains how `Prio` and `THIS` can be used.
+
+>Note: Use a [Ref](#ref) when possible.
+>A `Prio` element is required when the same position in a string is potentially
+>checked more than once.
 
 Example:
 ```python
