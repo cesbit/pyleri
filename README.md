@@ -14,16 +14,18 @@ Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We fir
     * [Grammar.export_java()](#export_java)
     * [Grammar.export_py()](#export_py)
   * [Elements](#elements)
-    * [Choice](#choice)
-    * [Sequence](#sequence)
     * [Keyword](#keyword)
-    * [Ref](#ref)
-    * [Repeat](#repeat)
-    * [Optional](#optional)
     * [Regex](#regex)
     * [Token](#token)
     * [Tokens](#tokens)
+    * [Sequence](#sequence)
+    * [Choice](#choice)
+    * [Repeat](#repeat)
+    * [List](#list)
+    * [Optional](#optional)
+    * [Ref](#ref)
     * [Prio](#prio)
+
 
 ---------------------------------------
 ## Related projects
@@ -354,42 +356,6 @@ class MyGrammar(Grammar):
 ## Elements
 Pyleri has several elements which can be used to create a grammar.
 
-### Choice
-syntax:
-```python
-Choice(element, element, ..., most_greedy=True)
-```
-The parser needs to choose between one of the given elements. Choice accepts one keyword argument `most_greedy` which is `True` by default. When `most_greedy` is set to `False` the parser will stop at the first match. When `True` the parser will try each element and returns the longest match. Setting `most_greedy` to `False` can provide some extra performance. Note that the parser will try to match each element in the exact same order they are parsed to Choice.
-
-Example: let us use `Choice` to modify the Quick usage example to allow the string 'bye "Iris"'
-```python
-class MyGrammar(Grammar):
-    r_name = Regex('(?:"(?:[^"]*)")+')
-    k_hi = Keyword('hi')
-    k_bye = Keyword('bye')
-    START = Sequence(Choice(k_hi, k_bye), r_name)
-
-my_grammar = MyGrammar()
-my_grammar.parse('hi "Iris"').is_valid  # => True
-my_grammar.parse('bye "Iris"').is_valid  # => True
-```
-
-### Sequence
-syntax:
-```python
-Sequence(element, element, ...)
-```
-The parser needs to match each element in a sequence.
-
-Example:
-```python
-class TicTacToe(Grammar):
-    START = Sequence(Keyword('Tic'), Keyword('Tac'), Keyword('Toe'))
-
-ttt_grammar = TicTacToe()
-ttt_grammar.parse('Tic Tac Toe').is_valid  # => True
-```
-
 ### Keyword
 syntax:
 ```python
@@ -410,32 +376,84 @@ ttt_grammar = TicTacToe()
 ttt_grammar.parse('Tic-Tac-Toe').is_valid  # => True
 ```
 
-### Ref
+### Regex
 syntax:
 ```python
-Ref()
+Regex(pattern, flags=0)
 ```
-The grammar can make a forward reference to make recursion possible. In the example below we create a forward reference to START but note that
-a reference to any element can be made.
+The parser compiles a regular expression using the `re` module. The current version of pyleri has only support for the `re.IGNORECASE` flag.
+See the [Quick usage](#quick-usage) example for how to use `Regex`.
 
->Warning: A reference is not protected against testing the same position in
->in a string. This could potentially lead to an infinite loop.
->For example:
->```python
->r = Ref()
->r = Optional(r)  # DON'T DO THIS
->```
->Use [Prio](#prio) if such recursive construction is required.
+### Token
+syntax:
+```python
+Token(token)
+```
+A token can be one or more characters and is usually used to match operators like `+`, `-`, `//` and so on. When we parse a string object where pyleri expects an element, it will automatically be converted to a `Token()` object.
 
 Example:
 ```python
-class NestedNi(Grammar):
-    START = Ref()
-    ni_item = Choice(Keyword('ni'), START)
-    START = Sequence('[', List(ni_item), ']')
+class Ni(Grammar):
+    t_dash = Token('-')
+    # We could just write delimiter='-' because
+    # any string will be converted to Token()
+    START = List(Keyword('ni'), delimiter=t_dash)
 
-nested_ni = NestedNi()
-nested_ni.parse('[ni, ni, [ni, [], [ni, ni]]]').is_valid  # => True
+ni = Ni()
+ni.parse('ni-ni-ni-ni-ni').is_valid  # => True
+```
+
+### Tokens
+syntax:
+```python
+Tokens(tokens)
+```
+Can be used to register multiple tokens at once. The `tokens` argument should be a string with tokens separated by spaces. If given tokens are different in size the parser will try to match the longest tokens first.
+
+Example:
+```python
+class Ni(Grammar):
+    tks = Tokens('+ - !=')
+    START = List(Keyword('ni'), delimiter=tks)
+
+ni = Ni()
+ni.parse('ni + ni != ni - ni').is_valid  # => True
+```
+
+### Sequence
+syntax:
+```python
+Sequence(element, element, ...)
+```
+The parser needs to match each element in a sequence.
+
+Example:
+```python
+class TicTacToe(Grammar):
+    START = Sequence(Keyword('Tic'), Keyword('Tac'), Keyword('Toe'))
+
+ttt_grammar = TicTacToe()
+ttt_grammar.parse('Tic Tac Toe').is_valid  # => True
+```
+
+### Choice
+syntax:
+```python
+Choice(element, element, ..., most_greedy=True)
+```
+The parser needs to choose between one of the given elements. Choice accepts one keyword argument `most_greedy` which is `True` by default. When `most_greedy` is set to `False` the parser will stop at the first match. When `True` the parser will try each element and returns the longest match. Setting `most_greedy` to `False` can provide some extra performance. Note that the parser will try to match each element in the exact same order they are parsed to Choice.
+
+Example: let us use `Choice` to modify the Quick usage example to allow the string 'bye "Iris"'
+```python
+class MyGrammar(Grammar):
+    r_name = Regex('(?:"(?:[^"]*)")+')
+    k_hi = Keyword('hi')
+    k_bye = Keyword('bye')
+    START = Sequence(Choice(k_hi, k_bye), r_name)
+
+my_grammar = MyGrammar()
+my_grammar.parse('hi "Iris"').is_valid  # => True
+my_grammar.parse('bye "Iris"').is_valid  # => True
 ```
 
 ### Repeat
@@ -503,47 +521,32 @@ my_grammar.parse('hi "Iris"').is_valid  # => True
 my_grammar.parse('hi').is_valid  # => True
 ```
 
-### Regex
+### Ref
 syntax:
 ```python
-Regex(pattern, flags=0)
+Ref()
 ```
-The parser compiles a regular expression using the `re` module. The current version of pyleri has only support for the `re.IGNORECASE` flag.
-See the [Quick usage](#quick-usage) example for how to use `Regex`.
+The grammar can make a forward reference to make recursion possible. In the example below we create a forward reference to START but note that
+a reference to any element can be made.
 
-### Token
-syntax:
-```python
-Token(token)
-```
-A token can be one or more characters and is usually used to match operators like `+`, `-`, `//` and so on. When we parse a string object where pyleri expects an element, it will automatically be converted to a `Token()` object.
+>Warning: A reference is not protected against testing the same position in
+>in a string. This could potentially lead to an infinite loop.
+>For example:
+>```python
+>r = Ref()
+>r = Optional(r)  # DON'T DO THIS
+>```
+>Use [Prio](#prio) if such recursive construction is required.
 
 Example:
 ```python
-class Ni(Grammar):
-    t_dash = Token('-')
-    # We could just write delimiter='-' because
-    # any string will be converted to Token()
-    START = List(Keyword('ni'), delimiter=t_dash)
+class NestedNi(Grammar):
+    START = Ref()
+    ni_item = Choice(Keyword('ni'), START)
+    START = Sequence('[', List(ni_item), ']')
 
-ni = Ni()
-ni.parse('ni-ni-ni-ni-ni').is_valid  # => True
-```
-### Tokens
-syntax:
-```python
-Tokens(tokens)
-```
-Can be used to register multiple tokens at once. The `tokens` argument should be a string with tokens separated by spaces. If given tokens are different in size the parser will try to match the longest tokens first.
-
-Example:
-```python
-class Ni(Grammar):
-    tks = Tokens('+ - !=')
-    START = List(Keyword('ni'), delimiter=tks)
-
-ni = Ni()
-ni.parse('ni + ni != ni - ni').is_valid  # => True
+nested_ni = NestedNi()
+nested_ni.parse('[ni, ni, [ni, [], [ni, ni]]]').is_valid  # => True
 ```
 
 ### Prio
