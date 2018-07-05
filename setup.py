@@ -6,14 +6,11 @@ python3 setup.py sdist upload -r pypitest
 
 python3 setup.py sdist upload -r pypi
 """
+import pypandoc
 from distutils.core import setup
 from pyleri import __version__ as version
 
-
-with open('README.md', 'r') as f:
-    long_description = f.read()
-
-
+long_description = pypandoc.convert('README.md', 'rst')
 setup(
     name='pyleri',
     packages=['pyleri'],

@@ -1,3 +1,7 @@
+2018.07.05, Version 1.2.1 (Stable)
+
+  * Format readme on PyPi
+
 2018.07.05, Version 1.2.0 (Stable)
 
   * Fixed typo in List mi/ma exception.
