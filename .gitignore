@@ -9,3 +9,4 @@ checklist.txt
 build/
 dist/
 .vscode/
+pyleri.egg-info/
