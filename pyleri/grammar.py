@@ -290,8 +290,6 @@ func {name}() *goleri.Grammar {{
  * Created at: {datetime}
  */
 
-import jleri.Grammar;
-import jleri.Element;
 {imports}
 
 {public}class {name} extends Grammar {{
@@ -534,7 +532,8 @@ import jleri.Element;
 
         language = []
         enums = set()
-        classes = set()
+        classes = {'jleri.Grammar', 'jleri.Element'}
+
         refs = []
         indent = 0
         pattern = self.RE_KEYWORDS.pattern.replace('\\', '\\\\')
@@ -576,8 +575,8 @@ import jleri.Element;
             name=self.__class__.__name__,
             imports='\n'.join(
                 map(lambda s: s, [
-                    'import jleri.{};'.format(c)
-                    for c in classes if c != 'Rule'])),
+                    'import {};'.format(c)
+                    for c in sorted(classes) if c != 'Rule'])),
             indent=java_indent,
             package='' if java_package is None
                     else 'package {};\n'.format(java_package),

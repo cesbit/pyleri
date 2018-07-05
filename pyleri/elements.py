@@ -49,7 +49,7 @@ def go_export(func):
 def java_export(func):
 
     def wrapper(self, java_indent, indent, enums, classes):
-        classes.add(self.__class__.__name__.lstrip('_'))
+        classes.add('jleri.{}'.format(self.__class__.__name__.lstrip('_')))
         gid = getattr(self, 'name', getattr(self, '_name', None))
         if gid is not None:
             gid = gid.upper()

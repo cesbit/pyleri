@@ -174,16 +174,17 @@ class TestPyleri(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
-    # Imports, note that we skip the imports in other examples...
+    # # Imports, note that we skip the imports in other examples...
     # from pyleri import (
     #     Grammar,
     #     Keyword,
     #     Regex,
     #     Sequence)
+    # import re
 
     # # Create a Grammar Class to define your language
     # class MyGrammar(Grammar):
-    #     r_name = Regex('(?:"(?:[^"]*)")+')
+    #     r_name = Regex('(?:"(?:[^"]*)")+', re.IGNORECASE)
     #     k_hi = Keyword('hi')
     #     START = Sequence(k_hi, r_name)
 
@@ -191,8 +192,8 @@ if __name__ == '__main__':
     # my_grammar = MyGrammar()
 
     # # Use the compiled grammar to parse 'strings'
-    # print(my_grammar.parse('hi "Iris"').is_valid) # => True
-    # print(my_grammar.parse('bye "Iris"').is_valid) # => False
+    # print(my_grammar.parse('hi "Iris"').is_valid)  # => True
+    # print(my_grammar.parse('bye "Iris"').is_valid)  # => False
 
-    # my_grammar = JsonGrammar()
-    # print(my_grammar.export_java())
+    # # my_grammar = JsonGrammar()
+    # print(my_grammar.export_go())

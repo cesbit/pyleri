@@ -38,7 +38,7 @@ class This(Element):
         return 'goleri.THIS'
 
     def _export_java(self, java_indent, indent, enums, classes):
-        classes.add('This')
+        classes.add('jleri.This')
         return 'This.THIS'
 
 

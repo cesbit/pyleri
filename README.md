@@ -359,7 +359,7 @@ syntax:
 ```python
 Choice(element, element, ..., most_greedy=True)
 ```
-The parser needs to choose between one of the given elements. Choice accepts one keyword argument `most_greedy` which is `True` by default. When `most_greedy` is set to `False` the parser will stop at the first match. When `True` the parser will try each element and returns the longest match. Settings `most_greedy` to `False` can provide some extra performance. Note that the parser will try to match each element in the exact same order they are parsed to Choice.
+The parser needs to choose between one of the given elements. Choice accepts one keyword argument `most_greedy` which is `True` by default. When `most_greedy` is set to `False` the parser will stop at the first match. When `True` the parser will try each element and returns the longest match. Setting `most_greedy` to `False` can provide some extra performance. Note that the parser will try to match each element in the exact same order they are parsed to Choice.
 
 Example: let us use `Choice` to modify the Quick usage example to allow the string 'bye "Iris"'
 ```python
@@ -434,7 +434,7 @@ syntax:
 ```python
 Repeat(element, mi=0, ma=None)
 ```
-The parser needs at least `mi` elements and at most `ma` elements. When `ma` is set to `None` we allow unlimited number of elements. `mi` can be any integer value equal of higher than 0 but not larger then `ma`.
+The parser needs at least `mi` elements and at most `ma` elements. When `ma` is set to `None` we allow unlimited number of elements. `mi` can be any integer value equal or higher than 0 but not larger then `ma`.
 
 Example:
 ```python
@@ -464,7 +464,7 @@ syntax:
 ```python
 List(element, delimiter=',', mi=0, ma=None, opt=False)
 ```
-List is like Repeat but with a delimiter. A comma is used as default delimiter but any element is allowed. When a string is used as delimiter it will be converted to a `Token` element. `mi` and `ma` work excatly like with Repeat. An optional keyword argument `opt` can be set to `True` to allow the list to end with a delimiter. By default this is set to `False` which means the list has to end with an element.
+List is like Repeat but with a delimiter. A comma is used as default delimiter but any element is allowed. When a string is used as delimiter it will be converted to a `Token` element. `mi` and `ma` work exactly like with Repeat. An optional keyword argument `opt` can be set to `True` to allow the list to end with a delimiter. By default this is set to `False` which means the list has to end with an element.
 
 Example:
 ```python
@@ -480,7 +480,7 @@ syntax:
 ```python
 Optional(element)
 ```
-The pasrser looks for an optional element. It is like using `Repeat(element, 0, 1)` but we encourage to use `Optional` since it is more readable. (and slightly faster)
+The parser looks for an optional element. It is like using `Repeat(element, 0, 1)` but we encourage to use `Optional` since it is more readable. (and slightly faster)
 
 Example:
 ```python
@@ -499,8 +499,7 @@ syntax:
 ```python
 Regex(pattern, flags=0)
 ```
-The parser compiles a regular expression using the `re` module. Therefore information about `flags` can be found at https://docs.python.org/3/library/re.html
-
+The parser compiles a regular expression using the `re` module. The current version of pyleri has only support for the `re.IGNORECASE` flag.
 See the Quick Usage example for how to use `Regex`.
 
 ### Token
