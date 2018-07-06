@@ -145,7 +145,7 @@ class Grammar(metaclass=_OrderedClass):
 
     JS_INDENTATION = ' ' * 4
     JS_MODULE_NAME = 'jsleri'
-    JS_TEMPLATE = '''
+    JS_WINDOW_TEMPLATE = '''
 /* jshint newcap: false */
 
 /*
@@ -158,6 +158,36 @@ class Grammar(metaclass=_OrderedClass):
 
 'use strict';
 
+(function (
+{arguments}
+{indent}{indent}) {{
+{language}
+
+{indent}window.{name} = Grammar(START, '{re_keywords}');
+
+}})(
+{constructors}
+);
+'''.lstrip()
+
+    JS_ES6_IMPORT_EXPORT_TEMPLATE = '''
+/*
+ * This grammar is generated using the Grammar.export_js() method and
+ * should be used with the `{js_module}` JavaScript module.
+ *
+ * Source class: {name}
+ * Created at: {datetime}
+ */
+
+import {{ {classes} }} from 'jsleri';
+
+class {name} extends Grammar {
+{language}
+{indent}constructor() {
+{indent}{indent}super({name}.START, '{re_keywords}');
+{refs}
+{indent}}
+}
 (function (
 {arguments}
 {indent}{indent}) {{
@@ -319,7 +349,7 @@ func {name}() *goleri.Grammar {{
     def export_js(
             self,
             js_module_name=JS_MODULE_NAME,
-            js_template=JS_TEMPLATE,
+            js_template=JS_WINDOW_TEMPLATE,
             js_indent=JS_INDENTATION):
         '''Export the grammar to a JavaScript file which can be
         used with the js-lrparsing module.'''
