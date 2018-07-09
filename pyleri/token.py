@@ -28,7 +28,7 @@ class Token(NamedElement):
 
         return is_valid, node.end or node.start
 
-    def _run_export_js(self, js_indent, indent, classes):
+    def _run_export_js(self, js_indent, indent, classes, cname):
         return 'Token(\'{}\')'.format(self._token)
 
     def _run_export_py(self, py_indent, indent, classes):

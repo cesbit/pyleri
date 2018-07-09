@@ -50,9 +50,9 @@ class Repeat(NamedElement):
 
         return is_valid, pos
 
-    def _run_export_js(self, js_indent, indent, classes):
+    def _run_export_js(self, js_indent, indent, classes, cname):
         return 'Repeat({}, {}, {})'.format(
-            self._element._export_js(js_indent, indent, classes),
+            self._element._export_js(js_indent, indent, classes, cname),
             self._min,
             self._max or 'undefined')
 

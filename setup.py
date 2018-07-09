@@ -3,13 +3,10 @@
 Upload to PyPI, Thx to: http://peterdowns.com/posts/first-time-with-pypi.html
 
 python3 setup.py sdist
-twine upload --repository pypitest dist/pyleri-1.2.1c.tar.gz
+twine upload --repository pypitest dist/pyleri-x.x.x.tar.gz
 
-python3 setup.py register -r pypitest
-python3 setup.py sdist upload -r pypitest
+twine upload --repository pypi dist/pyleri-x.x.x.tar.gz
 
-python3 setup.py register -r pypi
-python3 setup.py sdist upload -r pypi
 """
 from setuptools import setup
 from pyleri import __version__ as version

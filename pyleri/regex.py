@@ -32,7 +32,7 @@ class Regex(NamedElement):
 
         return is_valid, node.end or node.start
 
-    def _run_export_js(self, js_indent, indent, classes):
+    def _run_export_js(self, js_indent, indent, classes, cname):
         return 'Regex(\'{}\'{})'.format(
             self._compiled.pattern.replace('\\', '\\\\').replace('\'', '\\\''),
             ', true' if self._compiled.flags & re.IGNORECASE else '')

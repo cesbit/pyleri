@@ -55,7 +55,7 @@ class Keyword(NamedElement):
 
         return is_valid, node.end or node.start
 
-    def _run_export_js(self, js_indent, indent, classes):
+    def _run_export_js(self, js_indent, indent, classes, cname):
         return 'Keyword(\'{}\'{})'.format(
             self._keyword,
             ', true' if self._ign_case else '')

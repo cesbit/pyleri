@@ -28,9 +28,9 @@ class Optional(NamedElement):
 
         return True, node.end or node.start
 
-    def _run_export_js(self, js_indent, indent, classes):
+    def _run_export_js(self, js_indent, indent, classes, cname):
         return 'Optional({})'.format(
-            self._element._export_js(js_indent, indent, classes))
+            self._element._export_js(js_indent, indent, classes, cname))
 
     def _run_export_py(self, py_indent, indent, classes):
         return 'Optional({})'.format(

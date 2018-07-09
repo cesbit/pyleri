@@ -82,25 +82,26 @@ class NamedElement(Element):
 
     __slots__ = ('name',)
 
-    def _export_js(self, js_indent, indent, classes):
+    def _export_js(self, js_indent, indent, classes, cname):
         classes.add(self.__class__.__name__.lstrip('_'))
-        if hasattr(self, 'name') and indent:
-            return self.name
-        return self._run_export_js(js_indent, indent or 1, classes)
+        if hasattr(self, 'name') and indent > 0:
+            return '{}.{}'.format(cname, self.name) if cname else self.name
+        indent = 0 if indent < 0 else 1 if indent == 0 else indent
+        return self._run_export_js(js_indent, indent, classes, cname)
 
-    def _export_js_elements(self, js_indent, indent, classes):
+    def _export_js_elements(self, js_indent, indent, classes, cname):
         new_indent = indent + 1
         value = ',\n'.join(['{indent}{elem}'.format(
             indent=js_indent * new_indent,
             elem=elem._export_js(
                 js_indent,
-                new_indent, classes)) for elem in self._elements])
+                new_indent, classes, cname)) for elem in self._elements])
         return '{class_name}(\n{value}\n{indent})'.format(
             class_name=self.__class__.__name__.lstrip('_'),
             value=value,
             indent=js_indent * indent)
 
-    def _run_export_js(self, js_indent, indent, classes):
+    def _run_export_js(self, js_indent, indent, classes, cname):
         return 'not_implemented'
 
     def _export_py(self, py_indent, indent, classes):

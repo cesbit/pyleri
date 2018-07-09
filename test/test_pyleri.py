@@ -1,7 +1,7 @@
 import unittest
 import gc
 import sys
-sys.path.append('..')
+sys.path.insert(0, '..')
 
 from pyleri import (
     Keyword,
@@ -195,5 +195,6 @@ if __name__ == '__main__':
     # print(my_grammar.parse('hi "Iris"').is_valid)  # => True
     # print(my_grammar.parse('bye "Iris"').is_valid)  # => False
 
-    # # my_grammar = JsonGrammar()
-    # print(my_grammar.export_go())
+    # my_grammar = JsonGrammar()
+    # print(my_grammar.export_js(js_template=Grammar.JS_WINDOW_TEMPLATE))
+    # print(my_grammar.export_js())

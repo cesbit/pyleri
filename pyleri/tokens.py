@@ -26,7 +26,7 @@ class Tokens(NamedElement):
 
         return False, node.start
 
-    def _run_export_js(self, js_indent, indent, classes):
+    def _run_export_js(self, js_indent, indent, classes, cname):
         return 'Tokens(\'{}\')'.format(' '.join(self._tokens))
 
     def _run_export_py(self, py_indent, indent, classes):

@@ -23,7 +23,7 @@ class This(Element):
 
         return rule._tested[node.start]
 
-    def _export_js(self, js_indent, indent, classes):
+    def _export_js(self, js_indent, indent, classes, cname):
         classes.add('THIS')
         return 'THIS'
 

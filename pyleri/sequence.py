@@ -24,8 +24,8 @@ class Sequence(NamedElement):
 
         return is_valid, pos
 
-    def _run_export_js(self, js_indent, indent, classes):
-        return self._export_js_elements(js_indent, indent, classes)
+    def _run_export_js(self, js_indent, indent, classes, cname):
+        return self._export_js_elements(js_indent, indent, classes, cname)
 
     def _run_export_py(self, py_indent, indent, classes):
         return self._export_py_elements(py_indent, indent, classes)

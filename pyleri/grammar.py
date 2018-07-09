@@ -162,6 +162,7 @@ class Grammar(metaclass=_OrderedClass):
 {arguments}
 {indent}{indent}) {{
 {language}
+{refs}
 
 {indent}window.{name} = Grammar(START, '{re_keywords}');
 
@@ -181,23 +182,16 @@ class Grammar(metaclass=_OrderedClass):
 
 import {{ {classes} }} from 'jsleri';
 
-class {name} extends Grammar {
+class {name} extends Grammar {{
 {language}
-{indent}constructor() {
+
+{indent}constructor() {{
 {indent}{indent}super({name}.START, '{re_keywords}');
+{indent}}}
+}}
 {refs}
-{indent}}
-}
-(function (
-{arguments}
-{indent}{indent}) {{
-{language}
 
-{indent}window.{name} = Grammar(START, '{re_keywords}');
-
-}})(
-{constructors}
-);
+export default {name};
 '''.lstrip()
 
     PY_INDENTATION = ' ' * 4
@@ -349,14 +343,21 @@ func {name}() *goleri.Grammar {{
     def export_js(
             self,
             js_module_name=JS_MODULE_NAME,
-            js_template=JS_WINDOW_TEMPLATE,
+            js_template=JS_ES6_IMPORT_EXPORT_TEMPLATE,
             js_indent=JS_INDENTATION):
         '''Export the grammar to a JavaScript file which can be
-        used with the js-lrparsing module.'''
+        used with the js-lrparsing module.
+
+        Two templates are available:
+            Grammar.JS_WINDOW_TEMPLATE
+            Grammar.JS_ES6_IMPORT_EXPORT_TEMPLATE (default)
+        '''
 
         language = []
+        refs = []
         classes = {'Grammar'}
         indent = 0
+        cname = self.__class__.__name__ if 'import ' in js_template else None
 
         for name in self._order:
             elem = getattr(self, name, None)
@@ -364,21 +365,26 @@ func {name}() *goleri.Grammar {{
                 continue
             if not hasattr(elem, '_export_js'):
                 continue
-            language.append('{indent}var {name} = {value};'.format(
+            language.append('{indent}{var} {name} = {value};'.format(
                 indent=js_indent,
                 name=name,
-                value=elem._export_js(js_indent, indent, classes)))
+                var='static' if cname else 'var',
+                value=elem._export_js(js_indent, indent, classes, cname)))
 
         for name, ref in self._refs.items():
-            language.append(
-                    '{indent}Object.assign({name}, {value});'
+            refs.append(
+                    '{pre}{name}.set({value});'
                     .format(
-                        indent=js_indent,
+                        pre='{}.'.format(cname) if cname else js_indent,
                         name=name,
                         value=ref._element._export_js(
                             js_indent,
-                            indent,
-                            classes)))
+                            -1 if cname else indent,
+                            classes,
+                            cname)))
+
+        if 'Rule' in classes:
+            classes.remove('Rule')
 
         return js_template.format(
             name=self.__class__.__name__,
@@ -386,15 +392,16 @@ func {name}() *goleri.Grammar {{
             js_module=js_module_name,
             datetime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
             language='\n'.join(language),
+            refs='\n{}'.format('\n'.join(refs)),
             arguments=',\n'.join(map(lambda s:
                                      js_indent * 3 + s, classes)),
             re_keywords=self.RE_KEYWORDS.pattern.replace('\\', '\\\\'),
+            classes=', '.join(classes),
             constructors=',\n'.join(
                 map(lambda s: js_indent + s,
-                    ['.'.join(
-                        [
-                            'window',
-                            js_module_name, n]) for n in classes])))
+                    ['.'.join([
+                        'window',
+                        js_module_name, n]) for n in classes])))
 
     def export_py(
             self,

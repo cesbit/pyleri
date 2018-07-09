@@ -25,8 +25,8 @@ class Rule(NamedElement):
             root._append_tree(tree, node, pos)
         return is_valid, pos
 
-    def _run_export_js(self, js_indent, indent, classes):
-        return self._element._export_js(js_indent, indent, classes)
+    def _run_export_js(self, js_indent, indent, classes, cname):
+        return self._element._export_js(js_indent, indent, classes, cname)
 
     def _run_export_py(self, py_indent, indent, classes):
         return self._element._export_py(py_indent, indent, classes)
