@@ -134,50 +134,52 @@ if __name__ == '__main__':
     node_result = my_grammar.parse('hi "pyleri" hi "pyleri"')
     # The parse tree is visualized as a JSON object:
     print(json.dumps(view_parse_tree(node_result), indent=2))
-```
-Part of the output is shown below as a JSON object.
 
-```json
-{
-  "start": 0,
-  "end": 23,
-  "name": "START",
-  "element": "Repeat",
-  "string": "hi \"pyleri\" hi \"pyleri\"",
-  "children": [
-    {
-      "start": 0,
-      "end": 11,
-      "name": null,
-      "element": "Sequence",
-      "string": "hi \"pyleri\"",
-      "children": [
+
+''' Part of the output is shown below as a JSON object.
+
         {
-          "start": 0,
-          "end": 2,
-          "name": null,
-          "element": "Choice",
-          "string": "hi",
-          "children": [
+        "start": 0,
+        "end": 23,
+        "name": "START",
+        "element": "Repeat",
+        "string": "hi \"pyleri\" hi \"pyleri\"",
+        "children": [
             {
-              "start": 0,
-              "end": 2,
-              "name": "k_hi",
-              "element": "Keyword",
-              "string": "hi",
-              "children": []
-            }
-          ]
-        },
-        {
-          "start": 3,
-          "end": 11,
-          "name": "r_name",
-          "element": "Regex",
-          "string": "\"pyleri\"",
-          "children": []
-        }
-        ...
+            "start": 0,
+            "end": 11,
+            "name": null,
+            "element": "Sequence",
+            "string": "hi \"pyleri\"",
+            "children": [
+                {
+                "start": 0,
+                "end": 2,
+                "name": null,
+                "element": "Choice",
+                "string": "hi",
+                "children": [
+                    {
+                    "start": 0,
+                    "end": 2,
+                    "name": "k_hi",
+                    "element": "Keyword",
+                    "string": "hi",
+                    "children": []
+                    }
+                ]
+                },
+                {
+                "start": 3,
+                "end": 11,
+                "name": "r_name",
+                "element": "Regex",
+                "string": "\"pyleri\"",
+                "children": []
+                }
+                ...
+                ...
+ '''
 
 ```
 
