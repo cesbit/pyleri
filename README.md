@@ -63,7 +63,7 @@ print(my_grammar.parse('bye "Iris"').is_valid) # => False
 ```
 
 ## Grammar
-When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has a parse method: `parse()`, and a few export methods: `export_js()`, `export_c()`, `export_py()` and `export_go()` which are explained below.
+When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammar also has a parse method: `parse()`, and a few export methods: `export_js()`, `export_c()`, `export_py()` and `export_go()` which are explained below.
 
 ### parse
 syntax:
@@ -78,11 +78,107 @@ The `parse()` method returns a `NodeResult` object which has the following prope
 
 Let us take the example from Quick usage.
 ```python
-node_result = my_grammer.parse('bye "Iris"')
+node_result = my_grammar.parse('bye "Iris"')
 print(node_result.is_valid) # => False
 print(node_result.expecting) # => {hi} => We expected Keyword 'hi' instead of bye
 print(node_result.pos) # => 0 => Position in the string where we are expecting the above
 print(node_result.tree) # => Node object containing the parse tree
+```
+
+To following example will explain a way of visualizing the parse tree.
+
+```python
+import json
+from pyleri import Choice
+from pyleri import Grammar
+from pyleri import Keyword
+from pyleri import Regex
+from pyleri import Repeat
+from pyleri import Sequence
+
+
+# Create a Grammar Class to define your language
+class MyGrammar(Grammar):
+    r_name = Regex('(?:"(?:[^"]*)")+')
+    k_hi = Keyword('hi')
+    k_bye = Keyword('bye')
+    START = Repeat(Sequence(Choice(k_hi, k_bye), r_name))
+
+
+# Returns properties of a node object as a dictionary:
+def node_params(node, children):
+    return {
+        'start': node.start,  # start of element
+        'end': node.end,  # end of element
+        'name': node.element.name if hasattr(node.element, 'name') else None,  # name given to the element
+        'element': node.element.__class__.__name__,  # type of element (e.g. Repeat, Sequence, Keyword, etc.)
+        'string': node.string, # string that is parsed
+        'children': children} # children within the element
+
+
+# Recursive method to get the children of a node object:
+def get_children(children):
+    return [node_params(c, get_children(c.children)) for c in children]
+
+
+# View the parse tree:
+def view_parse_tree(node_result):
+    start = node_result.tree.children[0] \
+        if node_result.tree.children else node_result.tree
+    return node_params(start, get_children(start.children))
+
+
+if __name__ == '__main__':
+    # Compile your grammar by creating an instance of the Grammar Class:
+    my_grammar = MyGrammar()
+    node_result = my_grammar.parse('hi "pyleri" hi "pyleri"')
+    # The parse tree is visualized as a JSON object:
+    print(json.dumps(view_parse_tree(node_result), indent=2))
+```
+Part of the output is shown below as a JSON object.
+
+```json
+{
+  "start": 0,
+  "end": 23,
+  "name": "START",
+  "element": "Repeat",
+  "string": "hi \"pyleri\" hi \"pyleri\"",
+  "children": [
+    {
+      "start": 0,
+      "end": 11,
+      "name": null,
+      "element": "Sequence",
+      "string": "hi \"pyleri\"",
+      "children": [
+        {
+          "start": 0,
+          "end": 2,
+          "name": null,
+          "element": "Choice",
+          "string": "hi",
+          "children": [
+            {
+              "start": 0,
+              "end": 2,
+              "name": "k_hi",
+              "element": "Keyword",
+              "string": "hi",
+              "children": []
+            }
+          ]
+        },
+        {
+          "start": 3,
+          "end": 11,
+          "name": "r_name",
+          "element": "Regex",
+          "string": "\"pyleri\"",
+          "children": []
+        }
+        ...
+
 ```
 
 ### export_js
@@ -530,7 +626,7 @@ The grammar can make a forward reference to make recursion possible. In the exam
 a reference to any element can be made.
 
 >Warning: A reference is not protected against testing the same position in
->in a string. This could potentially lead to an infinite loop.
+>a string. This could potentially lead to an infinite loop.
 >For example:
 >```python
 >r = Ref()
