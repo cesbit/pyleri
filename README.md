@@ -81,14 +81,6 @@ The `parse()` method returns a result object which has the following properties 
 - `pos`
 - `tree`
 
-Let us take the example from Quick usage.
-```python
-node_result = my_grammar.parse('bye "Iris"')
-print(node_result.is_valid) # => False
-print(node_result.expecting) # => {hi} => We expected Keyword 'hi' instead of bye
-print(node_result.pos) # => 0 => Position in the string where we are expecting the above
-print(node_result.tree) # => Node object containing the parse tree
-```
 
 ### export_js
 syntax:
@@ -366,10 +358,21 @@ The result of the `parse()` method contains 4 properties that will be explained 
 `is_valid` returns a boolean value, `True` when the given string is valid according to the given grammar, `False` when not valid.
 ode_result.is_valid) # => False
 
+Let us take the example from Quick usage.
+```python
+node_result = my_grammar.parse('bye "Iris"')
+print(node_result.is_valid) # => False
+```
+
 
 ### Position
 `pos` returns the position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string with `str.rstrip()` applied)
 
+Let us take the example from Quick usage.
+```python
+node_result = my_grammar.parse('bye "Iris"')
+print(node_result.is_valid) # => False
+```
 
 ### Tree
 `tree` contains the parse tree. Even when `is_valid` is `False` the parse tree is returned but will only contain results as far as parsing has succeeded. The tree is the root node which can include several `children` nodes. The structure will be further clarified in the following example which explains a way of visualizing the parse tree.
