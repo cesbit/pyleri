@@ -488,6 +488,7 @@ A node contains 5 properties that will be explained next:
 ### Expecting
 `expecting` returns a Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string. Expecting is useful if you want to implement things like auto-completion, syntax error handling, auto-syntax-correction etc. The following example will illustrate a way.
 
+Example:
 ```python
 
 import re
@@ -583,7 +584,7 @@ Expected:
         (2) bye
 
 ```
-
+In the above example we parsed a invalid string. The `auto-correction` method that we built for this example combines all properties from `parse` to create a valid string. In the output the steps that the `auto-correction()` takes are printed. At every step it shows a set of expected elements. It takes one randomly and adds it to the string. When the string corresponds to the grammar the property `is_valid` will return `True`. Notably the expecting-property still contains elements. The reason in this case is because of the [Repeat](#repeat) element.
 
 ## Elements
 Pyleri has several elements which are all subclasses of [Element](#element) and can be used to create a grammar.
