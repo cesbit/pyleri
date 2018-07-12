@@ -16,14 +16,9 @@ Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We fir
   * [Result](#result)
     * [is_valid](#is_valid)
     * [Position](#position)
-    * [Tree](#tree) // hier uitleggen root node
-      * [start](#start)
-      * [end](#end)
-      * [element](#element) // name uitleggen
-      * [string](#string)
-      * [children](#children)
+    * [Tree](#tree)
     * [Expecting](#expecting)
-  * [Elements](#elements) -> verwijzen naar ResultTreeElement
+  * [Elements](#elements)
     * [Keyword](#keyword)
     * [Regex](#regex)
     * [Token](#token)
@@ -480,16 +475,11 @@ Part of the output is shown below.
 ```
 A node contains 5 properties that will be explained next:
 
-- start
-`start` property returns the start of the node object.
-- end
-`end` property returns the end of the  node object.
-- element
-`element` returns the type of Element(#elements) (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Kewword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
-- string
-`string` returns the string that is parsed.
-- children
-`children` can return a node object of deeper layered nodes provided that there are any. In our example the root node has an element type `Repeat()`, starts at 0 and ends at 24, and it has two `children` which are node objects that have both an element type `Sequence`, start at 0 and 12 respectively, and so on.
+- `start` property returns the start of the node object.
+- `end` property returns the end of the  node object.
+- `element` returns the type of Element(#elements) (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Kewword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
+- `string` returns the string that is parsed.
+- `children` can return a node object of deeper layered nodes provided that there are any. In our example the root node has an element type `Repeat()`, starts at 0 and ends at 24, and it has two `children` which are node objects that have both an element type `Sequence`, start at 0 and 12 respectively, and so on.
 
 
 ### Expecting
