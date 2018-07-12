@@ -10,7 +10,7 @@ pyleri/grammar.py
 pyleri/keyword.py
 pyleri/list.py
 pyleri/node.py
-pyleri/noderesult.py
+pyleri/result.py
 pyleri/optional.py
 pyleri/prio.py
 pyleri/ref.py

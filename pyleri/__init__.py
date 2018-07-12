@@ -25,6 +25,7 @@ from .sequence import Sequence
 from .this import THIS
 from .token import Token
 from .tokens import Tokens
+from .endofstatement import end_of_statement
 from .exceptions import (
     CompileError,
     KeywordError,
