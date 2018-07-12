@@ -38,7 +38,7 @@ def view_parse_tree(node_result):
 if __name__ == '__main__':
     # Compile your grammar by creating an instance of the Grammar Class.
     my_grammar = MyGrammar()
-    node_result = my_grammar.parse('hi "pyleri" hi "pyleri"')
+    node_result = my_grammar.parse('hi "pyleri" bye "pyleri"')
     print(node_result.is_valid)
     print(node_result.pos)
     print(json.dumps(view_parse_tree(node_result), indent=2))
