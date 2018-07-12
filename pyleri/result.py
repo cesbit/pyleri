@@ -1,10 +1,10 @@
-'''NodeResult class.
+'''Result class.
 
 :copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
 '''
 
 
-class NodeResult:
+class Result:
 
     __slots__ = ('is_valid', 'pos', 'expecting', 'tree')
 

@@ -20,7 +20,7 @@ from .endofstatement import end_of_statement
 from .elements import Element, NamedElement, camel_case
 from .keyword import Keyword
 from .ref import Ref
-from .noderesult import NodeResult
+from .result import Result
 from .exceptions import (
     KeywordError,
     ReKeywordsChangedError,
@@ -643,7 +643,7 @@ func {name}() *goleri.Grammar {{
         self._len_string = len(string)
         self._pos = None
         tree = Node(self._element, string, 0, self._len_string)
-        node_res = NodeResult(*self._walk(
+        node_res = Result(*self._walk(
             self._element,
             0,
             tree.children,

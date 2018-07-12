@@ -66,7 +66,7 @@ class TestPyleri(unittest.TestCase):
         # - is not _
         self.assertFalse(tg.parse('test ignore-case').is_valid)
 
-    def test_noderesult_from_sequence(self):
+    def test_result_from_sequence(self):
         tg = _TestGrammar1()
         k_test, k_ignore_case = tg.parse(
                 'test ignore_case').tree.children[0].children
