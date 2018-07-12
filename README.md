@@ -429,7 +429,7 @@ if __name__ == '__main__':
     print(json.dumps(view_parse_tree(node_result), indent=2))
 ```
 
-Part of the output is shown below as.
+Part of the output is shown below.
 
 ```json
 
@@ -473,22 +473,22 @@ Part of the output is shown below as.
             "children": []
             }
 
-            //...
-            //...
+            "..."
+            "..."
 
 
 ```
 A node contains 5 properties that will be explained next:
 
-#### start
+- start
 `start` property returns the start of the node object.
-#### end
+- end
 `end` property returns the end of the  node object.
-#### element
+- element
 `element` returns the type of Element(#elements) (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Kewword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
-#### string
+- string
 `string` returns the string that is parsed.
-#### children
+- children
 `children` can return a node object of deeper layered nodes provided that there are any. In our example the root node has an element type `Repeat()`, starts at 0 and ends at 24, and it has two `children` which are node objects that have both an element type `Sequence`, start at 0 and 12 respectively, and so on.
 
 
