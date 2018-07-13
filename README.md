@@ -13,6 +13,11 @@ Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We fir
     * [Grammar.export_go()](#export_go)
     * [Grammar.export_java()](#export_java)
     * [Grammar.export_py()](#export_py)
+  * [Result](#result)
+    * [is_valid](#is_valid)
+    * [Position](#position)
+    * [Tree](#tree)
+    * [Expecting](#expecting)
   * [Elements](#elements)
     * [Keyword](#keyword)
     * [Regex](#regex)
@@ -63,27 +68,20 @@ print(my_grammar.parse('bye "Iris"').is_valid) # => False
 ```
 
 ## Grammar
-When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammer also has a parse method: `parse()`, and a few export methods: `export_js()`, `export_c()`, `export_py()` and `export_go()` which are explained below.
+When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammar also has a parse method: `parse()`, and a few export methods: [export_js()](#export_js), [export_c()](#export_c), [export_py()](#export_py), [export_go()](#export_go) and [export_java()](#export_java) which are explained below.
+
 
 ### parse
 syntax:
 ```python
 Grammar().parse(string)
 ```
-The `parse()` method returns a `Result` object which has the following properties:
-- `expecting`: A Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string. Expecting is useful if you want to implement things like auto-completion, syntax error handling, auto-syntax-correction etc.
-- `is_valid`: Boolean value, `True` when the given string is valid, `False` when not valid.
-- `pos`: Position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string with `str.rstrip()` applied)
-- `tree`: Contains the parse tree. Even when `is_valid` is `False` the parse tree is returned but will only contain results as far as parsing has succeeded.
+The `parse()` method returns a result object which has the following properties that are further explained in [Result](#result):
+- `expecting`
+- `is_valid`
+- `pos`
+- `tree`
 
-Let us take the example from Quick usage.
-```python
-node_result = my_grammer.parse('bye "Iris"')
-print(node_result.is_valid) # => False
-print(node_result.expecting) # => {hi} => We expected Keyword 'hi' instead of bye
-print(node_result.pos) # => 0 => Position in the string where we are expecting the above
-print(node_result.tree) # => Node object containing the parse tree
-```
 
 ### export_js
 syntax:
@@ -353,8 +351,242 @@ class MyGrammar(Grammar):
         r_name
     )
 ```
+
+## Result
+The result of the `parse()` method contains 4 properties that will be explained next.
+
+### is_valid
+`is_valid` returns a boolean value, `True` when the given string is valid according to the given grammar, `False` when not valid.
+ode_result.is_valid) # => False
+
+Let us take the example from Quick usage.
+```python
+res = my_grammar.parse('bye "Iris"')
+print(res.is_valid) # => False
+```
+
+
+### Position
+`pos` returns the position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string with `str.rstrip()` applied)
+
+Let us take the example from Quick usage.
+```python
+result = my_grammar.parse('hi Iris')
+print(res.is_valid, result.pos) # => False, 3
+```
+
+### Tree
+`tree` contains the parse tree. Even when `is_valid` is `False` the parse tree is returned but will only contain results as far as parsing has succeeded. The tree is the root node which can include several `children` nodes. The structure will be further clarified in the following example which explains a way of visualizing the parse tree.
+
+Example:
+```python
+import json
+from pyleri import Choice
+from pyleri import Grammar
+from pyleri import Keyword
+from pyleri import Regex
+from pyleri import Repeat
+from pyleri import Sequence
+
+
+# Create a Grammar Class to define your language
+class MyGrammar(Grammar):
+    r_name = Regex('(?:"(?:[^"]*)")+')
+    k_hi = Keyword('hi')
+    k_bye = Keyword('bye')
+    START = Repeat(Sequence(Choice(k_hi, k_bye), r_name))
+
+
+# Returns properties of a node object as a dictionary:
+def node_props(node, children):
+    return {
+        'start': node.start,
+        'end': node.end,
+        'name': node.element.name if hasattr(node.element, 'name') else None,
+        'element': node.element.__class__.__name__,
+        'string': node.string,
+        'children': children}
+
+
+# Recursive method to get the children of a node object:
+def get_children(children):
+    return [node_props(c, get_children(c.children)) for c in children]
+
+
+# View the parse tree:
+def view_parse_tree(res):
+    start = res.tree.children[0] \
+        if res.tree.children else res.tree
+    return node_props(start, get_children(start.children))
+
+
+if __name__ == '__main__':
+    # Compile your grammar by creating an instance of the Grammar Class:
+    my_grammar = MyGrammar()
+    res = my_grammar.parse('hi "siri" bye "siri"')
+    # The parse tree is visualized as a JSON object:
+    print(json.dumps(view_parse_tree(res), indent=2))
+```
+
+Part of the output is shown below.
+
+```json
+
+    {
+    "start": 0,
+    "end": 23,
+    "name": "START",
+    "element": "Repeat",
+    "string": "hi \"pyleri\" hi \"pyleri\"",
+    "children": [
+        {
+        "start": 0,
+        "end": 11,
+        "name": null,
+        "element": "Sequence",
+        "string": "hi \"pyleri\"",
+        "children": [
+            {
+            "start": 0,
+            "end": 2,
+            "name": null,
+            "element": "Choice",
+            "string": "hi",
+            "children": [
+                {
+                "start": 0,
+                "end": 2,
+                "name": "k_hi",
+                "element": "Keyword",
+                "string": "hi",
+                "children": []
+                }
+            ]
+            },
+            {
+            "start": 3,
+            "end": 11,
+            "name": "r_name",
+            "element": "Regex",
+            "string": "\"pyleri\"",
+            "children": []
+            }
+
+            "..."
+            "..."
+
+
+```
+A node contains 5 properties that will be explained next:
+
+- `start` property returns the start of the node object.
+- `end` property returns the end of the  node object.
+- `element` returns the type of [Element](#elements) (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Kewword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
+- `string` returns the string that is parsed.
+- `children` can return a node object containing deeper layered nodes provided that there are any. In our example the root node has an element type `Repeat()`, starts at 0 and ends at 24, and it has two `children`. These children are node objects that have both an element type `Sequence`, start at 0 and 12 respectively, and so on.
+
+
+### Expecting
+`expecting` returns a Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string. Expecting is useful if you want to implement things like auto-completion, syntax error handling, auto-syntax-correction etc. The following example will illustrate a way of implementation.
+
+Example:
+```python
+
+import re
+import random
+from pyleri import Choice
+from pyleri import Grammar
+from pyleri import Keyword
+from pyleri import Repeat
+from pyleri import Sequence
+from pyleri import end_of_statement
+
+
+# Create a Grammar Class to define your language.
+class MyGrammar(Grammar):
+    RE_KEYWORDS = re.compile('\S+')
+    r_name = Keyword('"pyleri"')
+    k_hi = Keyword('hi')
+    k_bye = Keyword('bye')
+    START = Repeat(Sequence(Choice(k_hi, k_bye), r_name), mi=2)
+
+
+# Print the expected elements as a indented and numbered list.
+def print_expecting(node_expecting, string_expecting):
+    for loop, e in enumerate(node_expecting):
+        string_expecting = '{}\n\t({}) {}'.format(string_expecting, loop, e)
+    print(string_expecting)
+
+
+# Complete a string until it is valid according to the grammar.
+def auto_correction(string, my_grammar):
+    node = my_grammar.parse(string)
+    print('\nParsed string: {}'.format(node.tree.string))
+
+    if node.is_valid:
+        string_expecting = 'String is valid. \nExpected: '
+        print_expecting(node.expecting, string_expecting)
+
+    else:
+        string_expecting = 'String is NOT valid.\nExpected: ' \
+            if not node.pos \
+            else 'String is NOT valid. \nAfter "{}" expected: '.format(
+                                                  node.tree.string[:node.pos])
+        print_expecting(node.expecting, string_expecting)
+
+        selected = random.choice(list(node.expecting))
+        string = '{} {}'.format(node.tree.string[:node.pos],
+                                selected
+                                if selected
+                                is not end_of_statement else '')
+
+        auto_correction(string, my_grammar)
+
+
+if __name__ == '__main__':
+    # Compile your grammar by creating an instance of the Grammar Class.
+    my_grammar = MyGrammar()
+    string = 'hello "pyleri"'
+    auto_correction(string, my_grammar)
+
+```
+
+Output:
+
+```
+Parsed string: hello "pyleri"
+String is NOT valid.
+Expected:
+        (1) hi
+        (2) bye
+
+Parsed string:  bye
+String is NOT valid.
+After " bye" expected:
+        (1) "pyleri"
+
+Parsed string:  bye "pyleri"
+String is NOT valid.
+After " bye "pyleri"" expected:
+        (1) hi
+        (2) bye
+
+Parsed string:  bye "pyleri" hi
+String is NOT valid.
+After " bye "pyleri" hi" expected:
+        (1) "pyleri"
+
+Parsed string:  bye "pyleri" hi "pyleri"
+String is valid.
+Expected:
+        (1) hi
+        (2) bye
+
+```
+In the above example we parsed an invalid string according to the grammar class. The `auto-correction()` method that we built for this example combines all properties from the `parse()` to create a valid string. The output shows every recursion of the `auto-correction()` method and prints successively the set of expected elements. It takes one randomly and adds it to the string. When the string corresponds to the grammar, the property `is_valid` will return `True`. Notably the `expecting` property still contains elements even if the `is_valid` returned `True`. The reason in this example is because of the [Repeat](#repeat) element.
+
 ## Elements
-Pyleri has several elements which can be used to create a grammar.
+Pyleri has several elements which are all subclasses of [Element](#element) and can be used to create a grammar.
 
 ### Keyword
 syntax:
@@ -530,7 +762,7 @@ The grammar can make a forward reference to make recursion possible. In the exam
 a reference to any element can be made.
 
 >Warning: A reference is not protected against testing the same position in
->in a string. This could potentially lead to an infinite loop.
+>a string. This could potentially lead to an infinite loop.
 >For example:
 >```python
 >r = Ref()
