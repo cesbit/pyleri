@@ -1,80 +1,56 @@
-import json
 import re
+import random
 from pyleri import Choice
 from pyleri import Grammar
 from pyleri import Keyword
-from pyleri import Regex
 from pyleri import Repeat
 from pyleri import Sequence
-from pyleri import Token
+from pyleri import end_of_statement
 
 
-# Create a Grammar Class to define your language
+# Create a Grammar Class to define your language.
 class MyGrammar(Grammar):
-    # RE_KEYWORDS = re.compile('\S+')
-    k_all = Token('*')
-    k_mean = Token('mean')
-    k_serie = Token('series-001')
-    k_select = Token('select')
-    k_from = Token('from')
-    START = Sequence(k_select,
-                     Choice(k_mean, k_all),
-                     k_from,
-                     Choice(k_serie, k_all))
+    RE_KEYWORDS = re.compile('\S+')
+    r_name = Keyword('"pyleri"')
+    k_hi = Keyword('hi')
+    k_bye = Keyword('bye')
+    START = Repeat(Sequence(Choice(k_hi, k_bye), r_name), mi=2)
 
 
-def is_not_int(v):
-    try:
-        i = int(v)
-    except:
-        return True
-    return False
+# Print the expected elements as a indented and numbered list.
+def print_expecting(node_expecting, string_expecting):
+    for loop, e in enumerate(node_expecting):
+        string_expecting = '{}\n\t({}) {}'.format(string_expecting, loop, e)
+    print(string_expecting)
 
 
-def auto_completion(rawinput, my_grammar):
-    print(rawinput)
-    node = my_grammar.parse(rawinput)
-    # print(node.pos)
+# Complete a string until it is valid according to the grammar.
+def auto_correction(string, my_grammar):
+    node = my_grammar.parse(string)
+    print('\nParsed string: {}'.format(node.tree.string))
+
     if node.is_valid:
-        print('String is valid')
+        string_expecting = 'String is valid. \nExpected: '
+        print_expecting(node.expecting, string_expecting)
 
     else:
-        expect = [e for e in node.expecting]
-        string_expecting = '\nExpecting: '
-        loop = 0
+        string_expecting = 'String is NOT valid.\nExpected: ' \
+            if not node.pos \
+            else 'String is NOT valid. \nAfter "{}" expected: '.format(
+                                                  node.tree.string[:node.pos])
+        print_expecting(node.expecting, string_expecting)
 
-        for e in expect:
-            loop += 1
-            string_expecting = string_expecting + '\n({}) {}'.format(loop, e)
-        print(string_expecting)
+        selected = random.choice(list(node.expecting))
+        string = '{} {}'.format(node.tree.string[:node.pos],
+                                selected
+                                if selected
+                                is not end_of_statement else '')
 
-        choice = input('Choose a integer between 1-{}: '.format(len(expect)))
-
-        while is_not_int(choice):
-            choice = \
-                input('Choose a integer between 1-{}: '.format(len(expect)))
-
-        while int(choice) not in range(1, len(expect)+1):
-            choice = \
-                input('Choose a integer between 1-{}: '.format(len(expect)))
-
-        auto_completion(rawinput[0:node.pos] + ' ' + str(expect[int(choice) - 1]), my_grammar)
-
-
+        auto_correction(string, my_grammar)
 
 
 if __name__ == '__main__':
     # Compile your grammar by creating an instance of the Grammar Class.
     my_grammar = MyGrammar()
-    rawinput = input('Write a query starting with "select": ')
-    auto_completion(rawinput, my_grammar)
-
-
-# if loop == 1:
-            #     string = string + '\n({}) {}'.format(loop, e)
-            # elif loop == (len(expect)):
-            #     string = string + ' or\n({}) {}'.format(loop, e)
-            # else:
-            #     string = string + ',\n({}) {}'.format(loop, e)
-
-            #r = str(expect[int(choice) - 1]) if expect[int(choice) - 1] is not MyGrammar.r_name else '"pyleri"'
+    string = 'hello "pyleri"'
+    auto_correction(string, my_grammar)
