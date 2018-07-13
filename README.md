@@ -584,7 +584,7 @@ Expected:
         (2) bye
 
 ```
-In the above example we parsed a invalid string. The `auto-correction` method that we built for this example combines all properties from `parse` to create a valid string. In the output the steps that the `auto-correction()` takes are printed. At every step it shows a set of expected elements. It takes one randomly and adds it to the string. When the string corresponds to the grammar the property `is_valid` will return `True`. Notably the expecting-property still contains elements. The reason in this case is because of the [Repeat](#repeat) element.
+In the above example we parsed an invalid string according to the grammar class. The `auto-correction()` method that we built for this example combines all properties from the `parse()` to create a valid string. The output shows every recursion of the `auto-correction()` method and prints successively the set of expected elements. It takes one randomly and adds it to the string. When the string corresponds to the grammar, the property `is_valid` will return `True`. Notably the `expecting` property still contains elements even if the `is_valid` returned `True`. The reason in this example is because of the [Repeat](#repeat) element.
 
 ## Elements
 Pyleri has several elements which are all subclasses of [Element](#element) and can be used to create a grammar.
