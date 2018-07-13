@@ -15,7 +15,8 @@ class MyGrammar(Grammar):
     START = Repeat(Sequence(Choice(k_hi, k_bye), r_name))
 
 
-def node_params(node, children):
+# Returns properties of a node object as a dictionary:
+def node_props(node, children):
     return {
         'start': node.start,
         'end': node.end,
@@ -25,20 +26,21 @@ def node_params(node, children):
         'children': children}
 
 
+# Recursive method to get the children of a node object:
 def get_children(children):
-    return [node_params(c, get_children(c.children)) for c in children]
+    return [node_props(c, get_children(c.children)) for c in children]
 
 
-def view_parse_tree(node_result):
-    start = node_result.tree.children[0] \
-        if node_result.tree.children else node_result.tree
-    return node_params(start, get_children(start.children))
+# View the parse tree:
+def view_parse_tree(res):
+    start = res.tree.children[0] \
+        if res.tree.children else res.tree
+    return node_props(start, get_children(start.children))
 
 
 if __name__ == '__main__':
-    # Compile your grammar by creating an instance of the Grammar Class.
+    # Compile your grammar by creating an instance of the Grammar Class:
     my_grammar = MyGrammar()
-    node_result = my_grammar.parse('hi "pyleri" bye "pyleri"')
-    print(node_result.is_valid)
-    print(node_result.pos)
-    print(json.dumps(view_parse_tree(node_result), indent=2))
+    res = my_grammar.parse('hi "siri" bye "siri"')
+    # The parse tree is visualized as a JSON object:
+    print(json.dumps(view_parse_tree(res), indent=2))

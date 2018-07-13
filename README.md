@@ -68,7 +68,8 @@ print(my_grammar.parse('bye "Iris"').is_valid) # => False
 ```
 
 ## Grammar
-When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammar also has a parse method: `parse()`, and a few export methods: `export_js()`, `export_c()`, `export_py()` and `export_go()` which are explained below.
+When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammar also has a parse method: `parse()`, and a few export methods: [export_js()](#export_js), [export_c()](#export_c), [export_py()](#export_py), [export_go()](#export_go) and [export_java()](#export_java) which are explained below.
+
 
 ### parse
 syntax:
@@ -360,8 +361,8 @@ ode_result.is_valid) # => False
 
 Let us take the example from Quick usage.
 ```python
-node_result = my_grammar.parse('bye "Iris"')
-print(node_result.is_valid) # => False
+res = my_grammar.parse('bye "Iris"')
+print(res.is_valid) # => False
 ```
 
 
@@ -370,8 +371,8 @@ print(node_result.is_valid) # => False
 
 Let us take the example from Quick usage.
 ```python
-node_result = my_grammar.parse('bye "Iris"')
-print(node_result.is_valid) # => False
+result = my_grammar.parse('hi Iris')
+print(res.is_valid, result.pos) # => False, 3
 ```
 
 ### Tree
@@ -409,22 +410,22 @@ def node_props(node, children):
 
 # Recursive method to get the children of a node object:
 def get_children(children):
-    return [node_params(c, get_children(c.children)) for c in children]
+    return [node_props(c, get_children(c.children)) for c in children]
 
 
 # View the parse tree:
-def view_parse_tree(node_result):
-    start = node_result.tree.children[0] \
-        if node_result.tree.children else node_result.tree
-    return node_params(start, get_children(start.children))
+def view_parse_tree(res):
+    start = res.tree.children[0] \
+        if res.tree.children else res.tree
+    return node_props(start, get_children(start.children))
 
 
 if __name__ == '__main__':
     # Compile your grammar by creating an instance of the Grammar Class:
     my_grammar = MyGrammar()
-    node_result = my_grammar.parse('hi "siri" bye "siri"')
+    res = my_grammar.parse('hi "siri" bye "siri"')
     # The parse tree is visualized as a JSON object:
-    print(json.dumps(view_parse_tree(node_result), indent=2))
+    print(json.dumps(view_parse_tree(res), indent=2))
 ```
 
 Part of the output is shown below.
@@ -512,9 +513,7 @@ class MyGrammar(Grammar):
 
 # print the expected elements as a indented and numbered list.
 def print_expecting(node_expecting, string_expecting):
-    loop = 0
-    for e in node_expecting:
-        loop += 1
+    for loop, e in enumerate(node_expecting):
         string_expecting = '{}\n\t({}) {}'.format(string_expecting, loop, e)
     print(string_expecting)
 
@@ -530,17 +529,17 @@ def auto_correction(string, my_grammar):
 
     else:
         string_expecting = 'String is NOT valid.\nExpected: ' \
-            if node.pos is 0 \
+            if not node.pos \
             else 'String is NOT valid. \nAfter "{}" expected: '.format(
-                                                  node.tree.string[0:node.pos])
+                                                  node.tree.string[:node.pos])
         print_expecting(node.expecting, string_expecting)
 
-        list_expect = [e for e in node.expecting]
-        choice = random.randint(0, len(list_expect) - 1)
-        string = '{} {}'.format(node.tree.string[0:node.pos],
-                                list_expect[choice]
-                                if list_expect[choice]
+        selected = random.sample(node.expecting, 1).pop()
+        string = '{} {}'.format(node.tree.string[:node.pos],
+                                selected
+                                if selected
                                 is not end_of_statement else '')
+
         auto_correction(string, my_grammar)
 
 
