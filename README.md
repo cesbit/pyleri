@@ -480,13 +480,13 @@ A node contains 5 properties that will be explained next:
 
 - `start` property returns the start of the node object.
 - `end` property returns the end of the  node object.
-- `element` returns the type of Element(#elements) (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Kewword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
+- `element` returns the type of [Element](#elements) (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Kewword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
 - `string` returns the string that is parsed.
-- `children` can return a node object of deeper layered nodes provided that there are any. In our example the root node has an element type `Repeat()`, starts at 0 and ends at 24, and it has two `children` which are node objects that have both an element type `Sequence`, start at 0 and 12 respectively, and so on.
+- `children` can return a node object containing deeper layered nodes provided that there are any. In our example the root node has an element type `Repeat()`, starts at 0 and ends at 24, and it has two `children`. These children are node objects that have both an element type `Sequence`, start at 0 and 12 respectively, and so on.
 
 
 ### Expecting
-`expecting` returns a Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string. Expecting is useful if you want to implement things like auto-completion, syntax error handling, auto-syntax-correction etc. The following example will illustrate a way.
+`expecting` returns a Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string. Expecting is useful if you want to implement things like auto-completion, syntax error handling, auto-syntax-correction etc. The following example will illustrate a way of implementation.
 
 Example:
 ```python
