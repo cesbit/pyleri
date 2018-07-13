@@ -534,7 +534,7 @@ def auto_correction(string, my_grammar):
                                                   node.tree.string[:node.pos])
         print_expecting(node.expecting, string_expecting)
 
-        selected = random.sample(node.expecting, 1).pop()
+        selected = random.choice(list(node.expecting))
         string = '{} {}'.format(node.tree.string[:node.pos],
                                 selected
                                 if selected
