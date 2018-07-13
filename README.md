@@ -511,7 +511,7 @@ class MyGrammar(Grammar):
     START = Repeat(Sequence(Choice(k_hi, k_bye), r_name), mi=2)
 
 
-# print the expected elements as a indented and numbered list.
+# Print the expected elements as a indented and numbered list.
 def print_expecting(node_expecting, string_expecting):
     for loop, e in enumerate(node_expecting):
         string_expecting = '{}\n\t({}) {}'.format(string_expecting, loop, e)
