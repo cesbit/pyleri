@@ -480,7 +480,7 @@ A node contains 5 properties that will be explained next:
 
 - `start` property returns the start of the node object.
 - `end` property returns the end of the  node object.
-- `element` returns the type of [Element](#elements) (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Kewword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
+- `element` returns the type of [Element](#elements) (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Keyword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
 - `string` returns the string that is parsed.
 - `children` can return a node object containing deeper layered nodes provided that there are any. In our example the root node has an element type `Repeat()`, starts at 0 and ends at 24, and it has two `children`. These children are node objects that have both an element type `Sequence`, start at 0 and 12 respectively, and so on.
 
@@ -590,7 +590,7 @@ Pyleri has several elements which are all subclasses of [Element](#element) and 
 ### Keyword
 syntax:
 ```python
-Keyword(keyword, ign_case=Fasle)
+Keyword(keyword, ign_case=False)
 ```
 The parser needs to match the keyword which is just a string. When matching keywords we need to tell the parser what characters are allowed in keywords. By default Pyleri uses `^\w+` which is both in Python and JavaScript equal to `^[A-Za-z0-9_]+`. We can overwrite the default by setting `RE_KEYWORDS` in the grammar. Keyword() accepts one keyword argument `ign_case` to tell the parser if we should match case insensitive.
 
