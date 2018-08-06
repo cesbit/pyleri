@@ -357,7 +357,6 @@ The result of the `parse()` method contains 4 properties that will be explained 
 
 ### is_valid
 `is_valid` returns a boolean value, `True` when the given string is valid according to the given grammar, `False` when not valid.
-ode_result.is_valid) # => False
 
 Let us take the example from Quick usage.
 ```python
