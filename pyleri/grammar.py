@@ -8,7 +8,7 @@ class MyGrammar(Grammar):
     ...
 
 
-:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2018, Jeroen van der Heijden (Transceptor Technology)
 '''
 
 
@@ -30,7 +30,7 @@ from .exceptions import (
     UnusedElementError)
 
 
-_RE_KEYWORDS = re.compile('^\w+')
+_RE_KEYWORDS = re.compile(r'^\w+')
 
 
 class _KeepOrder(dict):

@@ -14,12 +14,12 @@ class JsonGrammar(Grammar):
 
     # JSON strings should be enclosed in double quotes.
     # A backslash can be used as escape character.
-    r_string = Regex('(")(?:(?=(\\\?))\\2.)*?\\1')
+    r_string = Regex(r'(")(?:(?=(\\?))\2.)*?\1')
 
     # JSON does not support floats or integers prefixed with a + sign
     # and floats must start with a number, for example .5 is not allowed
     # but should be written like 0.5
-    r_float = Regex('-?[0-9]+\.?[0-9]+')
+    r_float = Regex(r'-?[0-9]+\.?[0-9]+')
     r_integer = Regex('-?[0-9]+')
 
     k_true = Keyword('true')

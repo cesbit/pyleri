@@ -1,6 +1,6 @@
 '''Tokens class.
 
-:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2018, Jeroen van der Heijden (Transceptor Technology)
 '''
 from .elements import NamedElement, c_export, go_export, java_export
 

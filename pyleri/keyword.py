@@ -4,18 +4,7 @@ Try matching a given keyword string. The keyword should match
 Grammer.RE_KEYWORDS otherwise the keyword will not be found. It's possible
 however to overwrite the default RE_KEYWORDS in you own Grammar class.
 
-Example:
-
-class MyGrammar(Grammar):
-
-    # needed because the default ^\w+ will not match keyword: my-keyword
-    RE_KEYWORDS = re.compile('^[\w-]+')
-
-    my_keyword = Keyword('my-keyword')
-    ...
-
-
-:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2018, Jeroen van der Heijden (Transceptor Technology)
 '''
 from .elements import NamedElement, c_export, go_export, java_export
 

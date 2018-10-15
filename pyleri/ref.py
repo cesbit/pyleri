@@ -4,7 +4,7 @@ When a forward reference is used the grammar must contain a final
 reference with the same name. The Grammar class is used to validate
 a valid grammer and set element.
 
-:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2018, Jeroen van der Heijden (Transceptor Technology)
 '''
 from .elements import NamedElement
 

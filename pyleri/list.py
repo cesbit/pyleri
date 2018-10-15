@@ -9,7 +9,7 @@ delimiter is given we split using a comma. All arguments:
     ma: Maximum elements the parser will search for. (default: None, unlimited)
     opt: When set to True the list may end with a delimiter. (default: False)
 
-:copyright: 2015, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2018, Jeroen van der Heijden (Transceptor Technology)
 '''
 from .elements import NamedElement, c_export, go_export, java_export
 

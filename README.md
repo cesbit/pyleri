@@ -523,7 +523,7 @@ from pyleri import end_of_statement
 
 # Create a Grammar Class to define your language.
 class MyGrammar(Grammar):
-    RE_KEYWORDS = re.compile('\S+')
+    RE_KEYWORDS = re.compile(r'\S+')
     r_name = Keyword('"pyleri"')
     k_hi = Keyword('hi')
     k_bye = Keyword('bye')
