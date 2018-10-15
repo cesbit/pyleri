@@ -10,7 +10,7 @@ an 'expecting' in a node result when an 'End of Statement' is possible.
 class _EndOfStatement:
 
     def __repr__(self):
-        return 'End-Of-Statement'
+        return 'end_of_statement'
 
 
 end_of_statement = _EndOfStatement()

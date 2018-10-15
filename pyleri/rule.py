@@ -7,7 +7,7 @@ from .elements import NamedElement
 
 class Rule(NamedElement):
 
-    __slots__ = ('_element', '_tested', '_tree')
+    __slots__ = ('_element', '_tested', '_tree', '_depth')
 
     def __init__(self, element):
         self._element = element
@@ -15,6 +15,7 @@ class Rule(NamedElement):
     def _get_node_result(self, root, tree, rule, _s, node):
         self._tested = {}
         self._tree = {}
+        self._depth = -1
         is_valid, pos = root._walk(
             self._element,
             node.start,

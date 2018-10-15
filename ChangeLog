@@ -1,7 +1,17 @@
+2018.10.15, Version 1.3.0 (Stable)
+
+  * Added element properties:
+    - `Keyword.ign_case`
+    - `Choice.most_greedy`
+    - `List.min`, `List.max`, `List.opt_closing`
+    - `Repeat.min`, 'Repeat.max`
+  * Added `Result.as_str` for returning a textual parse result.
+  * Fixed correct expecting for `List` element.
+  * Added `MaxRecursionError` exception for `Prio` element.
+
 2018.07.09, Version 1.2.2 (Stable)
 
   * Added export to JavaScript using class (es6) syntax.
-
   * Use jsleri Ref.set() method instead of Object.assign.
 
 2018.07.05, Version 1.2.1 (Stable)
@@ -11,13 +21,9 @@
 2018.07.05, Version 1.2.0 (Stable)
 
   * Fixed typo in List mi/ma exception.
-
   * Do not allow duplicate names in lower or upper case.
-
   * Added export to Java for the jleri module.
-
   * Fixed typo indentation.
-
   * Added grammar check for missing START point.
 
 2017.06.23, Version 1.1.8 (Stable)
@@ -27,7 +33,6 @@
 2017.06.22, Version 1.1.7 (Stable)
 
   * Added support for cleri_dup() in export to C. (issue #5)
-
   * Fixed header guards while exporting to C. (issue #6)
 
 2017.06.20, Version 1.1.6 (Stable)

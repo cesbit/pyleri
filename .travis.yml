@@ -3,5 +3,8 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
+before_install:
+  - pip install pycodestyle
 script:
   - pytest -v
+  - find . -name \*.py -exec pycodestyle {} +

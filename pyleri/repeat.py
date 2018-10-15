@@ -27,6 +27,14 @@ class Repeat(NamedElement):
         self._max = ma
 
     @property
+    def min(self):
+        return self._min
+
+    @property
+    def max(self):
+        return self._max
+
+    @property
     def _elements(self):
         yield self._element
 

@@ -33,6 +33,10 @@ class Keyword(NamedElement):
         self._keyword = keyword
         self._ign_case = bool(ign_case)
 
+    @property
+    def ign_case(self):
+        return self._ign_case
+
     def __repr__(self):
         return self._keyword
 

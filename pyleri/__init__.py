@@ -13,7 +13,9 @@ module with JavaScript projects.
 '''
 
 from .choice import Choice
+from .endofstatement import end_of_statement
 from .grammar import Grammar
+from .grammar import create_grammar
 from .keyword import Keyword
 from .list import List
 from .optional import Optional
@@ -25,16 +27,18 @@ from .sequence import Sequence
 from .this import THIS
 from .token import Token
 from .tokens import Tokens
-from .endofstatement import end_of_statement
 from .exceptions import (
     CompileError,
     KeywordError,
     ReKeywordsChangedError,
     NameAssignedError,
     MissingStartError,
-    UnusedElementError)
+    UnusedElementError,
+    ParseError,
+    MaxRecursionError,
+)
 
 __author__ = 'Jeroen van der Heijden'
 __maintainer__ = 'Jeroen van der Heijden'
 __email__ = 'jeroen@transceptor.technology'
-__version__ = '1.2.2'
+__version__ = '1.3.0-alpha0'

@@ -38,6 +38,18 @@ class List(NamedElement):
         self._opt = bool(opt)
 
     @property
+    def min(self):
+        return self._min
+
+    @property
+    def max(self):
+        return self._max
+
+    @property
+    def opt_closing(self):
+        return self._opt
+
+    @property
     def _elements(self):
         yield self._element
         yield self._delimiter
@@ -53,8 +65,10 @@ class List(NamedElement):
                 i < self._min)
             if not is_valid:
                 break
-            pos = p
             i += 1
+            pos = p
+            if i == self._max and not self._opt:
+                break
 
             is_valid, p = root._walk(
                 self._delimiter,
@@ -64,15 +78,14 @@ class List(NamedElement):
                 i < self._min)
             if not is_valid:
                 break
-            pos = p
             j += 1
+            pos = p
+            if j == self._max:
+                break
 
-        is_valid = not (i < self._min or
-                        (self._max and
-                         i > self._max) or
-                        (not self._opt and
-                         i and
-                         i == j))
+        is_valid = not (i < self._min or (
+            not self._opt and i and i == j))
+
         if is_valid:
             root._append_tree(tree, node, pos)
 

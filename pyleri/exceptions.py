@@ -30,3 +30,11 @@ class MissingStartError(CompileError):
 
 class UnusedElementError(CompileError):
     pass
+
+
+class ParseError(Exception):
+    pass
+
+
+class MaxRecursionError(ParseError):
+    pass

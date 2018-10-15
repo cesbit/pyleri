@@ -139,9 +139,7 @@ class Grammar(metaclass=_OrderedClass):
 
     __slots__ = ('_element', '_string', '_expecting', '_cached_kw_match')
 
-    RE_LEFT_WHITESPACE = re.compile('^\s+')
     RE_KEYWORDS = _RE_KEYWORDS
-    RE_WHITESPACE = re.compile('\s+')
 
     JS_INDENTATION = ' ' * 4
     JS_MODULE_NAME = 'jsleri'
@@ -686,3 +684,10 @@ func {name}() *goleri.Grammar {{
         self._expecting.set_mode_required(node.start, is_required)
 
         return element._get_node_result(self, tree, rule, self._s, node)
+
+
+def create_grammar(elem, re_keywords=_RE_KEYWORDS):
+    class _Grammar(Grammar):
+        RE_KEYWORDS = _RE_KEYWORDS
+        START = elem
+    return _Grammar()

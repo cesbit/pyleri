@@ -68,7 +68,7 @@ print(my_grammar.parse('bye "Iris"').is_valid) # => False
 ```
 
 ## Grammar
-When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS` and `RE_WHITESPACE`, which are both explained later. Grammar also has a parse method: `parse()`, and a few export methods: [export_js()](#export_js), [export_c()](#export_c), [export_py()](#export_py), [export_go()](#export_go) and [export_java()](#export_java) which are explained below.
+When writing a grammar you should subclass Grammar. A Grammar expects at least a `START` property so the parser knows where to start parsing. Grammar has some default properties which can be overwritten like `RE_KEYWORDS`, which will be explained later. Grammar also has a parse method: `parse()`, and a few export methods: [export_js()](#export_js), [export_c()](#export_c), [export_py()](#export_py), [export_go()](#export_go) and [export_java()](#export_java) which are explained below.
 
 
 ### parse
@@ -353,7 +353,29 @@ class MyGrammar(Grammar):
 ```
 
 ## Result
-The result of the `parse()` method contains 4 properties that will be explained next.
+The result of the `parse()` method contains 4 properties that will be explained next. A function `as_str(translate=None)` is also available which will
+show the result as a string. The `translate` argument should be a function which accepts an element as argument. This function can be used to
+return custom strings for certain elements. If the return value of `translate` is `None` then the function will fall try to generate a string value. If
+the return value is an empty string, the value will be ignored.
+
+Example of translate functions:
+```python
+# In case a translation function returns an empty string, no text is used
+def translate(elem):
+    return ''  # as a result you get something like: 'error at position x'
+
+# Text may be returned based on gid
+def translate(elem):
+    if elem is some_elem:
+        return 'A'   # something like: error at position x, expecting: A
+    elif elem is other_elem:
+        return ''    # other_elem will be ignored
+    else:
+        return None  # normal parsing
+
+# A translate function can be used as follow:
+print(my_grammar.parse('some string').as_str(translate=translate))
+```
 
 ### is_valid
 `is_valid` returns a boolean value, `True` when the given string is valid according to the given grammar, `False` when not valid.
@@ -363,7 +385,6 @@ Let us take the example from Quick usage.
 res = my_grammar.parse('bye "Iris"')
 print(res.is_valid) # => False
 ```
-
 
 ### Position
 `pos` returns the position where the parser had to stop. (when `is_valid` is `True` this value will be equal to the length of the given string with `str.rstrip()` applied)
@@ -490,7 +511,6 @@ A node contains 5 properties that will be explained next:
 
 Example:
 ```python
-
 import re
 import random
 from pyleri import Choice
@@ -551,7 +571,6 @@ if __name__ == '__main__':
 ```
 
 Output:
-
 ```
 Parsed string: hello "pyleri"
 String is NOT valid.

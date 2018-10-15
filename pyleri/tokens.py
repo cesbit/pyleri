@@ -14,7 +14,7 @@ class Tokens(NamedElement):
         self._tokens.sort(key=len, reverse=True)
 
     def __repr__(self):
-        return ', '.join(self._tokens)
+        return ' '.join(self._tokens)
 
     def _get_node_result(self, root, tree, rule, s, node):
         for token in self._tokens:

@@ -20,6 +20,10 @@ class Choice(NamedElement):
             self._most_greedy_result if most_greedy else \
             self._stop_at_first_match
 
+    @property
+    def most_greedy(self):
+        return self._get_node_result == self._most_greedy_result
+
     def _most_greedy_result(self, root, tree, rule, s, node):
         mg_is_valid, mg_pos = False, node.start
 

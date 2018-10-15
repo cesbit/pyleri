@@ -4,9 +4,12 @@
 '''
 from .elements import NamedElement
 from .rule import Rule
+from .exceptions import MaxRecursionError
 
 
 class _Prio(NamedElement):
+
+    MAX_RECURSION = 50
 
     __slots__ = ('_elements', '_name')
 
@@ -14,6 +17,11 @@ class _Prio(NamedElement):
         self._elements = self._validate_elements(elements)
 
     def _get_node_result(self, root, tree, rule, s, node):
+        if rule._depth == _Prio.MAX_RECURSION:
+            raise MaxRecursionError(
+                f'Max recursion depth of {_Prio.MAX_RECURSION} is reached')
+        rule._depth += 1
+
         if node.start not in rule._tested:
             rule._tested[node.start] = False, node.start
 
