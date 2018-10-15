@@ -24,7 +24,7 @@ class Result:
     def as_str(self, translate=None):
         if self.is_valid:
             return 'parsed successfully'
-        res = [f'error at position {self.pos}']
+        res = ['error at position {}'.format(self.pos)]
         arr = []
         for elem in (self.expecting):
             expectstr = translate(elem) if translate else None
@@ -38,11 +38,11 @@ class Result:
         total = len(arr) - 1
         for i, expectstr in enumerate(arr):
             if i == 0:
-                res.append(f', expecting: {expectstr}')
+                res.append(', expecting: {}'.format(expectstr))
             elif i < total:
-                res.append(f', {expectstr}')
+                res.append(', {}'.format(expectstr))
             else:
-                res.append(f' or {expectstr}')
+                res.append(' or {}'.format(expectstr))
 
         return ''.join(res)
 

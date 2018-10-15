@@ -19,7 +19,8 @@ class _Prio(NamedElement):
     def _get_node_result(self, root, tree, rule, s, node):
         if rule._depth == _Prio.MAX_RECURSION:
             raise MaxRecursionError(
-                f'Max recursion depth of {_Prio.MAX_RECURSION} is reached')
+                'Max recursion depth of {} is reached'
+                .format(_Prio.MAX_RECURSION))
         rule._depth += 1
 
         if node.start not in rule._tested:
