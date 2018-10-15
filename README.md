@@ -65,6 +65,7 @@ my_grammar = MyGrammar()
 # Use the compiled grammar to parse 'strings'
 print(my_grammar.parse('hi "Iris"').is_valid) # => True
 print(my_grammar.parse('bye "Iris"').is_valid) # => False
+print(my_grammar.parse('bye "Iris"').as_str()) # => error at position 0, expecting: hi
 ```
 
 ## Grammar
