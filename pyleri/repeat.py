@@ -84,7 +84,7 @@ class Repeat(NamedElement):
             gid,
             self._element._export_c(c_indent, indent, enums),
             self._min,
-            self._max or 'undefined')
+            self._max or 0)
 
     @go_export
     def _run_export_go(self, go_indent, indent, enums, gid):
