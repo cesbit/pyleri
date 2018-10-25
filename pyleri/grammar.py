@@ -224,7 +224,7 @@ class {name}(Grammar):
  * Created at: {datetime}
  */
 
-#include "{target}.h"
+#include {header_file}
 #include <stdio.h>
 
 #define CLERI_CASE_SENSITIVE 0
@@ -233,7 +233,7 @@ class {name}(Grammar):
 #define CLERI_FIRST_MATCH 0
 #define CLERI_MOST_GREEDY 1
 
-cleri_grammar_t * compile_grammar(void)
+cleri_grammar_t * compile_{target}(void)
 {{
 {language}
 
@@ -258,7 +258,7 @@ cleri_grammar_t * compile_grammar(void)
 
 #include <cleri/cleri.h>
 
-cleri_grammar_t * compile_grammar(void);
+cleri_grammar_t * compile_{target}(void);
 
 enum cleri_grammar_ids {{
     CLERI_NONE,   // used for objects with no name
@@ -449,7 +449,7 @@ func {name}() *goleri.Grammar {{
                     ' '.join(['from', py_module_name, 'import', n])
                     for n in classes if n != 'Rule'])))
 
-    def export_c(self, target=C_TARGET, c_indent=C_INDENTATION):
+    def export_c(self, target=C_TARGET, c_indent=C_INDENTATION, headerf=None):
         '''Export the grammar to a c (source and header) file which can be
         used with the libcleri module.'''
         language = []
@@ -487,9 +487,12 @@ func {name}() *goleri.Grammar {{
             '{}{}'.format(c_indent, gid)
             for gid in sorted(enums)]) + ','
 
+        header_file = '"{}.h"'.format(target) if headerf is None else headerf
+
         return (self.__class__.C_TEMPLATE_C.format(
                     name=self.__class__.__name__,
                     target=target,
+                    header_file=header_file,
                     indent=c_indent,
                     datetime=time.strftime(
                         '%Y-%m-%d %H:%M:%S',

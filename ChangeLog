@@ -1,3 +1,8 @@
+2018.10.25, Version 1.3.1 (Stable)
+
+  * Fixed exporting `Repeat` element to C. (issue #9)
+  * Added header file name option to `export_c()` method.
+
 2018.10.15, Version 1.3.0 (Stable)
 
   * Added element properties:
