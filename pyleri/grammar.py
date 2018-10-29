@@ -233,7 +233,7 @@ class {name}(Grammar):
 #define CLERI_FIRST_MATCH 0
 #define CLERI_MOST_GREEDY 1
 
-cleri_grammar_t * compile_{target}(void)
+cleri_grammar_t * compile_{fun}(void)
 {{
 {language}
 
@@ -258,7 +258,7 @@ cleri_grammar_t * compile_{target}(void)
 
 #include <cleri/cleri.h>
 
-cleri_grammar_t * compile_{target}(void);
+cleri_grammar_t * compile_{fun}(void);
 
 enum cleri_grammar_ids {{
     CLERI_NONE,   // used for objects with no name
@@ -489,10 +489,13 @@ func {name}() *goleri.Grammar {{
 
         header_file = '"{}.h"'.format(target) if headerf is None else headerf
 
+        fun = target.strip('/').replace('/', '_')
+
         return (self.__class__.C_TEMPLATE_C.format(
                     name=self.__class__.__name__,
                     target=target,
                     header_file=header_file,
+                    fun=fun,
                     indent=c_indent,
                     datetime=time.strftime(
                         '%Y-%m-%d %H:%M:%S',
@@ -502,6 +505,7 @@ func {name}() *goleri.Grammar {{
                 self.__class__.C_TEMPLATE_H.format(
                     name=self.__class__.__name__,
                     target=target,
+                    fun=fun,
                     guard=target.upper().replace('/', '_').replace('\\', '_'),
                     datetime=time.strftime(
                         '%Y-%m-%d %H:%M:%S',
