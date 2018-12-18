@@ -422,7 +422,7 @@ def view_parse_tree(res):
 if __name__ == '__main__':
     # Compile your grammar by creating an instance of the Grammar Class:
     my_grammar = MyGrammar()
-    res = my_grammar.parse('hi "siri" bye "siri"')
+    res = my_grammar.parse('hi "pyleri" bye "pyleri"')
     # The parse tree is visualized as a JSON object:
     print(json.dumps(view_parse_tree(res), indent=2))
 ```
@@ -436,7 +436,7 @@ Part of the output is shown below.
     "end": 23,
     "name": "START",
     "element": "Repeat",
-    "string": "hi \"pyleri\" hi \"pyleri\"",
+    "string": "hi \"pyleri\" bye \"pyleri\"",
     "children": [
         {
         "start": 0,
