@@ -444,7 +444,7 @@ def view_parse_tree(res):
 if __name__ == '__main__':
     # Compile your grammar by creating an instance of the Grammar Class:
     my_grammar = MyGrammar()
-    res = my_grammar.parse('hi "siri" bye "siri"')
+    res = my_grammar.parse('hi "pyleri" bye "pyleri"')
     # The parse tree is visualized as a JSON object:
     print(json.dumps(view_parse_tree(res), indent=2))
 ```
@@ -458,7 +458,7 @@ Part of the output is shown below.
     "end": 23,
     "name": "START",
     "element": "Repeat",
-    "string": "hi \"pyleri\" hi \"pyleri\"",
+    "string": "hi \"pyleri\" bye \"pyleri\"",
     "children": [
         {
         "start": 0,
@@ -502,13 +502,13 @@ A node contains 5 properties that will be explained next:
 
 - `start` property returns the start of the node object.
 - `end` property returns the end of the  node object.
-- `element` returns the type of [Element](#elements) (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Keyword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
+- `element` returns the [Element](#elements)'s type (e.g. Repeat, Sequence, Keyword, etc.). An element can be assigned to a variable; for instance in the example above `Keyword('hi')` was assigned to `k_hi`. With `element.name` the assigned name `k_hi` will be returned. Note that it is not a given that an element is named; in our example `Sequence` was not assigned, thus in this case the element has no attribute `name`.
 - `string` returns the string that is parsed.
 - `children` can return a node object containing deeper layered nodes provided that there are any. In our example the root node has an element type `Repeat()`, starts at 0 and ends at 24, and it has two `children`. These children are node objects that have both an element type `Sequence`, start at 0 and 12 respectively, and so on.
 
 
 ### Expecting
-`expecting` returns a Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string. Expecting is useful if you want to implement things like auto-completion, syntax error handling, auto-syntax-correction etc. The following example will illustrate a way of implementation.
+`expecting` returns a Python set() containing elements which pyleri expects at `pos`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string. "Expecting" is useful if you want to implement things like auto-completion, syntax error handling, auto-syntax-correction etc. The following example will illustrate a way of implementation.
 
 Example:
 ```python
@@ -602,7 +602,7 @@ Expected:
         (2) bye
 
 ```
-In the above example we parsed an invalid string according to the grammar class. The `auto-correction()` method that we built for this example combines all properties from the `parse()` to create a valid string. The output shows every recursion of the `auto-correction()` method and prints successively the set of expected elements. It takes one randomly and adds it to the string. When the string corresponds to the grammar, the property `is_valid` will return `True`. Notably the `expecting` property still contains elements even if the `is_valid` returned `True`. The reason in this example is because of the [Repeat](#repeat) element.
+In the above example we parsed an invalid string according to the grammar class. The `auto-correction()` method that we built for this example combines all properties from the `parse()` to create a valid string. The output shows every recursion of the `auto-correction()` method and prints successively the set of expected elements. It takes one randomly and adds it to the string. When the string corresponds to the grammar, the property `is_valid` will return `True`. Notably the `expecting` property still contains elements even if the `is_valid` returned `True`. The reason in this example is due to the [Repeat](#repeat) element.
 
 ## Elements
 Pyleri has several elements which are all subclasses of [Element](#element) and can be used to create a grammar.
