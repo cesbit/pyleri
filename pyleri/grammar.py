@@ -120,7 +120,7 @@ class _OrderedClass(type):
                     'actual reference is missing.'.format(n))
         if bases and not isinstance(attrs.get('START'), Element):
             raise MissingStartError(
-                'Grammar is mising the required START element entry point.')
+                'Grammar is missing the required START element entry point.')
         if bases:
             used = set()
             _used_checker(attrs['START'], used)
