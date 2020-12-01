@@ -50,19 +50,19 @@ class Keyword(NamedElement):
 
     def _run_export_js(self, js_indent, indent, classes, cname):
         return 'Keyword(\'{}\'{})'.format(
-            self._keyword,
+            self._keyword.replace('\'', '\\\''),
             ', true' if self._ign_case else '')
 
     def _run_export_py(self, py_indent, indent, classes):
         return 'Keyword(\'{}\'{})'.format(
-            self._keyword,
+            self._keyword.replace('\'', '\\\''),
             ', True' if self._ign_case else '')
 
     @c_export
     def _run_export_c(self, c_indent, indent, enums, gid):
         return 'cleri_keyword({}, "{}", {})'.format(
             gid,
-            self._keyword,
+            self._keyword.replace('"', '\\"'),
             'CLERI_CASE_INSENSITIVE'
             if self._ign_case else 'CLERI_CASE_SENSITIVE')
 
@@ -70,12 +70,12 @@ class Keyword(NamedElement):
     def _run_export_go(self, go_indent, indent, enums, gid):
         return 'goleri.NewKeyword({}, "{}", {})'.format(
             gid,
-            self._keyword,
+            self._keyword.replace('"', '\\"'),
             'true' if self._ign_case else 'false')
 
     @java_export
     def _run_export_java(self, c_indent, indent, enums, classes, gid):
         return 'new Keyword({}"{}", {})'.format(
             '' if gid is None else 'Ids.{}, '.format(gid),
-            self._keyword,
+            self._keyword.replace('"', '\\"'),
             'true' if self._ign_case else 'false')
