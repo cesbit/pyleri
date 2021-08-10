@@ -49,7 +49,7 @@ class TestPrio(unittest.TestCase):
 
     def test_prio_list(self):
         arr = Sequence('[', List(THIS), ']')
-        prio = Prio(Keyword('nil'),arr)
+        prio = Prio(Keyword('nil'), arr)
         grammar = create_grammar(prio)
         self.assertTrue(grammar.parse('[]').is_valid)
         self.assertTrue(grammar.parse('[[nil]]').is_valid)
