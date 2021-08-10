@@ -23,7 +23,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Jeroen van der Heijden',
-    author_email='jeroen@transceptor.technology',
+    author_email='jeroen@cesbit.com',
     url='https://github.com/transceptor-technology/pyleri',
     download_url=(
         'https://github.com/transceptor-technology/'

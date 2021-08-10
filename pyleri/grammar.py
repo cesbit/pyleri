@@ -8,7 +8,7 @@ class MyGrammar(Grammar):
     ...
 
 
-:copyright: 2018, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 '''
 
 

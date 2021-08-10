@@ -10,6 +10,7 @@ from pyleri import (
     Sequence,
     Keyword,
     Prio,
+    List,
     THIS,
     MaxRecursionError,
 )  # nopep8
@@ -44,6 +45,28 @@ class TestPrio(unittest.TestCase):
             grammar.parse(
                 '(((((((((((((((((((((((((((((((((((((((((((((((((((hi'
                 ')))))))))))))))))))))))))))))))))))))))))))))))))))'
+            )
+
+    def test_prio_list(self):
+        arr = Sequence('[', List(THIS), ']')
+        prio = Prio(Keyword('nil'),arr)
+        grammar = create_grammar(prio)
+        self.assertTrue(grammar.parse('[]').is_valid)
+        self.assertTrue(grammar.parse('[[nil]]').is_valid)
+        self.assertTrue(
+            grammar.parse(
+                '['
+                'nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,'
+                'nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,'
+                'nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,'
+                'nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,'
+                'nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,'
+                'nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil'
+                ']').is_valid)
+        with self.assertRaises(MaxRecursionError):
+            grammar.parse(
+                '[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[hi'
+                ']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]'
             )
 
 

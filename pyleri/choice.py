@@ -4,7 +4,7 @@ Choose one of the given elements. When most_greedy is True we will choose
 the 'longest' element when multiple elements are valid. If most_greedy is
 False we will return the first match.
 
-:copyright: 2018, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 '''
 
 from .elements import NamedElement, c_export, go_export, java_export

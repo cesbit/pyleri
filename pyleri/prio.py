@@ -1,6 +1,6 @@
 '''Prio class.
 
-:copyright: 2018, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 '''
 from .elements import NamedElement
 from .rule import Rule
@@ -33,6 +33,8 @@ class _Prio(NamedElement):
                     pos > rule._tested[node.start][1]:
                 node.children = rule._tree[node.start] = children
                 rule._tested[node.start] = is_valid, pos
+
+        rule._depth -= 1
 
         if rule._tested[node.start][0]:
             root._append_tree(tree, node, rule._tested[node.start][1])

@@ -1,6 +1,6 @@
 '''Sequence class.
 
-:copyright: 2018, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 '''
 from .elements import NamedElement, c_export
 

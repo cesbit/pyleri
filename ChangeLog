@@ -1,3 +1,7 @@
+2020.12.02, Version 1.3.4 (Stable)
+
+  * Fixed bug with recursion in Prio element. (issue #18)
+
 2020.12.01, Version 1.3.3 (Stable)
 
   * Fixed bug with single and double quote characters in export. (issue #16)
