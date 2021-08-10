@@ -8,7 +8,7 @@ therefore decided to build our own parser which works together with the
 Javascript JS-LeRi (jsleri) module so we can exchange grammars written by this
 module with JavaScript projects.
 
-:copyright: 2016, Jeroen van der Heijden (Transceptor Technology)
+:copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 :license: MIT
 '''
 
@@ -40,5 +40,5 @@ from .exceptions import (
 
 __author__ = 'Jeroen van der Heijden'
 __maintainer__ = 'Jeroen van der Heijden'
-__email__ = 'jeroen@transceptor.technology'
+__email__ = 'jeroen@cesbit.com'
 __version__ = '1.3.4'
