@@ -1,3 +1,6 @@
+[![CI](https://github.com/transceptor-technology/pyleri/workflows/CI/badge.svg)](https://github.com/transceptor-technology/pyleri/actions)
+[![Release Version](https://img.shields.io/github/release/transceptor-technology/pyleri)](https://github.com/transceptor-technology/pyleri/releases)
+
 Python Left-Right Parser
 ========================
 Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues within the `lrparsing` module and also had difficulties keeping the language the same in all projects. That is when we decided to create Pyleri which can export a created grammar to JavaScript, C, Python, Go and Java.
