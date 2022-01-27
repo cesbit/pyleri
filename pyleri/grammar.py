@@ -284,7 +284,7 @@ package {package}
 import (
 \t"regexp"
 
-\t"github.com/transceptor-technology/goleri"
+\t"github.com/cesbit/goleri"
 )
 
 // Element indentifiers

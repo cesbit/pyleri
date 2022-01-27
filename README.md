@@ -1,9 +1,9 @@
-[![CI](https://github.com/transceptor-technology/pyleri/workflows/CI/badge.svg)](https://github.com/transceptor-technology/pyleri/actions)
-[![Release Version](https://img.shields.io/github/release/transceptor-technology/pyleri)](https://github.com/transceptor-technology/pyleri/releases)
+[![CI](https://github.com/cesbit/pyleri/workflows/CI/badge.svg)](https://github.com/cesbit/pyleri/actions)
+[![Release Version](https://img.shields.io/github/release/cesbit/pyleri)](https://github.com/cesbit/pyleri/releases)
 
 Python Left-Right Parser
 ========================
-Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/transceptor-technology/jsleri) for auto-completion and suggestions in our web console. Later we found small issues within the `lrparsing` module and also had difficulties keeping the language the same in all projects. That is when we decided to create Pyleri which can export a created grammar to JavaScript, C, Python, Go and Java.
+Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We first used [lrparsing](http://lrparsing.sourceforge.net/doc/html/) and wrote [jsleri](https://github.com/cesbit/jsleri) for auto-completion and suggestions in our web console. Later we found small issues within the `lrparsing` module and also had difficulties keeping the language the same in all projects. That is when we decided to create Pyleri which can export a created grammar to JavaScript, C, Python, Go and Java.
 
 ---------------------------------------
   * [Related projects](#related-projects)
@@ -37,10 +37,10 @@ Pyleri is an easy-to-use parser created for [SiriDB](http://siridb.net/). We fir
 
 ---------------------------------------
 ## Related projects
-- [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
-- [libcleri](https://github.com/transceptor-technology/libcleri): C parser
-- [goleri](https://github.com/transceptor-technology/goleri): Go parser
-- [jleri](https://github.com/transceptor-technology/jleri): Java parser
+- [jsleri](https://github.com/cesbit/jsleri): JavaScript parser
+- [libcleri](https://github.com/cesbit/libcleri): C parser
+- [goleri](https://github.com/cesbit/goleri): Go parser
+- [jleri](https://github.com/cesbit/jleri): Java parser
 
 ## Installation
 The easiest way is to use PyPI:
@@ -243,7 +243,7 @@ package grammar
 import (
         "regexp"
 
-        "github.com/transceptor-technology/goleri"
+        "github.com/cesbit/goleri"
 )
 
 // Element indentifiers

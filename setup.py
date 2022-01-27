@@ -24,9 +24,9 @@ setup(
     long_description_content_type='text/markdown',
     author='Jeroen van der Heijden',
     author_email='jeroen@cesbit.com',
-    url='https://github.com/transceptor-technology/pyleri',
+    url='https://github.com/cesbit/pyleri',
     download_url=(
-        'https://github.com/transceptor-technology/'
+        'https://github.com/cesbit/'
         'pyleri/tarball/{}'.format(version)),
     keywords=['parser', 'grammar', 'autocompletion'],
     classifiers=[
