@@ -342,7 +342,7 @@ func {name}() *goleri.Grammar {{
             self,
             js_module_name=JS_MODULE_NAME,
             js_template=JS_ES6_IMPORT_EXPORT_TEMPLATE,
-            js_indent=JS_INDENTATION):
+            js_indent=JS_INDENTATION) -> str:
         """Export the grammar to a JavaScript file which can be
         used with the js-lrparsing module.
 
@@ -405,7 +405,7 @@ func {name}() *goleri.Grammar {{
             self,
             py_module_name=PY_MODULE_NAME,
             py_template=PY_TEMPLATE,
-            py_indent=PY_INDENTATION):
+            py_indent=PY_INDENTATION) -> str:
         """Export the grammar to a python file which can be
         used with the pyleri module. This can be useful when python code
         if used to auto-create a grammar and an export of the final result is
@@ -449,7 +449,11 @@ func {name}() *goleri.Grammar {{
                     ' '.join(['from', py_module_name, 'import', n])
                     for n in classes if n != 'Rule'])))
 
-    def export_c(self, target=C_TARGET, c_indent=C_INDENTATION, headerf=None):
+    def export_c(
+            self,
+            target=C_TARGET,
+            c_indent=C_INDENTATION,
+            headerf=None) -> str:
         """Export the grammar to a c (source and header) file which can be
         used with the libcleri module."""
         language = []
@@ -517,7 +521,7 @@ func {name}() *goleri.Grammar {{
             self,
             go_template=GO_TEMPLATE,
             go_indent=GO_INDENTATION,
-            go_package=GO_PACKAGE):
+            go_package=GO_PACKAGE) -> str:
         """Export the grammar to a Go file which can be
         used with the goleri module."""
 
@@ -568,7 +572,7 @@ func {name}() *goleri.Grammar {{
             java_template=JAVA_TEMPLATE,
             java_indent=JAVA_INDENTATION,
             java_package=JAVA_PACKAGE,
-            is_public=True):
+            is_public=True) -> str:
         """Export the grammar to a Java file which can be
         used with the jleri module."""
 
@@ -629,7 +633,7 @@ func {name}() *goleri.Grammar {{
             enums=enum_str,
             public='public ' if is_public else '')
 
-    def parse(self, string):
+    def parse(self, string) -> Result:
         """Parse some string to the Grammar.
 
         Returns a nodeResult with the following attributes:
@@ -692,7 +696,9 @@ func {name}() *goleri.Grammar {{
         return element._get_node_result(self, tree, rule, self._s, node)
 
 
-def create_grammar(elem, re_keywords=_RE_KEYWORDS):
+def create_grammar(
+        elem: Element,
+        re_keywords: re.Pattern = _RE_KEYWORDS) -> Grammar:
     class _Grammar(Grammar):
         RE_KEYWORDS = _RE_KEYWORDS
         START = elem
