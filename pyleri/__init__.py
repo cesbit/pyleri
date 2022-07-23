@@ -41,4 +41,4 @@ from .exceptions import (
 __author__ = 'Jeroen van der Heijden'
 __maintainer__ = 'Jeroen van der Heijden'
 __email__ = 'jeroen@cesbit.com'
-__version__ = '1.3.4'
+__version__ = '1.4.0'

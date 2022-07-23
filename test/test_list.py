@@ -63,6 +63,18 @@ class TestList(unittest.TestCase):
             'error at position 0, expecting: hi'
         )
 
+        self.assertEqual(
+            grammar.parse('').as_str(line_number=True),
+            'error at line 1, col 1, expecting: hi'
+        )
+
+        self.assertEqual(
+            grammar.parse("""
+                hi-hi-hi-hi-hi
+            """).as_str(line_number=True),
+            'error at line 2, col 26, expecting: end_of_statement'
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -5,6 +5,18 @@
 import re
 from .elements import NamedElement, c_export, go_export, java_export
 
+_RE_FLAGS = re.compile(
+    r'^('
+    r'(\(\?i\))|'
+    r'(\(\?m\))|'
+    r'(\(\?s\))|'
+    r'(\(\?A\))|'
+    r'(\(\?x\))|'
+    r'(\(\?X\))|'
+    r'(\(\?U\))|'
+    r'(\(\?:\))'
+    r')(.)')
+
 
 class Regex(NamedElement):
 
@@ -12,7 +24,12 @@ class Regex(NamedElement):
 
     def __init__(self, pattern, flags=0):
         if not pattern.startswith('^'):
-            pattern = '^' + pattern
+            m = _RE_FLAGS.match(pattern)
+            if not m:
+                pattern = '^' + pattern
+            elif m.group(2) != '^':
+                pos = m.end() - 1
+                pattern = pattern[:pos] + '^' + pattern[pos:]
         assert flags == 0 or flags == re.IGNORECASE, \
             'Only re.IGNORECASE is currently accepted as flag'
         self._compiled = re.compile(pattern, flags=flags)

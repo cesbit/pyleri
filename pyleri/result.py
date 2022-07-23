@@ -21,10 +21,16 @@ class Result:
         self.expecting = None
         self.tree = None
 
-    def as_str(self, translate=None):
+    def as_str(self, translate=None, line_number=False):
         if self.is_valid:
             return 'parsed successfully'
-        res = ['error at position {}'.format(self.pos)]
+        if line_number:
+            string = self.tree._string
+            lnr = string.count('\n', 0, self.pos) + 1
+            pos = self.pos - string.rfind('\n', 0, self.pos)
+            res = ['error at line {}, col {}'.format(lnr, pos)]
+        else:
+            res = ['error at position {}'.format(self.pos)]
         arr = []
         for elem in (self.expecting):
             expectstr = translate(elem) if translate else None

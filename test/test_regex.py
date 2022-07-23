@@ -28,6 +28,15 @@ class TestRegex(unittest.TestCase):
                 if elem is regex else None),
             'error at position 0, expecting: single_quoted_string'
         )
+        self.assertTrue(grammar.parse("'hi'").is_valid)
+
+    def test_flags_regex(self):
+        regex = Regex(r'(?s)//.*?(\r?\n|$)')
+        grammar = create_grammar(regex)
+
+        self.assertTrue(grammar.parse("""
+                //test
+        """).is_valid)
 
 
 if __name__ == '__main__':
