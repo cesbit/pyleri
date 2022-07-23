@@ -698,7 +698,7 @@ func {name}() *goleri.Grammar {{
 
 def create_grammar(
         elem: Element,
-        re_keywords: re.Pattern = _RE_KEYWORDS) -> Grammar:
+        re_keywords: 're.Pattern' = _RE_KEYWORDS) -> Grammar:
     class _Grammar(Grammar):
         RE_KEYWORDS = _RE_KEYWORDS
         START = elem
