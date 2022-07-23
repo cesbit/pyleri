@@ -1,4 +1,4 @@
-'''JSON Grammar.'''
+"""JSON Grammar."""
 from pyleri import (
     Ref,
     Choice,

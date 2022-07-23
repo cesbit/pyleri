@@ -1,8 +1,8 @@
-'''Prio class.
+"""Prio class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
-from .elements import NamedElement
+"""
+from .elements import NamedElement, Element
 from .rule import Rule
 from .exceptions import MaxRecursionError
 
@@ -13,7 +13,7 @@ class _Prio(NamedElement):
 
     __slots__ = ('_elements', '_name')
 
-    def __init__(self, *elements):
+    def __init__(self, *elements: Element):
         self._elements = self._validate_elements(elements)
 
     def _get_node_result(self, root, tree, rule, s, node):

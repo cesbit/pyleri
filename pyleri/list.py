@@ -1,4 +1,4 @@
-'''pyleri.List Class.
+"""pyleri.List Class.
 
 The grammar must find given elements separated by a delimiter. When no
 delimiter is given we split using a comma. All arguments:
@@ -10,15 +10,22 @@ delimiter is given we split using a comma. All arguments:
     opt: When set to True the list may end with a delimiter. (default: False)
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
-from .elements import NamedElement, c_export, go_export, java_export
+"""
+import typing as t
+from .elements import Element, NamedElement, c_export, go_export, java_export
 
 
 class List(NamedElement):
 
     __slots__ = ('_element', '_delimiter', '_min', '_max', '_opt')
 
-    def __init__(self, element, delimiter=',', mi=0, ma=None, opt=False):
+    def __init__(
+            self,
+            element: Element,
+            delimiter: str = ',',
+            mi: int = 0,
+            ma: t.Optional[int] = None,
+            opt: bool = False):
         self._element, self._delimiter = \
             map(self._validate_element, (element, delimiter))
 
@@ -38,15 +45,15 @@ class List(NamedElement):
         self._opt = bool(opt)
 
     @property
-    def min(self):
+    def min(self) -> int:
         return self._min
 
     @property
-    def max(self):
+    def max(self) -> t.Optional[int]:
         return self._max
 
     @property
-    def opt_closing(self):
+    def opt_closing(self) -> bool:
         return self._opt
 
     @property

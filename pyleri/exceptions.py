@@ -1,7 +1,7 @@
-'''Exceptions.
+"""Exceptions.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
 
 
 class CompileError(Exception):

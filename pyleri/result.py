@@ -1,11 +1,15 @@
-'''Result class.
+"""Result class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
+import typing as t
 from .keyword import Keyword
 from .token import Token
 from .tokens import Tokens
 from .endofstatement import _EndOfStatement
+if t.TYPE_CHECKING:
+    from .node import Node
+    from .expecting import Expecting
 
 
 TOSTR = (Keyword, Token, Tokens, _EndOfStatement)
@@ -15,11 +19,11 @@ class Result:
 
     __slots__ = ('is_valid', 'pos', 'expecting', 'tree')
 
-    def __init__(self, is_valid, pos):
-        self.is_valid = is_valid
-        self.pos = pos
-        self.expecting = None
-        self.tree = None
+    def __init__(self, is_valid: bool, pos: int, tree: 'Node'):
+        self.is_valid: bool = is_valid
+        self.pos: int = pos
+        self.expecting: t.Optional['Expecting'] = None
+        self.tree: 'Node' = tree
 
     def as_str(self, translate=None, line_number=False):
         if self.is_valid:

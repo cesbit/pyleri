@@ -1,11 +1,11 @@
-'''pyleri.Keyword Class.
+"""pyleri.Keyword Class.
 
 Try matching a given keyword string. The keyword should match
 Grammer.RE_KEYWORDS otherwise the keyword will not be found. It's possible
 however to overwrite the default RE_KEYWORDS in you own Grammar class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
 from .elements import NamedElement, c_export, go_export, java_export
 
 
@@ -13,7 +13,7 @@ class Keyword(NamedElement):
 
     __slots__ = ('_keyword', '_ign_case')
 
-    def __init__(self, keyword, ign_case=False):
+    def __init__(self, keyword: str, ign_case: bool = False):
 
         if not isinstance(keyword, str):
             raise TypeError(
@@ -23,7 +23,7 @@ class Keyword(NamedElement):
         self._ign_case = bool(ign_case)
 
     @property
-    def ign_case(self):
+    def ign_case(self) -> bool:
         return self._ign_case
 
     def __repr__(self):

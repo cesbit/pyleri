@@ -1,4 +1,4 @@
-'''pyleri.Grammar Class.
+"""pyleri.Grammar Class.
 
 When creating a new grammar this class should be used as the base class.
 
@@ -9,7 +9,7 @@ class MyGrammar(Grammar):
 
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
 
 
 import re
@@ -328,11 +328,11 @@ func {name}() *goleri.Grammar {{
 '''.lstrip()
 
     def __init__(self):
-        '''Initialize the grammar.
+        """Initialize the grammar.
 
         Note: usually you should only initialize a Grammar instance
         once in a project.
-        '''
+        """
         self._element = self.START
         self._string = None
         self._expecting = None
@@ -343,13 +343,13 @@ func {name}() *goleri.Grammar {{
             js_module_name=JS_MODULE_NAME,
             js_template=JS_ES6_IMPORT_EXPORT_TEMPLATE,
             js_indent=JS_INDENTATION):
-        '''Export the grammar to a JavaScript file which can be
+        """Export the grammar to a JavaScript file which can be
         used with the js-lrparsing module.
 
         Two templates are available:
             Grammar.JS_WINDOW_TEMPLATE
             Grammar.JS_ES6_IMPORT_EXPORT_TEMPLATE (default)
-        '''
+        """
 
         language = []
         refs = []
@@ -406,10 +406,10 @@ func {name}() *goleri.Grammar {{
             py_module_name=PY_MODULE_NAME,
             py_template=PY_TEMPLATE,
             py_indent=PY_INDENTATION):
-        '''Export the grammar to a python file which can be
+        """Export the grammar to a python file which can be
         used with the pyleri module. This can be useful when python code
         if used to auto-create a grammar and an export of the final result is
-        required.'''
+        required."""
 
         language = []
         classes = {'Grammar'}
@@ -450,8 +450,8 @@ func {name}() *goleri.Grammar {{
                     for n in classes if n != 'Rule'])))
 
     def export_c(self, target=C_TARGET, c_indent=C_INDENTATION, headerf=None):
-        '''Export the grammar to a c (source and header) file which can be
-        used with the libcleri module.'''
+        """Export the grammar to a c (source and header) file which can be
+        used with the libcleri module."""
         language = []
         indent = 0
         enums = set()
@@ -518,8 +518,8 @@ func {name}() *goleri.Grammar {{
             go_template=GO_TEMPLATE,
             go_indent=GO_INDENTATION,
             go_package=GO_PACKAGE):
-        '''Export the grammar to a Go file which can be
-        used with the goleri module.'''
+        """Export the grammar to a Go file which can be
+        used with the goleri module."""
 
         language = []
         enums = set()
@@ -569,8 +569,8 @@ func {name}() *goleri.Grammar {{
             java_indent=JAVA_INDENTATION,
             java_package=JAVA_PACKAGE,
             is_public=True):
-        '''Export the grammar to a Java file which can be
-        used with the jleri module.'''
+        """Export the grammar to a Java file which can be
+        used with the jleri module."""
 
         language = []
         enums = set()
@@ -630,7 +630,7 @@ func {name}() *goleri.Grammar {{
             public='public ' if is_public else '')
 
     def parse(self, string):
-        '''Parse some string to the Grammar.
+        """Parse some string to the Grammar.
 
         Returns a nodeResult with the following attributes:
          - is_valid: True when the string is successfully parsed
@@ -641,7 +641,7 @@ func {name}() *goleri.Grammar {{
                       'pos' in the string.
          - tree: the parse_tree containing a structured
                  result for the given string.
-        '''
+        """
         self._string = string
         self._expecting = Expecting()
         self._cached_kw_match.clear()
@@ -653,7 +653,8 @@ func {name}() *goleri.Grammar {{
             0,
             tree.children,
             self._element,
-            True))
+            True),
+            tree)
 
         # get rest if anything
         rest = self._string[node_res.pos:].lstrip()
@@ -672,8 +673,6 @@ func {name}() *goleri.Grammar {{
         # add expecting and correct pos to node_res if node_res is not valid
         if not node_res.is_valid:
             node_res.pos = self._expecting.pos
-
-        node_res.tree = tree
 
         return node_res
 

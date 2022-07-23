@@ -1,7 +1,7 @@
-'''Optional class.
+"""Optional class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
 from .elements import NamedElement, c_export, go_export, java_export
 
 

@@ -1,20 +1,25 @@
-'''Repeat class.
+"""Repeat class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
-from .elements import NamedElement, c_export, go_export, java_export
+"""
+import typing as t
+from .elements import Element, NamedElement, c_export, go_export, java_export
 
 
 class Repeat(NamedElement):
 
     __slots__ = ('_element', '_min', '_max')
 
-    def __init__(self, element, mi=0, ma=None):
+    def __init__(
+            self,
+            element: Element,
+            mi: int = 0,
+            ma: t.Optional[int] = None):
         self._element = self._validate_element(element)
 
         if not isinstance(mi, int) or mi < 0:
             raise TypeError('Repeat(): "mi" must be an integer value larger '
-                            'than or equal to 0, got: {}'.format(mi))
+                            'than or equal to 0, got: {mi}'.format(mi))
 
         self._min = mi
 

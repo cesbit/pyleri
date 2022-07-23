@@ -1,18 +1,19 @@
-'''Element and NamedElement Class.
+"""Element and NamedElement Class.
 
 These are the base classes used for all other elements.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
+import typing as t
 
 
-def camel_case(s):
+def camel_case(s: str) -> str:
     return ''.join(
         p[0].upper() + p[1:] if n else p
         for n, p in enumerate(s.split('_')))
 
 
-def cap_case(s):
+def cap_case(s: str) -> str:
     return ''.join(p[0].upper() + p[1:] for p in s.split('_') if p)
 
 
@@ -63,18 +64,20 @@ class Element:
 
     __slots__ = tuple()
 
+    name: t.Optional[str]
+
     @staticmethod
-    def _validate_element(element):
+    def _validate_element(element: 'Element') -> 'Element':
         if isinstance(element, str):
             return Token(element)
         if isinstance(element, Element):
             return element
         raise TypeError(
-            'Expecting an element or string but received type: {}'.format(
-                type(element)))
+            'Expecting an element or string '
+            'but received type: {}'.format(type(element)))
 
     @classmethod
-    def _validate_elements(cls, elements):
+    def _validate_elements(cls, elements) -> t.List['Element']:
         return [cls._validate_element(elem) for elem in elements]
 
 
@@ -82,7 +85,12 @@ class NamedElement(Element):
 
     __slots__ = ('name',)
 
-    def _export_js(self, js_indent, indent, classes, cname):
+    def _export_js(
+            self,
+            js_indent: int,
+            indent: int,
+            classes,
+            cname) -> str:
         classes.add(self.__class__.__name__.lstrip('_'))
         if hasattr(self, 'name') and indent > 0:
             return '{}.{}'.format(cname, self.name) if cname else self.name

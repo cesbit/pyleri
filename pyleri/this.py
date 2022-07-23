@@ -1,7 +1,7 @@
-'''This class and THIS instance.
+"""This class and THIS instance.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
 from .elements import Element
 
 

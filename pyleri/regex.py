@@ -1,7 +1,7 @@
-'''Regex class.
+"""Regex class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
 import re
 from .elements import NamedElement, c_export, go_export, java_export
 
@@ -22,7 +22,7 @@ class Regex(NamedElement):
 
     __slots__ = ('_compiled',)
 
-    def __init__(self, pattern, flags=0):
+    def __init__(self, pattern: str, flags: int = 0):
         if not pattern.startswith('^'):
             m = _RE_FLAGS.match(pattern)
             if not m:

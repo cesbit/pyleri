@@ -1,7 +1,7 @@
-'''Tokens class.
+"""Tokens class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
 from .elements import NamedElement, c_export, go_export, java_export
 
 
@@ -9,7 +9,7 @@ class Tokens(NamedElement):
 
     __slots__ = ('_tokens',)
 
-    def __init__(self, tokens):
+    def __init__(self, tokens: str):
         self._tokens = tokens.split()
         self._tokens.sort(key=len, reverse=True)
 

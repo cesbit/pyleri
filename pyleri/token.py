@@ -1,7 +1,7 @@
-'''Token class.
+"""Token class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
+"""
 from .elements import NamedElement, c_export, go_export, java_export
 
 
@@ -9,7 +9,7 @@ class Token(NamedElement):
 
     __slots__ = ('_token',)
 
-    def __init__(self, token):
+    def __init__(self, token: str):
         if not isinstance(token, str):
             raise TypeError('Token(): first argument must be a string '
                             'value, got {}'.format(token))

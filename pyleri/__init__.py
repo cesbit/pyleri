@@ -1,4 +1,4 @@
-'''Py-LeRi (pyleri) Python LR-parsing module.
+"""Py-LeRi (pyleri) Python LR-parsing module.
 
 This module is inspired by lrparsing (http://lrparsing.sourceforge.net/),
 a Python parser written by Russell Stuart, 2014-05-29.
@@ -10,7 +10,7 @@ module with JavaScript projects.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 :license: MIT
-'''
+"""
 
 from .choice import Choice
 from .endofstatement import end_of_statement

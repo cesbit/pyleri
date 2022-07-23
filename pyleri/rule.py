@@ -1,15 +1,15 @@
-'''Rule class.
+"""Rule class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
-'''
-from .elements import NamedElement
+"""
+from .elements import NamedElement, Element
 
 
 class Rule(NamedElement):
 
     __slots__ = ('_element', '_tested', '_tree', '_depth')
 
-    def __init__(self, element):
+    def __init__(self, element: Element):
         self._element = element
 
     def _get_node_result(self, root, tree, rule, _s, node):

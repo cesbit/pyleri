@@ -17,7 +17,7 @@ class TestJsonLang(unittest.TestCase):
     def test_json(self):
         grammar = JsonGrammar()
         # should be true
-        self.assertTrue(grammar.parse('''
+        self.assertTrue(grammar.parse("""
             {
                 "hoi \\"Iris\\"": [
                     5,
@@ -27,7 +27,7 @@ class TestJsonLang(unittest.TestCase):
                         "b": false
                     }
                 ]
-            }''').is_valid)
+            }""").is_valid)
 
         # keys must be strings
         self.assertFalse(grammar.parse('{5: true}').is_valid)
