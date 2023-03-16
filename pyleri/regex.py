@@ -61,7 +61,7 @@ class Regex(NamedElement):
 
     @c_export
     def _run_export_c(self, c_indent, indent, enums, gid):
-        assert not(self._compiled.flags & re.IGNORECASE), \
+        assert not (self._compiled.flags & re.IGNORECASE), \
             'libcleri has currently no support for the re.IGNORECASE flag'
         return 'cleri_regex({}, "{}")'.format(
             gid,
