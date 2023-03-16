@@ -22,7 +22,7 @@ class List(NamedElement):
     def __init__(
             self,
             element: Element,
-            delimiter: str = ',',
+            delimiter: t.Union[str, Element] = ',',
             mi: int = 0,
             ma: t.Optional[int] = None,
             opt: bool = False):
