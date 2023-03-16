@@ -67,7 +67,7 @@ class Element:
     name: t.Optional[str]
 
     @staticmethod
-    def _validate_element(element: 'Element') -> 'Element':
+    def _validate_element(element: t.Union[str, 'Element']) -> 'Element':
         if isinstance(element, str):
             return Token(element)
         if isinstance(element, Element):
