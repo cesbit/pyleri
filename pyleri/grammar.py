@@ -127,7 +127,7 @@ class _OrderedClass(type):
             elems = {
                 elem for elem in attrs['_order']
                 if isinstance(attrs[elem], Element)}
-            if used != elems:
+            if elems - used:
                 raise UnusedElementError(
                     'Unused element(s) found: {}'.format(
                         ', '.join(elems - used)))
