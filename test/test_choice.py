@@ -10,6 +10,7 @@ from pyleri import (
     Sequence,
     Choice,
     Keyword,
+    Regex,
 )  # nopep8
 
 
@@ -38,6 +39,24 @@ class TestChoice(unittest.TestCase):
         self.assertTrue(grammar.parse('hi').is_valid)
         self.assertFalse(grammar.parse(' hi iris ').is_valid)
         self.assertFalse(grammar.parse(' hi sasha ').is_valid)
+
+    def test_choice_with_named_elements(self):
+        int_value = Regex(r"\d+")
+        int_value.name = "INT_VALUE"
+
+        float_value = Regex(r"\d+(\.\d+)?")
+        float_value.name = "FLOAT_VALUE"
+
+        choice = Choice(float_value, int_value)
+        grammar = create_grammar(choice)
+
+        result = grammar.parse("invalid")
+
+        expecting = {str(element) for element in result.expecting}
+
+        self.assertIn('"INT_VALUE"', expecting)
+        self.assertIn('"FLOAT_VALUE"', expecting)
+        self.assertNotIn("Regex", expecting)
 
 
 if __name__ == '__main__':
