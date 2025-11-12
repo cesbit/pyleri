@@ -1,5 +1,6 @@
 [![CI](https://github.com/cesbit/pyleri/workflows/CI/badge.svg)](https://github.com/cesbit/pyleri/actions)
 [![Release Version](https://img.shields.io/github/release/cesbit/pyleri)](https://github.com/cesbit/pyleri/releases)
+[![Github stargazers](https://img.shields.io/github/stars/cesbit/pyleri)](https://github.com/cesbit/pyleri/stargazers)
 
 Python Left-Right Parser
 ========================
