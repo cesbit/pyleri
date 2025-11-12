@@ -6,6 +6,7 @@ False we will return the first match.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 """
+import typing as t
 from .elements import Element, NamedElement, c_export, go_export, java_export
 
 
@@ -15,7 +16,7 @@ class Choice(NamedElement):
 
     def __init__(
             self,
-            *elements: Element,
+            *elements: t.Union[Element, str],
             most_greedy: bool = True):
         self._elements = self._validate_elements(elements)
         self._get_node_result = \
@@ -43,6 +44,7 @@ class Choice(NamedElement):
         return mg_is_valid, mg_pos
 
     def _stop_at_first_match(self, root, tree, rule, s, node):
+        is_valid, pos = True, node.start
         for elem in self._elements:
             children = []
             is_valid, pos = root._walk(elem, node.start, children, rule, True)
@@ -66,10 +68,8 @@ class Choice(NamedElement):
                 new_indent,
                 classes)) for elem in self._elements])
         return 'Choice(\n{val},\n{indent}most_greedy={mg})'.format(
-            mg='{mg}'.format(
-                indent=py_indent * (indent + 1),
-                mg=('False', 'True')[
-                    self._get_node_result == self._most_greedy_result]),
+            mg=('False', 'True')[
+                self._get_node_result == self._most_greedy_result],
             val=value,
             indent=py_indent * new_indent)
 

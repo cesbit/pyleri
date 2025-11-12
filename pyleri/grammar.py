@@ -14,6 +14,7 @@ class MyGrammar(Grammar):
 
 import re
 import time
+import typing as t
 from .node import Node
 from .expecting import Expecting
 from .endofstatement import end_of_statement
@@ -36,9 +37,9 @@ _RE_KEYWORDS = re.compile(r'^\w+')
 class _KeepOrder(dict):
 
     def __init__(self, *args):
-        self._order = []
-        self._refs = {}
-        self._re_keywords = _RE_KEYWORDS
+        self._order: t.List[str] = []
+        self._refs: t.Dict[str, Ref] = {}
+        self._re_keywords: re.Pattern = _RE_KEYWORDS
         self._has_keywords = False
         super().__setitem__('_order', self._order)
         super().__setitem__('_refs', self._refs)
@@ -55,7 +56,7 @@ class _KeepOrder(dict):
             for elem in element._elements:
                 self._check_keywords(elem)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: t.Any):
         if key not in self:
             for k in self._order:
                 if k.upper() == key.upper():
@@ -78,6 +79,7 @@ class _KeepOrder(dict):
                 raise ReKeywordsChangedError(
                     'RE_KEYWORDS must be set on top of Grammar before '
                     'keywords are set.')
+            assert isinstance(value, re.Pattern)
             self._re_keywords = value
 
         if isinstance(value, NamedElement):
@@ -92,24 +94,24 @@ class _KeepOrder(dict):
         super().__setitem__(key, value)
 
 
-def _used_checker(elem, used):
+def _used_checker(elem: Element, used: t.Set[str]):
     if hasattr(elem, 'name') and not isinstance(elem, Ref):
         if elem.name in used:
             return
         used.add(elem.name)
     if hasattr(elem, '_element'):
-        _used_checker(elem._element, used)
+        _used_checker(elem._element, used)  # type: ignore
         if hasattr(elem, '_delimiter'):
-            _used_checker(elem._delimiter, used)
+            _used_checker(elem._delimiter, used)  # type: ignore
     elif hasattr(elem, '_elements'):
-        for el in elem._elements:
+        for el in elem._elements:  # type: ignore
             _used_checker(el, used)
 
 
 class _OrderedClass(type):
 
     @classmethod
-    def __prepare__(mcs, name, bases):
+    def __prepare__(mcs, name, bases, **kwds):
         return _KeepOrder()
 
     def __new__(mcs, name, bases, attrs, **kwargs):
@@ -122,7 +124,7 @@ class _OrderedClass(type):
             raise MissingStartError(
                 'Grammar is missing the required START element entry point.')
         if bases:
-            used = set()
+            used: t.Set[str] = set()
             _used_checker(attrs['START'], used)
             elems = {
                 elem for elem in attrs['_order']
@@ -137,7 +139,8 @@ class _OrderedClass(type):
 
 class Grammar(metaclass=_OrderedClass):
 
-    __slots__ = ('_element', '_string', '_expecting', '_cached_kw_match')
+    _order: t.List[str]
+    _refs: t.Dict[str, Ref]
 
     RE_KEYWORDS = _RE_KEYWORDS
 
@@ -333,9 +336,9 @@ func {name}() *goleri.Grammar {{
         Note: usually you should only initialize a Grammar instance
         once in a project.
         """
-        self._element = self.START
-        self._string = None
-        self._expecting = None
+        self._element: Element = self.START  # type: ignore
+        self._string = ''
+        self._expecting = Expecting()
         self._cached_kw_match = {}
 
     def export_js(
@@ -453,12 +456,12 @@ func {name}() *goleri.Grammar {{
             self,
             target=C_TARGET,
             c_indent=C_INDENTATION,
-            headerf=None) -> str:
+            headerf=None) -> t.Tuple[str, str]:
         """Export the grammar to a c (source and header) file which can be
         used with the libcleri module."""
         language = []
         indent = 0
-        enums = set()
+        enums: t.Set[str] = set()
         for name in self._order:
             elem = getattr(self, name, None)
             if not isinstance(elem, Element):
@@ -487,7 +490,7 @@ func {name}() *goleri.Grammar {{
         if not pattern.startswith('^'):
             pattern = '^' + pattern
 
-        enums = ',\n'.join([
+        enum_str = ',\n'.join([
             '{}{}'.format(c_indent, gid)
             for gid in sorted(enums)]) + ','
 
@@ -515,7 +518,7 @@ func {name}() *goleri.Grammar {{
                         '%Y-%m-%d %H:%M:%S',
                         time.localtime()),
                     language='\n'.join(language),
-                    enums=enums))
+                    enums=enum_str))
 
     def export_go(
             self,
@@ -633,7 +636,7 @@ func {name}() *goleri.Grammar {{
             enums=enum_str,
             public='public ' if is_public else '')
 
-    def parse(self, string) -> Result:
+    def parse(self, string: str) -> Result:
         """Parse some string to the Grammar.
 
         Returns a nodeResult with the following attributes:
@@ -646,11 +649,12 @@ func {name}() *goleri.Grammar {{
          - tree: the parse_tree containing a structured
                  result for the given string.
         """
+        self._s = ''
         self._string = string
         self._expecting = Expecting()
         self._cached_kw_match.clear()
         self._len_string = len(string)
-        self._pos = None
+        self._pos = -1
         tree = Node(self._element, string, 0, self._len_string)
         node_res = Result(*self._walk(
             self._element,
@@ -686,7 +690,12 @@ func {name}() *goleri.Grammar {{
         node.end = pos
         tree.append(node)
 
-    def _walk(self, element, pos, tree, rule, is_required):
+    def _walk(self,
+              element: Element,
+              pos: int,
+              tree: t.List[Node],
+              rule: Element,
+              is_required: bool) -> t.Tuple[bool, int]:
         if self._pos != pos:
             self._s = self._string[pos:].lstrip()
             self._pos = self._len_string - len(self._s)

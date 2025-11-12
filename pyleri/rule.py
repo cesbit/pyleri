@@ -12,7 +12,7 @@ class Rule(NamedElement):
     def __init__(self, element: Element):
         self._element = element
 
-    def _get_node_result(self, root, tree, rule, _s, node):
+    def _get_node_result(self, root, tree, rule, s, node):
         self._tested = {}
         self._tree = {}
         self._depth = -1
@@ -32,7 +32,7 @@ class Rule(NamedElement):
     def _run_export_py(self, py_indent, indent, classes):
         return self._element._export_py(py_indent, indent, classes)
 
-    def _run_export_c(self, c_indent, indent, enums):
+    def _run_export_c(self, c_indent, indent, enums):  # type: ignore
         name = getattr(self, 'name', None)
         if name is not None:
             self._element._name = name

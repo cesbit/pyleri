@@ -2,18 +2,20 @@
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 """
-from .elements import Element, NamedElement, c_export
+import typing as t
+from .elements import Element, NamedElement
 
 
 class Sequence(NamedElement):
 
     __slots__ = ('_elements',)
 
-    def __init__(self, *elements: Element):
+    def __init__(self, *elements: t.Union[Element, str]):
         self._elements = self._validate_elements(elements)
 
-    def _get_node_result(self, root, tree, rule, _s, node):
+    def _get_node_result(self, root, tree, rule, s, node):
         pos = node.start
+        is_valid = True
 
         for elem in self._elements:
             is_valid, pos = root._walk(elem, pos, node.children, rule, True)
@@ -30,8 +32,8 @@ class Sequence(NamedElement):
     def _run_export_py(self, py_indent, indent, classes):
         return self._export_py_elements(py_indent, indent, classes)
 
-    def _run_export_c(self, c_indent, indent, enums):
-        return self._export_c_elements(c_indent, indent, enums)
+    def _run_export_c(self, c_indent, indent, enums):  # type: ignore
+        return self._export_c_elements(c_indent, indent, enums)  # type: ignore
 
     def _run_export_go(self, go_indent, indent, enums):
         return self._export_go_elements(go_indent, indent, enums)

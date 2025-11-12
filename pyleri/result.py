@@ -10,6 +10,7 @@ from .endofstatement import _EndOfStatement
 if t.TYPE_CHECKING:
     from .node import Node
     from .expecting import Expecting
+    from .elements import Element
 
 
 TOSTR = (Keyword, Token, Tokens, _EndOfStatement)
@@ -22,7 +23,7 @@ class Result:
     def __init__(self, is_valid: bool, pos: int, tree: 'Node'):
         self.is_valid: bool = is_valid
         self.pos: int = pos
-        self.expecting: t.Optional['Expecting'] = None
+        self.expecting: t.Set[Element] = set()
         self.tree: 'Node' = tree
 
     def as_str(self, translate=None, line_number=False):
@@ -36,7 +37,8 @@ class Result:
         else:
             res = ['error at position {}'.format(self.pos)]
         arr = []
-        for elem in (self.expecting):
+        assert self.expecting is not None
+        for elem in self.expecting:
             expectstr = translate(elem) if translate else None
             if expectstr is None and isinstance(elem, TOSTR):
                 expectstr = str(elem)

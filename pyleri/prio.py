@@ -17,6 +17,7 @@ class _Prio(NamedElement):
         self._elements = self._validate_elements(elements)
 
     def _get_node_result(self, root, tree, rule, s, node):
+        assert isinstance(rule, Rule)
         if rule._depth == _Prio.MAX_RECURSION:
             raise MaxRecursionError(
                 'Max recursion depth of {} is reached'
@@ -47,8 +48,8 @@ class _Prio(NamedElement):
     def _run_export_py(self, py_indent, indent, classes):
         return self._export_py_elements(py_indent, indent, classes)
 
-    def _run_export_c(self, c_indent, indent, enums):
-        return self._export_c_elements(c_indent, indent, enums)
+    def _run_export_c(self, c_indent, indent, enums):  # type: ignore
+        return self._export_c_elements(c_indent, indent, enums)  # type: ignore
 
     def _run_export_go(self, go_indent, indent, enums):
         return self._export_go_elements(go_indent, indent, enums)

@@ -2,6 +2,7 @@
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 """
+import typing as t
 from .elements import NamedElement, c_export, go_export, java_export
 
 
@@ -26,7 +27,11 @@ class Tokens(NamedElement):
 
         return False, node.start
 
-    def _run_export_js(self, js_indent, indent, classes, cname):
+    def _run_export_js(self,
+                       js_indent: str,
+                       indent: int,
+                       classes: t.Set[str],
+                       cname) -> str:
         return 'Tokens(\'{}\')'.format(
             ' '.join(self._tokens).replace('\'', '\\\''))
 
@@ -41,13 +46,22 @@ class Tokens(NamedElement):
             ' '.join(self._tokens).replace('"', '\\"'))
 
     @go_export
-    def _run_export_go(self, go_indent, indent, enums, gid):
+    def _run_export_go(self,
+                       go_indent: str,
+                       indent: int,
+                       enums: t.Set[str],
+                       gid: str) -> str:
         return 'goleri.NewTokens({}, "{}")'.format(
             gid,
             ' '.join(self._tokens).replace('"', '\\"'))
 
     @java_export
-    def _run_export_java(self, java_indent, indent, enums, classes, gid):
+    def _run_export_java(self,
+                         java_indent: str,
+                         indent: int,
+                         enums: t.Set[str],
+                         classes: t.Set[str],
+                         gid: t.Optional[str]) -> str:
         return 'new Tokens({}"{}")'.format(
             '' if gid is None else 'Ids.{}, '.format(gid),
             ' '.join(self._tokens).replace('"', '\\"'))

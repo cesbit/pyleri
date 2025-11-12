@@ -12,14 +12,14 @@ class Repeat(NamedElement):
 
     def __init__(
             self,
-            element: Element,
+            element: t.Union[Element, str],
             mi: int = 0,
             ma: t.Optional[int] = None):
         self._element = self._validate_element(element)
 
         if not isinstance(mi, int) or mi < 0:
             raise TypeError('Repeat(): "mi" must be an integer value larger '
-                            'than or equal to 0, got: {mi}'.format(mi))
+                            'than or equal to 0, got: {mi}'.format(mi=mi))
 
         self._min = mi
 
@@ -101,6 +101,7 @@ class Repeat(NamedElement):
 
     @java_export
     def _run_export_java(self, java_indent, indent, enums, classes, gid):
+        assert isinstance(self._element, NamedElement)
         return 'new Repeat({}{}, {}, {})'.format(
             '' if gid is None else 'Ids.{}, '.format(gid),
             self._element._export_java(java_indent, indent, enums, classes),

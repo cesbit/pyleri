@@ -6,6 +6,7 @@ however to overwrite the default RE_KEYWORDS in you own Grammar class.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 """
+import typing as t
 from .elements import NamedElement, c_export, go_export, java_export
 
 
@@ -36,11 +37,11 @@ class Keyword(NamedElement):
             re_match = \
                 root._cached_kw_match[node.start] = \
                 root.RE_KEYWORDS.match(s)
-        is_valid = \
-            re_match and \
+        is_valid = bool(
+            re_match and
             (re_match.group(0) == self._keyword or
              (self._ign_case and
-              re_match.group(0).lower() == self._keyword.lower()))
+              re_match.group(0).lower() == self._keyword.lower())))
         if is_valid:
             root._append_tree(tree, node, node.start + len(self._keyword))
         else:

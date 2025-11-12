@@ -1,6 +1,7 @@
 import unittest
 import os
 import sys
+import re
 if os.environ.get('USELIB') != '1':
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -44,7 +45,9 @@ class TestKeyword(unittest.TestCase):
             str(grammar.parse('Hi Iris')))
 
     def test_keyword_alt_regkw(self):
-        grammar = create_grammar(Choice(Keyword('hi'), Token('HI')), r'[a-z]+')
+        grammar = create_grammar(
+            Choice(Keyword('hi'), Token('HI')),
+            re.compile(r'[a-z]+'))
         self.assertTrue(grammar.parse('hi').is_valid)
         self.assertTrue(grammar.parse('HI').is_valid)
         self.assertFalse(grammar.parse('').is_valid)

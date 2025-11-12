@@ -5,6 +5,10 @@ These are the base classes used for all other elements.
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 """
 import typing as t
+from abc import abstractmethod
+if t.TYPE_CHECKING:
+    from .grammar import Grammar
+    from .node import Node
 
 
 def camel_case(s: str) -> str:
@@ -17,10 +21,17 @@ def cap_case(s: str) -> str:
     return ''.join(p[0].upper() + p[1:] for p in s.split('_') if p)
 
 
-_cref = None
+_cref: t.Optional['Element'] = None
+T = t.TypeVar('T', bound='Element')
 
 
-def c_export(func):
+def c_export(func: t.Callable[
+            [T, str, int, t.Set[str], str],
+            str
+        ]) -> t.Callable[
+            [T, str, int, t.Set[str], t.Optional['Element']],
+            str
+        ]:
 
     def wrapper(self, c_indent, indent, enums, ref=None):
         global _cref
@@ -35,8 +46,13 @@ def c_export(func):
     return wrapper
 
 
-def go_export(func):
-
+def go_export(func: t.Callable[
+            [T, str, int, t.Set[str], str],
+            str
+        ]) -> t.Callable[
+            [T, str, int, t.Set[str]],
+            str
+        ]:
     def wrapper(self, go_indent, indent, enums):
         gid = getattr(self, 'name', getattr(self, '_name', 'NoGid'))
         if gid != 'NoGid':
@@ -47,12 +63,19 @@ def go_export(func):
     return wrapper
 
 
-def java_export(func):
+def java_export(func: t.Callable[
+            [T, str, int, t.Set[str], t.Set[str], t.Optional[str]],
+            str
+        ]) -> t.Callable[
+            [T, str, int, t.Set[str], t.Set[str]],
+            str
+        ]:
 
     def wrapper(self, java_indent, indent, enums, classes):
         classes.add('jleri.{}'.format(self.__class__.__name__.lstrip('_')))
         gid = getattr(self, 'name', getattr(self, '_name', None))
         if gid is not None:
+            assert isinstance(gid, str)
             gid = gid.upper()
             enums.add(gid)
         return func(self, java_indent, indent, enums, classes, gid)
@@ -63,8 +86,8 @@ def java_export(func):
 class Element:
 
     __slots__ = tuple()
-
-    name: t.Optional[str]
+    name: str
+    _name: str
 
     @staticmethod
     def _validate_element(element: t.Union[str, 'Element']) -> 'Element':
@@ -77,8 +100,34 @@ class Element:
             'but received type: {}'.format(type(element)))
 
     @classmethod
-    def _validate_elements(cls, elements) -> t.List['Element']:
+    def _validate_elements(cls,
+                           elements: t.Tuple[t.Union[str, 'Element'], ...]
+                           ) -> t.List['Element']:
         return [cls._validate_element(elem) for elem in elements]
+
+    @abstractmethod
+    def _get_node_result(self,
+                         root: 'Grammar',
+                         tree: t.List['Node'],
+                         rule: 'Element',
+                         s: str,
+                         node: 'Node') -> t.Tuple[bool, int]:
+        pass
+
+    def _export_py(self, *args, **kwargs) -> str:
+        return "must_be_called_on_named_element"
+
+    def _export_js(self, *args, **kwargs) -> str:
+        return "must_be_called_on_named_element"
+
+    def _export_c(self, *args, **kwargs) -> str:
+        return "must_be_called_on_named_element"
+
+    def _export_go(self, *args, **kwargs) -> str:
+        return "must_be_called_on_named_element"
+
+    def _export_java(self, *args, **kwargs) -> str:
+        return "must_be_called_on_named_element"
 
 
 class NamedElement(Element):
@@ -87,67 +136,97 @@ class NamedElement(Element):
 
     def _export_js(
             self,
-            js_indent: int,
+            js_indent: str,
             indent: int,
-            classes,
-            cname) -> str:
+            classes: t.Set[str],
+            cname: t.Optional[str]) -> str:
         classes.add(self.__class__.__name__.lstrip('_'))
         if hasattr(self, 'name') and indent > 0:
             return '{}.{}'.format(cname, self.name) if cname else self.name
         indent = 0 if indent < 0 else 1 if indent == 0 else indent
         return self._run_export_js(js_indent, indent, classes, cname)
 
-    def _export_js_elements(self, js_indent, indent, classes, cname):
+    def _export_js_elements(
+            self,
+            js_indent: str,
+            indent: int,
+            classes: t.Set[str],
+            cname: t.Optional[str]) -> str:
         new_indent = indent + 1
         value = ',\n'.join(['{indent}{elem}'.format(
             indent=js_indent * new_indent,
             elem=elem._export_js(
                 js_indent,
-                new_indent, classes, cname)) for elem in self._elements])
+                new_indent, classes, cname))
+            for elem in self._elements])  # type: ignore
         return '{class_name}(\n{value}\n{indent})'.format(
             class_name=self.__class__.__name__.lstrip('_'),
             value=value,
             indent=js_indent * indent)
 
-    def _run_export_js(self, js_indent, indent, classes, cname):
+    def _run_export_js(self,
+                       js_indent: str,
+                       indent: int,
+                       classes: t.Set[str],
+                       cname: t.Optional[str]) -> str:
         return 'not_implemented'
 
-    def _export_py(self, py_indent, indent, classes):
+    def _export_py(self,
+                   py_indent: str,
+                   indent: int,
+                   classes: t.Set[str]) -> str:
         classes.add(self.__class__.__name__.lstrip('_'))
         if hasattr(self, 'name') and indent:
             return self.name
         return self._run_export_py(py_indent, indent or 1, classes)
 
-    def _export_py_elements(self, py_indent, indent, classes):
+    def _export_py_elements(self,
+                            py_indent: str,
+                            indent: int,
+                            classes: t.Set[str]) -> str:
         new_indent = indent + 1
         value = ',\n'.join(['{indent}{elem}'.format(
             indent=py_indent * new_indent,
             elem=elem._export_py(
                 py_indent,
-                new_indent, classes)) for elem in self._elements])
+                new_indent,
+                classes))
+            for elem in self._elements])  # type: ignore
         return '{class_name}(\n{value}\n{indent})'.format(
             class_name=self.__class__.__name__.lstrip('_'),
             value=value,
             indent=py_indent * indent)
 
-    def _run_export_py(self, py_indent, indent, classes):
+    def _run_export_py(self,
+                       py_indent: str,
+                       indent: int,
+                       classes: t.Set[str]) -> str:
         return 'not_implemented'
 
     @c_export
-    def _export_c(self, c_indent, indent, enums, gid):
+    def _export_c(self,
+                  c_indent: str,
+                  indent: int,
+                  enums: t.Set[str],
+                  gid: str) -> str:
         if hasattr(self, 'name') and indent:
             return self.name
-        return self._run_export_c(c_indent, indent or 1, enums)
+        return self._run_export_c(c_indent, indent or 1, enums)  # type: ignore
 
     @c_export
-    def _export_c_elements(self, c_indent, indent, enums, gid):
+    def _export_c_elements(self,
+                           c_indent: str,
+                           indent: int,
+                           enums: t.Set[str],
+                           gid: str) -> str:
         new_indent = indent + 1
         value = ',\n'.join(['{indent}{elem}'.format(
             indent=c_indent * new_indent,
             elem=elem._export_c(
                 c_indent,
                 new_indent,
-                enums)) for elem in self._elements])
+                enums))
+            for elem in self._elements])  # type: ignore
         return \
             'cleri_{class_name}(\n{gid},\n{num},\n{value}\n{indent})'.format(
                 class_name=self.__class__.__name__.lstrip('_').lower(),
@@ -156,28 +235,41 @@ class NamedElement(Element):
                     gid=gid),
                 num='{indent}{num}'.format(
                     indent=c_indent * (indent + 1),
-                    num=len(self._elements)),
+                    num=len(self._elements)),  # type: ignore
                 value=value,
                 indent=c_indent * indent)
 
-    def _run_export_c(self, c_indent, indent, enums):
+    @c_export
+    def _run_export_c(self,
+                      c_indent: str,
+                      indent: int,
+                      enums: t.Set[str],
+                      gid: str) -> str:
         return 'not_implemented'
 
     @go_export
-    def _export_go(self, go_indent, indent, enums, gid):
+    def _export_go(self,
+                   go_indent: str,
+                   indent: int,
+                   enums: t.Set[str],
+                   gid: str) -> str:
         if hasattr(self, 'name') and indent:
             return camel_case(self.name)
         return self._run_export_go(go_indent, indent or 1, enums)
 
     @go_export
-    def _export_go_elements(self, go_indent, indent, enums, gid):
+    def _export_go_elements(self,
+                            go_indent: str,
+                            indent: int,
+                            enums: t.Set[str],
+                            gid: str) -> str:
         new_indent = indent + 1
         value = ',\n'.join(['{indent}{elem}'.format(
             indent=go_indent * new_indent,
             elem=elem._export_go(
                 go_indent,
                 new_indent,
-                enums)) for elem in self._elements])
+                enums)) for elem in self._elements])  # type: ignore
         return '{class_name}(\n{gid},\n{value},\n{indent})'.format(
             class_name='goleri.New' + self.__class__.__name__.lstrip('_'),
             gid='{indent}{gid}'.format(
@@ -186,19 +278,33 @@ class NamedElement(Element):
             value=value,
             indent=go_indent * indent)
 
-    def _run_export_go(self, go_indent, indent, enums):
+    @go_export
+    def _run_export_go(self,
+                       go_indent: str,
+                       indent: int,
+                       enums: t.Set[str],
+                       gid: str) -> str:
         return 'not_implemented'
 
     @java_export
-    def _export_java(self, java_indent, indent, enums, classes, gid):
+    def _export_java(self,
+                     java_indent: str,
+                     indent: int,
+                     enums: t.Set[str],
+                     classes: t.Set[str],
+                     gid: t.Optional[str]) -> str:
         if hasattr(self, 'name') and indent > 0:
             return self.name.upper()
         return self._run_export_java(
             java_indent, abs(indent) or 1, enums, classes)
 
     @java_export
-    def _export_java_elements(
-            self, java_indent, indent, enums, classes, gid):
+    def _export_java_elements(self,
+                              java_indent: str,
+                              indent: int,
+                              enums: t.Set[str],
+                              classes: t.Set[str],
+                              gid: t.Optional[str]) -> str:
         new_indent = indent + 1
         value = ',\n'.join(['{indent}{elem}'.format(
             indent=java_indent * new_indent,
@@ -206,7 +312,7 @@ class NamedElement(Element):
                 java_indent,
                 new_indent,
                 enums,
-                classes)) for elem in self._elements])
+                classes)) for elem in self._elements])  # type: ignore
         return '{class_name}({gid}\n{value}\n{indent})'.format(
             class_name='new ' + self.__class__.__name__.lstrip('_'),
             gid='' if gid is None else '\n{indent}Ids.{gid},'.format(
@@ -215,7 +321,13 @@ class NamedElement(Element):
             value=value,
             indent=java_indent * indent)
 
-    def _run_export_java(self, java_indent, indent, enums, classes):
+    @java_export
+    def _run_export_java(self,
+                         java_indent: str,
+                         indent: int,
+                         enums: t.Set[str],
+                         classes: t.Set[str],
+                         gid: t.Optional[str]):
         return 'not_implemented'
 
 # Added this import to the bottom to prevent circular import cycle.
@@ -224,4 +336,4 @@ class NamedElement(Element):
 #       is sub-classed from the 'NamedElement' class.
 
 
-from .token import Token  # nopep8
+from .token import Token  # nopep8  # noqa: E402

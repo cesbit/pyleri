@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pycodestyle
+          pip install pytest pycodestyle pyright
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run tests with pytest
         run: |
@@ -31,3 +31,6 @@ jobs:
       - name: Lint with PyCodeStyle
         run: |
           find . -name \*.py -exec pycodestyle {} +
+      - name: Check with PyRight
+        run: |
+          pyright

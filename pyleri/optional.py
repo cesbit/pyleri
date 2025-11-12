@@ -2,21 +2,22 @@
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 """
-from .elements import NamedElement, c_export, go_export, java_export
+import typing as t
+from .elements import Element, NamedElement, c_export, go_export, java_export
 
 
 class Optional(NamedElement):
 
     __slots__ = ('_element',)
 
-    def __init__(self, element):
+    def __init__(self, element: t.Union[str, Element]):
         self._element = self._validate_element(element)
 
     @property
     def _elements(self):
         yield self._element
 
-    def _get_node_result(self, root, tree, rule, _s, node):
+    def _get_node_result(self, root, tree, rule, s, node):
         is_valid, pos = root._walk(
             self._element,
             node.start,

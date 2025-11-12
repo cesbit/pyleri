@@ -19,7 +19,7 @@ class Node:
             end: t.Optional[int] = None):
         self.element = element
         self.start = start
-        self.end = end
+        self.end = end or 0
         self._string = string
         self.children: t.List['Node'] = []
 

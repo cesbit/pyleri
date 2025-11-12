@@ -5,9 +5,10 @@ an 'expecting' in a node result when an 'End of Statement' is possible.
 
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 """
+from .elements import Element
 
 
-class _EndOfStatement:
+class _EndOfStatement(Element):
 
     def __repr__(self):
         return 'end_of_statement'

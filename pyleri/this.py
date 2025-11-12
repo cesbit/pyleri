@@ -3,11 +3,13 @@
 :copyright: 2021, Jeroen van der Heijden <jeroen@cesbit.com>
 """
 from .elements import Element
+from .rule import Rule
 
 
 class This(Element):
 
-    def _get_node_result(self, root, tree, rule, _s, node):
+    def _get_node_result(self, root, tree, rule, s, node):
+        assert isinstance(rule, Rule)
         if node.start not in rule._tested:
             rule._tested[node.start] = root._walk(
                 rule._element,
