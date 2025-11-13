@@ -15,6 +15,7 @@ from pyleri import Regex
 from pyleri import THIS
 from pyleri import Choice
 
+
 class LangDef(Grammar):
     
     RE_KEYWORDS = re.compile('^[A-Za-z_][0-9A-Za-z_]{0,254}(?![0-9A-Za-z_])')
