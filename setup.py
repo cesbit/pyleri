@@ -1,7 +1,4 @@
 """setup.py
-
-Upload to PyPI, Thx to: http://peterdowns.com/posts/first-time-with-pypi.html
-
 python -m build
 twine upload --repository pypitest dist/pyleri-x.x.x*
 twine upload --repository pypi dist/pyleri-x.x.x*
