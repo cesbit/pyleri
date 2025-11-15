@@ -2,9 +2,9 @@
 
 Upload to PyPI, Thx to: http://peterdowns.com/posts/first-time-with-pypi.html
 
-python3 setup.py sdist
-twine upload --repository pypitest dist/pyleri-x.x.x.tar.gz
-twine upload --repository pypi dist/pyleri-x.x.x.tar.gz
+python -m build
+twine upload --repository pypitest dist/pyleri-x.x.x*
+twine upload --repository pypi dist/pyleri-x.x.x*
 """
 from setuptools import setup
 from pyleri import __version__ as version
