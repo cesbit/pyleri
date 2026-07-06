@@ -37,6 +37,8 @@ class Choice(NamedElement):
             if is_valid and pos > mg_pos:
                 node.children = children
                 mg_is_valid, mg_pos = is_valid, pos
+                if pos == root._len_string:
+                    break
 
         if mg_is_valid:
             root._append_tree(tree, node, mg_pos)

@@ -7,10 +7,12 @@ if os.environ.get('USELIB') != '1':
 from pyleri import (
     KeywordError,
     create_grammar,
+    Repeat,
     Sequence,
     Choice,
     Keyword,
     Regex,
+    Token,
 )  # nopep8
 
 
@@ -27,6 +29,20 @@ class TestChoice(unittest.TestCase):
         self.assertTrue(grammar.parse('hi').is_valid)
         self.assertTrue(grammar.parse(' hi iris ').is_valid)
         self.assertFalse(grammar.parse(' hi sasha ').is_valid)
+
+    def test_choice_most_greedy_selects_full_match(self):
+        short = Token('a')
+        long = Token('aa')
+        grammar = create_grammar(Repeat(Choice(short, long)))
+
+        result = grammar.parse('aa')
+        repeat_node = result.tree.children[0]
+        choice_node = repeat_node.children[0]
+
+        self.assertTrue(result.is_valid)
+        self.assertEqual(len(repeat_node.children), 1)
+        self.assertEqual(choice_node.children[0].element, long)
+        self.assertEqual(choice_node.children[0].string, 'aa')
 
     def test_choice_first_match(self):
         k_hi = Keyword('hi')
